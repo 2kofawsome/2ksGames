@@ -19,7 +19,7 @@ def MineSweeper(errorCheck):
       widget.destroy()
    master.configure(bg = "darkgrey") #Sets intial background colour to darkgrey
    Label(master, bg = "darkgrey", text="MineSweeper").grid(row = 0, column = 1) #just says the game name, bg means background (black) and fg means foreground (white)
-   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we") #sticky we causes it to fill all availible space
+   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = master.destroy).grid(row = 0, column = 0, sticky = "we") #sticky we causes it to fill all availible space
    varSizeMine=IntVar() #declaired the var variables
    varBombMine=IntVar()
    tk.Scale(master, bg="#fff", from_=8, to=24, orient=HORIZONTAL, variable=varSizeMine, label="The size of your grid (X by X)").grid(row = 3, columnspan = 3, sticky="we") #this is a scale (slider) for custom games, sticky makes it fill full column span
