@@ -844,7 +844,12 @@ def the2048():
    tk.Button(master, text = "Menu", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we")
    tk.Button(master, text = "How To Play", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: howToPlay2048()).grid(row = 0, column = 3, sticky = "we")
 
-   frame2048=[]
+   frame2048=[[]] #same as all lists above, but for flags
+   for r in range(4):
+      if len(frame2048)==r:
+         frame2048.append([])
+      for c in range(4):
+         flagsMine[r].append(" ")
 
    value2048=[[" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]] #creates empty grid
 
@@ -926,6 +931,7 @@ def reloadFull2048():
 def reload2048(r, c):
    for widget in frame2048[r*4+c].winfo_children(): #deletes all
       widget.destroy()
+
    if value2048[r][c] == " ":
       tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey").pack(expand=True, fill="both")
    elif value2048[r][c] == 2:
@@ -969,15 +975,11 @@ def up2048(event):
                         moved="True" #it mvoed at least once
                      break #end circle because  anumber means end of the line (the process started at the top (row = 0) so no possible higher one
 
-
-
                   reload2048(r+1-adjustment, c)
                   reload2048(r-adjustment, c)
                   master.update()
                   time.sleep(.01)
 
-
-               
       if moved == "True": #if something mvoed, create a new number
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
          column = random.randint(0, 3) #random column
@@ -997,7 +999,7 @@ def down2048(event):
          for c in range(4):
             if value2048[(-r-1)-1][c] != " ": #row is reversed
                for adjustment in range(3):
-                  if value2048[(-r-1)+adjustment][c] == " ": #plus adjustment not minus
+                  if value2048[(-r-1)+adjustment][c] == " " and ((-r-1)+adjustment)<0: #plus adjustment not minus
                      value2048[(-r-1)+adjustment][c] = value2048[(-r-1)-1+adjustment][c] #minus 1, not plus 1
                      value2048[(-r-1)-1+adjustment][c] = " "
                      moved="True"
@@ -1007,6 +1009,11 @@ def down2048(event):
                         value2048[(-r-1)-1+adjustment][c] = " "
                         moved="True"
                      break
+
+                  reload2048((-r-1)-1+adjustment, c)
+                  reload2048((-r-1)+adjustment, c)
+                  master.update()
+                  time.sleep(.01)
 
       if moved == "True":
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
@@ -1027,7 +1034,7 @@ def left2048(event): #this is the same code as up, but r and c is switched throu
          for r in range(4):
             if value2048[r][c+1] != " ":
                for adjustment in range(3):
-                  if value2048[r][c-adjustment] == " ":
+                  if value2048[r][c-adjustment] == " " and (c-adjustment)>=0:
                      value2048[r][c-adjustment] = value2048[r][c+1-adjustment]
                      value2048[r][c+1-adjustment] = " "
                      moved="True" 
@@ -1036,7 +1043,12 @@ def left2048(event): #this is the same code as up, but r and c is switched throu
                         value2048[r][c-adjustment] = (value2048[r][c-adjustment])*2
                         value2048[r][c+1-adjustment] = " "
                         moved="True"
-                     break 
+                     break
+                  
+                  reload2048(r, c+1-adjustment)
+                  reload2048(r, c-adjustment)
+                  master.update()
+                  time.sleep(.01)
 
       if moved == "True":
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
@@ -1050,14 +1062,14 @@ def left2048(event): #this is the same code as up, but r and c is switched throu
 
       reloadFull2048()
       
-def right2048(event): #this is the same code as down, but r and c are switcehd thorughout it
+def right2048(event): #this is the same code as down, but r and c are switched throughout it
    if win2048 == "schrodinger":
       moved="False"
       for c in range(3):
          for r in range(4):
             if value2048[r][(-c-1)-1] != " ":
                for adjustment in range(3):
-                  if value2048[r][(-c-1)+adjustment] == " ":
+                  if value2048[r][(-c-1)+adjustment] == " " and ((-c-1)+adjustment)<0:
                      value2048[r][(-c-1)+adjustment] = value2048[r][(-c-1)-1+adjustment]
                      value2048[r][(-c-1)-1+adjustment] = " "
                      moved="True"
@@ -1067,6 +1079,11 @@ def right2048(event): #this is the same code as down, but r and c are switcehd t
                         value2048[r][(-c-1)-1+adjustment] = " "
                         moved="True"
                      break
+                  
+                  reload2048(r, (-c-1)-1+adjustment)
+                  reload2048(r, (-c-1)+adjustment)
+                  master.update()
+                  time.sleep(.01)
 
       if moved == "True":
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
@@ -1077,8 +1094,9 @@ def right2048(event): #this is the same code as down, but r and c are switcehd t
                break
       else:
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
-
       reloadFull2048()
+
+   
       
 #################################################################################################### 2048 end
 
