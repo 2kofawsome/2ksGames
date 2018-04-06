@@ -584,7 +584,7 @@ def chordMine(event):
                if r+1<sizeMine and c+1<sizeMine and flagsMine[r+1][c+1] == "?":
                   chording+=1
                if chording == hiddenMine[r][c]: #if there are the saem amount of flags as the number
-                  if r-1>=0 and c-1>=0 and flagsMine[r-1][c-1] == " ": #clicks on every open spot aorund it
+                  if r-1>=0 and c-1>=0 and flagsMine[r-1][c-1] == " ": #clicks on every open spot around it
                      checkMine(r-1, c-1)
                   if c-1>=0 and flagsMine[r][c-1] == " ":
                      checkMine(r, c-1)            
@@ -606,22 +606,22 @@ def updateMine(row, column): #this updates only 1 sqaure, before it was updating
       widget.destroy()
    if shownMine[row][column] == " " or shownMine[row][column] == 1:
       tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", bg = "lightgrey", fg = "blue").pack(expand=True, fill="both") #makes a new button which is the same as the last, but with new value
+      activebackground = "grey", activeforeground = "navy", bg = "lightgrey", fg = "blue").pack(expand=True, fill="both") #makes a new button which is the same as the last, but with new value
    elif shownMine[row][column] == 2:
       tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", bg = "lightgrey", fg = "green").pack(expand=True, fill="both")
+      activebackground = "grey", activeforeground = "dark green", bg = "lightgrey", fg = "green4").pack(expand=True, fill="both")
    elif shownMine[row][column] == 3:
       tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", bg = "lightgrey", fg = "red").pack(expand=True, fill="both")
+      activebackground = "grey", activeforeground = "red4", bg = "lightgrey", fg = "red").pack(expand=True, fill="both")
    elif shownMine[row][column] == 4:
       tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", bg = "lightgrey", fg = "navy").pack(expand=True, fill="both")
+      activebackground = "grey", activeforeground = "midnight blue", bg = "lightgrey", fg = "navy").pack(expand=True, fill="both")
    elif shownMine[row][column] == 5:
       tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", bg = "lightgrey", fg = "crimson").pack(expand=True, fill="both")
+      activebackground = "grey", activeforeground = "brown4", bg = "lightgrey", fg = "crimson").pack(expand=True, fill="both")
    elif shownMine[row][column] == 6:
       tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", bg = "lightgrey", fg = "darkcyan").pack(expand=True, fill="both")
+      activebackground = "grey", activeforeground = "dark slate grey", bg = "lightgrey", fg = "darkcyan").pack(expand=True, fill="both")
    elif shownMine[row][column] == 7:
       tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
       activebackground = "grey", bg = "lightgrey", fg = "black" ).pack(expand=True, fill="both")
@@ -814,15 +814,16 @@ def Sudoku():
 #################################################################################################### 2048 start
 
 #Sam Gunter
-#2048 was finished 1:43am on the 2nd of april, 2018
-#This was created to copy the microsoft minesweeper game that we know and love
-#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computer it does have severe lag
+#2048 was finished 2:18pm on the 6th of april, 2018
+#This was created to play 2048. The hardest and longest part was making the program appear fluid, not a sudden movement where the entire screen refreshes,
+#but maing it refreash one by oen as the label moves. If the entire screen reloaded it would be too slow, so I had to compeltly change how I made frames on tkinter.
 
-#Next steps are add swiping, left and right, check for end game, colours, etc
+#Next step is to fix problem with multiple numbers going tgetehr at once, fix error where the game end 1 turn too early, add hwo to play and add a leaderboard document (will have to learn how to do file manipulation).
 
-#2048: Global variables and functions normally have a "2048" at the end incase another game uses similar variables later on (or earlier on).
-#First function is MineSweeper(). Then chocie of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
-#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first clickw ill never be a bomb. Allows user to chose to play again
+#2048: Global variables and functions normally have a 2048 at the end, main one is called the2048 because had to have letters.
+#First function is gamemode, then if single player was chosen difficulty, then a function to set difficulty.
+#No matter if single or multiplayer the next function creates the tkinter window and then one of the turns happen either turnTic or one of the ai, ends with endTic. User can go back to menu or click again and the person starting alternates
+#It is always set up so the next function is last in the current function (using if and else statements)
 
 def the2048():
    global pixel2048
@@ -849,7 +850,9 @@ def the2048():
       if len(frame2048)==r:
          frame2048.append([])
       for c in range(4):
-         flagsMine[r].append(" ")
+         frame2048[r].append(tk.Frame(master, bd = 2, width = pixel2048, height = pixel2048))
+         frame2048[r][c].grid(row=r+1, column=c, sticky="nsew") 
+         frame2048[r][c].propagate(False)
 
    value2048=[[" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]] #creates empty grid
 
@@ -862,12 +865,6 @@ def the2048():
       if value2048[row][column] == " ": #checks to make sure 2 isnt already there
          value2048[row][column] = 4 #places the 4
          break
- 
-   for r in range(4): #loads the frame and grid
-      for c in range(4):
-         frame2048.append(tk.Frame(master, bd = 2, width = pixel2048, height = pixel2048))
-         frame2048[r*4+c].grid(row=r+1, column=c, sticky="nsew") 
-         frame2048[r*4+c].propagate(False)
 
    
    reloadFull2048()
@@ -894,32 +891,32 @@ def reloadFull2048():
 
          if value2048[r][c] == 2048:
             win2048="True"
-         for widget in frame2048[r*4+c].winfo_children(): #deletes all
+         for widget in frame2048[r][c].winfo_children(): #deletes all
             widget.destroy()
          if value2048[r][c] == " ":
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey").pack(expand=True, fill="both")
          elif value2048[r][c] == 2:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "white").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "white").pack(expand=True, fill="both")
          elif value2048[r][c] == 4:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "lemonchiffon").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "lemonchiffon").pack(expand=True, fill="both")
          elif value2048[r][c] == 8:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "sandybrown").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "sandybrown").pack(expand=True, fill="both")
          elif value2048[r][c] == 16:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "chocolate").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "chocolate").pack(expand=True, fill="both")
          elif value2048[r][c] == 32:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "salmon").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "salmon").pack(expand=True, fill="both")
          elif value2048[r][c] == 64:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "tomato").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "tomato").pack(expand=True, fill="both")
          elif value2048[r][c] == 128:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "khaki").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "khaki").pack(expand=True, fill="both")
          elif value2048[r][c] == 256:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "yellow").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "yellow").pack(expand=True, fill="both")
          elif value2048[r][c] == 512:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "gold").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "gold").pack(expand=True, fill="both")
          elif value2048[r][c] == 1024:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "orange").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "orange").pack(expand=True, fill="both")
          elif value2048[r][c] == 2048:
-            tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "goldenrod").pack(expand=True, fill="both")
+            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "goldenrod").pack(expand=True, fill="both")
    if win2048 == "True":
       Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="You Win!").grid(row = 5, columnspan = 4, sticky = "we")
       tk.Button(master, text = "Play Again", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 3, sticky = "we")
@@ -929,38 +926,38 @@ def reloadFull2048():
 
    
 def reload2048(r, c):
-   for widget in frame2048[r*4+c].winfo_children(): #deletes all
+   for widget in frame2048[r][c].winfo_children(): #deletes all
       widget.destroy()
 
    if value2048[r][c] == " ":
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey").pack(expand=True, fill="both")
    elif value2048[r][c] == 2:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "white").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "white").pack(expand=True, fill="both")
    elif value2048[r][c] == 4:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "lemonchiffon").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "lemonchiffon").pack(expand=True, fill="both")
    elif value2048[r][c] == 8:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "sandybrown").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "sandybrown").pack(expand=True, fill="both")
    elif value2048[r][c] == 16:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "chocolate").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "chocolate").pack(expand=True, fill="both")
    elif value2048[r][c] == 32:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "salmon").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "salmon").pack(expand=True, fill="both")
    elif value2048[r][c] == 64:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "tomato").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "tomato").pack(expand=True, fill="both")
    elif value2048[r][c] == 128:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "khaki").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "khaki").pack(expand=True, fill="both")
    elif value2048[r][c] == 256:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "yellow").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "yellow").pack(expand=True, fill="both")
    elif value2048[r][c] == 512:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "gold").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "gold").pack(expand=True, fill="both")
    elif value2048[r][c] == 1024:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "orange").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "orange").pack(expand=True, fill="both")
    elif value2048[r][c] == 2048:
-      tk.Label(frame2048[r*4+c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "goldenrod").pack(expand=True, fill="both")
+      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "goldenrod").pack(expand=True, fill="both")
 
 def up2048(event):
    if win2048 == "schrodinger":
       moved="False" #checks to see if any move happened
-      for r in range(3): #one less becaus edont need to check the highest row
+      for r in range(3): #one less because dont need to check the highest row
          for c in range(4):
             if value2048[r+1][c] != " ": #if the tile is not empty, saves code time
                for adjustment in range(3): #adjustment makes it go to end, and not just up once
@@ -969,12 +966,10 @@ def up2048(event):
                      value2048[r+1-adjustment][c] = " " #delete one under
                      moved="True" #it moved at least once
                   else: #if a number above
-                     if value2048[r-adjustment][c] == value2048[r+1-adjustment][c]: #if the number below and above are the same
+                     if value2048[r-adjustment][c] == value2048[r+1-adjustment][c] and (r-adjustment)>=0: #if the number below and above are the same
                         value2048[r-adjustment][c] = (value2048[r-adjustment][c])*2 #multiply above
                         value2048[r+1-adjustment][c] = " " #and delete bottom
                         moved="True" #it mvoed at least once
-                     break #end circle because  anumber means end of the line (the process started at the top (row = 0) so no possible higher one
-
                   reload2048(r+1-adjustment, c)
                   reload2048(r-adjustment, c)
                   master.update()
@@ -1004,11 +999,10 @@ def down2048(event):
                      value2048[(-r-1)-1+adjustment][c] = " "
                      moved="True"
                   else:
-                     if value2048[(-r-1)+adjustment][c] == value2048[(-r-1)-1+adjustment][c]:
+                     if value2048[(-r-1)+adjustment][c] == value2048[(-r-1)-1+adjustment][c] and ((-r-1)+adjustment)<0:
                         value2048[(-r-1)+adjustment][c] = (value2048[(-r-1)+adjustment][c])*2
                         value2048[(-r-1)-1+adjustment][c] = " "
                         moved="True"
-                     break
 
                   reload2048((-r-1)-1+adjustment, c)
                   reload2048((-r-1)+adjustment, c)
@@ -1027,7 +1021,7 @@ def down2048(event):
 
       reloadFull2048()
 
-def left2048(event): #this is the same code as up, but r and c is switched throughout it
+def left2048(event): #this is the same code as up2048, but r and c is switched throughout it
    if win2048 == "schrodinger":
       moved="False"
       for c in range(3):
@@ -1039,11 +1033,10 @@ def left2048(event): #this is the same code as up, but r and c is switched throu
                      value2048[r][c+1-adjustment] = " "
                      moved="True" 
                   else:
-                     if value2048[r][c-adjustment] == value2048[r][c+1-adjustment]:
+                     if value2048[r][c-adjustment] == value2048[r][c+1-adjustment]and (c-adjustment)>=0:
                         value2048[r][c-adjustment] = (value2048[r][c-adjustment])*2
                         value2048[r][c+1-adjustment] = " "
                         moved="True"
-                     break
                   
                   reload2048(r, c+1-adjustment)
                   reload2048(r, c-adjustment)
@@ -1062,7 +1055,7 @@ def left2048(event): #this is the same code as up, but r and c is switched throu
 
       reloadFull2048()
       
-def right2048(event): #this is the same code as down, but r and c are switched throughout it
+def right2048(event): #this is the same code as down,2048 but r and c are switched throughout it
    if win2048 == "schrodinger":
       moved="False"
       for c in range(3):
@@ -1074,11 +1067,10 @@ def right2048(event): #this is the same code as down, but r and c are switched t
                      value2048[r][(-c-1)-1+adjustment] = " "
                      moved="True"
                   else:
-                     if value2048[r][(-c-1)+adjustment] == value2048[r][(-c-1)-1+adjustment]:
+                     if value2048[r][(-c-1)+adjustment] == value2048[r][(-c-1)-1+adjustment] and ((-c-1)+adjustment)<0:
                         value2048[r][(-c-1)+adjustment] = (value2048[r][(-c-1)+adjustment])*2
                         value2048[r][(-c-1)-1+adjustment] = " "
                         moved="True"
-                     break
                   
                   reload2048(r, (-c-1)-1+adjustment)
                   reload2048(r, (-c-1)+adjustment)
