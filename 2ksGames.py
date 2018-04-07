@@ -67,11 +67,11 @@ def howToPlayTic():
    frameMine2.propagate(False)
 
    
-   Label(frameMine1, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//60) + " bold", text="""Click on an empty tile to place an X or an O.
+   Label(frameMine1, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//45) + " bold", text="""Click on an empty tile to place an X or an O.
 If single player the AI will automatically put down an 0 right after your X.""").pack(expand=True, fill="both")
 
-   Label(frameMine2, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//60), text="""The goal of Tic Tac Toe is to beat your oppenent by being the first to score a row.
-One player is 0's and another is X's and the players alternate putting down their letter.
+   Label(frameMine2, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//45), text="""The goal of Tic Tac Toe is to beat your opponent by being the first to score a row.
+One player is O's and another is X's and the players alternate putting down their letter.
 If one player is able to get 3 of their letter in a row (up to down, left to right, or diagonal) then they win.""").pack(expand=True, fill="both")
 
 
@@ -401,7 +401,7 @@ def MineSweeper(errorCheck):
       widget.destroy()
    master.configure(bg = "darkgrey") #Sets intial background colour to darkgrey
    Label(master, bg = "darkgrey", text="MineSweeper").grid(row = 0, column = 1) #just says the game name, bg means background (black) and fg means foreground (white)
-   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we") #sticky we causes it to fill all availible space
+   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: unbind()).grid(row = 0, column = 0, sticky = "we") #sticky we causes it to fill all availible space
    varSizeMine=IntVar() #declaired the var variables
    varBombMine=IntVar()
    tk.Scale(master, bg="#fff", from_=8, to=24, orient=HORIZONTAL, variable=varSizeMine, label="The size of your grid (X by X)").grid(row = 3, columnspan = 3, sticky="we") #this is a scale (slider) for custom games, sticky makes it fill full column span
@@ -454,7 +454,7 @@ If a number is uncovered (such as the 1) and the required amount of flags are to
 Chording will automatically click every adjacent tile to the number that you chorded as long as there is no flag on the tile.
 Be warned though, if you incorrectly placed your flags it could click on a spot with a bomb and end the game. To chord use the middle button on the mouse (not on all mouses).
 
-The first click is guarenteed to be safe, but after that you must make choices for yourself, good luck!""").pack(expand=True, fill="both")
+The first click is guaranteed to be safe, but after that you must make choices for yourself, good luck!""").pack(expand=True, fill="both")
    
 def gameSetMine(level):
    global sizeMine
@@ -818,7 +818,7 @@ def Sudoku():
 #This was created to play 2048. The hardest and longest part was making the program appear fluid, not a sudden movement where the entire screen refreshes,
 #but maing it refreash one by oen as the label moves. If the entire screen reloaded it would be too slow, so I had to compeltly change how I made frames on tkinter.
 
-#Next step is to fix problem with multiple numbers going tgetehr at once, fix error where the game end 1 turn too early, add hwo to play and add a leaderboard document (will have to learn how to do file manipulation).
+#Next step is to make user be able to slide cursor, add how to play and add a leaderboard document (will have to learn how to do file manipulation).
 
 #2048: Global variables and functions normally have a 2048 at the end, main one is called the2048 because had to have letters.
 #First function is gamemode, then if single player was chosen difficulty, then a function to set difficulty.
@@ -835,6 +835,8 @@ def the2048():
    master.bind("<Down>", down2048)
    master.bind("<Left>", left2048)
    master.bind("<Right>", right2048)
+   master.bind("<Button-1>", buttonclick2048)
+   master.bind("<ButtonRelease-1>", buttonrelease2048)
    for widget in master.winfo_children():
       widget.destroy()
    if screenWidth<screenHeight:
@@ -842,7 +844,7 @@ def the2048():
    else:
       pixel2048=(screenHeight//5)
    Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//6), text="2048").grid(row = 0, column=1, columnspan = 2)
-   tk.Button(master, text = "Menu", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "Menu", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: unbind()).grid(row = 0, column = 0, sticky = "we")
    tk.Button(master, text = "How To Play", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: howToPlay2048()).grid(row = 0, column = 3, sticky = "we")
 
    frame2048=[[]] #same as all lists above, but for flags
@@ -869,6 +871,34 @@ def the2048():
    
    reloadFull2048()
 
+def howToPlay2048():
+   for widget in master.winfo_children():
+      widget.destroy()
+   if screenWidth<screenHeight:
+      pixelMine=(screenWidth)
+   else:
+      pixelMine=(screenHeight)
+   Label(master, bg = "#000000", fg = "#fff", text="2048").grid(row = 0, column = 1)
+   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 0, sticky = "we")
+
+   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/5))
+   frameMine1.grid(row=2, columnspan=2, sticky="nsew")
+   frameMine1.propagate(False)
+   frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
+   frameMine2.grid(row=3, columnspan=2, sticky="nsew")
+   frameMine2.propagate(False)
+
+   
+   Label(frameMine1, bg = "silver", font = "Helvetica " + str(pixelMine//45) + " bold", text="""Use the arrow keys to go up, down, left or right.
+You can also use your finger (or mouse) and drag across the screen to shift the board.""").pack(expand=True, fill="both")
+
+   Label(frameMine2, bg = "silver", font = "Helvetica " + str(pixelMine//45), text="""The goal of 2048 is to get a tile containing the number "2048".
+To achieve this goal you must merge numbers together to create larger numbers.
+When you shift the board ALL numbers on the board move as far as they can over.
+If 2 numbers are the same they will merge to create the sum of those numbers (2s become 4, 4s  become 8 and so on.
+Everytime you shift the board a new 2 will appear at the opposite end of the board.""").pack(expand=True, fill="both")
+
+
 def reloadFull2048():
    global win2048
    win2048="False"
@@ -876,16 +906,16 @@ def reloadFull2048():
       for c in range(4):
          if value2048[r][c] == " ":
             win2048="schrodinger"
-         elif r>0:
+         if r>0:
             if value2048[r][c] == value2048[r-1][c]:
                win2048="schrodinger"
-         elif r<3:
+         if r<3:
             if value2048[r][c] == value2048[r+1][c]:
                win2048="schrodinger"
-         elif c>0:
+         if c>0:
             if value2048[r][c] == value2048[r][c-1]:
                win2048="schrodinger"
-         elif c<3:
+         if c<3:
             if value2048[r][c] == value2048[r][c+1]:
                win2048="schrodinger"
 
@@ -926,9 +956,8 @@ def reloadFull2048():
 
    
 def reload2048(r, c):
-   for widget in frame2048[r][c].winfo_children(): #deletes all
+   for widget in frame2048[r][c].winfo_children(): #deletes one
       widget.destroy()
-
    if value2048[r][c] == " ":
       tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey").pack(expand=True, fill="both")
    elif value2048[r][c] == 2:
@@ -954,28 +983,51 @@ def reload2048(r, c):
    elif value2048[r][c] == 2048:
       tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "goldenrod").pack(expand=True, fill="both")
 
+def buttonclick2048(event): #checks x and y value with first click
+   global x2048
+   global y2048
+   x2048=master.winfo_pointerx()
+   y2048=master.winfo_pointery()
+
+def buttonrelease2048(event): #when button is released (the mouse was slide in this time)
+   xslide2048=master.winfo_pointerx() - x2048 #checks difference in start and end
+   yslide2048=master.winfo_pointery() - y2048
+   if xslide2048 > pixel2048: #if x bigger than one block (to the right)
+      if yslide2048 < pixel2048 and yslide2048 > -1 * pixel2048: #checks if opposite (y in this case) was moced less than a block
+         right2048(" ") 
+   if xslide2048 < -1 * pixel2048: #if x smaller than negative one block (to the left)
+      if yslide2048 < pixel2048 and yslide2048 > -1 * pixel2048:
+         left2048(" ") 
+   if yslide2048 > pixel2048: #if y bigger than one block (down)
+      if xslide2048 < pixel2048 and xslide2048 > -1 * pixel2048:
+         down2048(" ")
+   if yslide2048 < -1 * pixel2048: #if y smaller than negative one block (up)
+      if xslide2048 < pixel2048 and xslide2048 > -1 * pixel2048:
+         up2048(" ")
+
 def up2048(event):
-   if win2048 == "schrodinger":
-      moved="False" #checks to see if any move happened
+   if win2048 == "schrodinger": #neither true nor false
+      together=[False, False, False, False] #makes it so only 1 thing happens on each line
+      moved=False #checks to see if any move happened
       for r in range(3): #one less because dont need to check the highest row
-         for c in range(4):
-            if value2048[r+1][c] != " ": #if the tile is not empty, saves code time
-               for adjustment in range(3): #adjustment makes it go to end, and not just up once
+         for adjustment in range(3): #adjustment makes it go to end, and not just up once
+            for c in range(4):
+               if value2048[r+1-adjustment][c] != " " and (r+1-adjustment)>=0: #if the tile is not empty, saves code time
                   if value2048[r-adjustment][c] == " " and (r-adjustment)>=0: #if the one above is empty
                      value2048[r-adjustment][c] = value2048[r+1-adjustment][c] #replace with one under
                      value2048[r+1-adjustment][c] = " " #delete one under
-                     moved="True" #it moved at least once
+                     moved=True #it moved at least once
                   else: #if a number above
-                     if value2048[r-adjustment][c] == value2048[r+1-adjustment][c] and (r-adjustment)>=0: #if the number below and above are the same
+                     if value2048[r-adjustment][c] == value2048[r+1-adjustment][c] and (r-adjustment)>=0 and together[c] == False: #if the number below and above are the same
                         value2048[r-adjustment][c] = (value2048[r-adjustment][c])*2 #multiply above
                         value2048[r+1-adjustment][c] = " " #and delete bottom
-                        moved="True" #it mvoed at least once
+                        together[c] = True
+                        moved=True #it moved at least once
                   reload2048(r+1-adjustment, c)
                   reload2048(r-adjustment, c)
-                  master.update()
+                  master.update_idletasks()
                   time.sleep(.01)
-
-      if moved == "True": #if something mvoed, create a new number
+      if moved == True: #if something moved, create a new number
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
          column = random.randint(0, 3) #random column
          for c in range(4): #makes it so it will check all fast and not just random
@@ -989,27 +1041,27 @@ def up2048(event):
 
 def down2048(event):
    if win2048 == "schrodinger":
-      moved="False"
+      together=[False, False, False, False]
+      moved=False
       for r in range(3):
-         for c in range(4):
-            if value2048[(-r-1)-1][c] != " ": #row is reversed
-               for adjustment in range(3):
+         for adjustment in range(3):
+            for c in range(4):
+               if value2048[(-r-1)-1+adjustment][c] != " " and (-r-1)-1+adjustment<0: #row is reversed
                   if value2048[(-r-1)+adjustment][c] == " " and ((-r-1)+adjustment)<0: #plus adjustment not minus
                      value2048[(-r-1)+adjustment][c] = value2048[(-r-1)-1+adjustment][c] #minus 1, not plus 1
                      value2048[(-r-1)-1+adjustment][c] = " "
-                     moved="True"
+                     moved=True
                   else:
-                     if value2048[(-r-1)+adjustment][c] == value2048[(-r-1)-1+adjustment][c] and ((-r-1)+adjustment)<0:
+                     if value2048[(-r-1)+adjustment][c] == value2048[(-r-1)-1+adjustment][c] and ((-r-1)+adjustment)<0 and together[c] == False:
                         value2048[(-r-1)+adjustment][c] = (value2048[(-r-1)+adjustment][c])*2
                         value2048[(-r-1)-1+adjustment][c] = " "
-                        moved="True"
-
+                        moved=True
+                        together[c] = True
                   reload2048((-r-1)-1+adjustment, c)
                   reload2048((-r-1)+adjustment, c)
-                  master.update()
+                  master.update_idletasks()
                   time.sleep(.01)
-
-      if moved == "True":
+      if moved == True:
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
          column = random.randint(0, 3)
          for c in range(4):
@@ -1023,27 +1075,27 @@ def down2048(event):
 
 def left2048(event): #this is the same code as up2048, but r and c is switched throughout it
    if win2048 == "schrodinger":
-      moved="False"
+      together=[False, False, False, False]
+      moved=False
       for c in range(3):
-         for r in range(4):
-            if value2048[r][c+1] != " ":
-               for adjustment in range(3):
+         for adjustment in range(3):
+            for r in range(4):
+               if value2048[r][c+1-adjustment] != " " and (c+1-adjustment)>=0:
                   if value2048[r][c-adjustment] == " " and (c-adjustment)>=0:
                      value2048[r][c-adjustment] = value2048[r][c+1-adjustment]
                      value2048[r][c+1-adjustment] = " "
-                     moved="True" 
+                     moved=True
                   else:
-                     if value2048[r][c-adjustment] == value2048[r][c+1-adjustment]and (c-adjustment)>=0:
+                     if value2048[r][c-adjustment] == value2048[r][c+1-adjustment] and (c-adjustment)>=0 and together[r] == False:
                         value2048[r][c-adjustment] = (value2048[r][c-adjustment])*2
                         value2048[r][c+1-adjustment] = " "
-                        moved="True"
-                  
+                        moved=True
+                        together[r] = True                  
                   reload2048(r, c+1-adjustment)
                   reload2048(r, c-adjustment)
-                  master.update()
+                  master.update_idletasks()
                   time.sleep(.01)
-
-      if moved == "True":
+      if moved == True:
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
          row = random.randint(0, 3)
          for r in range(4):
@@ -1057,27 +1109,27 @@ def left2048(event): #this is the same code as up2048, but r and c is switched t
       
 def right2048(event): #this is the same code as down,2048 but r and c are switched throughout it
    if win2048 == "schrodinger":
-      moved="False"
+      together=[False, False, False, False]
+      moved=False
       for c in range(3):
-         for r in range(4):
-            if value2048[r][(-c-1)-1] != " ":
-               for adjustment in range(3):
+         for adjustment in range(3):
+            for r in range(4):
+               if value2048[r][(-c-1)-1+adjustment] != " " and ((-c-1)-1+adjustment)<0:
                   if value2048[r][(-c-1)+adjustment] == " " and ((-c-1)+adjustment)<0:
                      value2048[r][(-c-1)+adjustment] = value2048[r][(-c-1)-1+adjustment]
                      value2048[r][(-c-1)-1+adjustment] = " "
-                     moved="True"
+                     moved=True
                   else:
-                     if value2048[r][(-c-1)+adjustment] == value2048[r][(-c-1)-1+adjustment] and ((-c-1)+adjustment)<0:
+                     if value2048[r][(-c-1)+adjustment] == value2048[r][(-c-1)-1+adjustment] and ((-c-1)+adjustment)<0 and together[r] == False:
                         value2048[r][(-c-1)+adjustment] = (value2048[r][(-c-1)+adjustment])*2
                         value2048[r][(-c-1)-1+adjustment] = " "
-                        moved="True"
-                  
+                        moved=True
+                        together[r] = True                  
                   reload2048(r, (-c-1)-1+adjustment)
                   reload2048(r, (-c-1)+adjustment)
-                  master.update()
+                  master.update_idletasks()
                   time.sleep(.01)
-
-      if moved == "True":
+      if moved == True:
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
          row = random.randint(0, 3)
          for r in range(4):
@@ -1144,6 +1196,17 @@ master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenhe
 screenWidth = master.winfo_screenwidth()
 screenHeight = master.winfo_screenheight()
 
+def unbind(): #unbinds anything I have binded (from multiple games) and goes back to homescreen.
+   master.unbind("<Up>")
+   master.unbind("<Down>")
+   master.unbind("<Left>")
+   master.unbind("<Right>")
+   master.unbind("<Button-1>")
+   master.unbind("<ButtonRelease-1>")
+   master.unbind("<Button-3>")
+   master.unbind("<Button-2>")
+   menu()
+
 def menu():
    for widget in master.winfo_children(): #clears contents, but not frame meaning it can update without making a new window each time
       widget.destroy()
@@ -1153,7 +1216,7 @@ def menu():
    tk.Button(master, text = "TicTacToe2.0", height = 5, width = 20, bg = "#fff", command = lambda: TicTacToe()).grid(row = 1, column = 0, sticky = "we")
    tk.Button(master, text = "MineSweeper", height = 5, width = 20, bg = "#fff", command = lambda: MineSweeper(" ")).grid(row = 1, column = 1, sticky = "we")
    tk.Button(master, text = "SudokuNF", height = 5, width = 20, bg = "#fff", command = lambda: generateSu()).grid(row = 1, column = 2, sticky = "we")
-   tk.Button(master, text = "2048NF", height = 5, width = 20, bg = "#fff", command = lambda: the2048()).grid(row = 2, column = 0, sticky = "we")
+   tk.Button(master, text = "2048", height = 5, width = 20, bg = "#fff", command = lambda: the2048()).grid(row = 2, column = 0, sticky = "we")
    tk.Button(master, text = "ThreesNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).grid(row = 2, column = 1, sticky = "we")
    tk.Button(master, text = "CheckersNF", height = 5, width = 20, bg = "#fff", command = lambda: Checkers()).grid(row = 2, column = 2, sticky = "we")
    tk.Button(master, text = "HangManNF", height = 5, width = 20, bg = "#fff", command = lambda: HangMan()).grid(row = 3, column = 0, sticky = "we")
