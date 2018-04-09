@@ -8,8 +8,8 @@ from tkinter.font import Font
 
 #Sam Gunter
 #TicTacToe2.14 was finished 5:50pm on the 18th of march, 2018
-#This was created to play TicTacToe either 2 player or againts varing degrees of AI. The easy Ai should be easy (duh) to win against and the hard should be impossible to beat.
-#Unlike TicTacToe1.0 this has a GUI to make the experience better. The hard ai is much better and now not only gets lines and blocks lines, but sets up plays where it is a guarenteed win.
+#This was created to play TicTacToe either 2 player or against varying degrees of AI. The easy Ai should be easy (duh) to win against and the hard should be impossible to beat.
+#Unlike TicTacToe1.0 this has a GUI to make the experience better. The hard ai is much better and now not only gets lines and blocks lines, but sets up plays where it is a guaranteed win.
 #I created this in functions and procedures instead of linear to allow both single player and multiplayer to use the same blocks of code. This is also so multiple games can be added together in one document.
 
 #Next step is to add a leaderboard document (will have to learn how to do file manipulation).
@@ -43,7 +43,7 @@ def TicTacToe():
         0, 0, 0,
         0, 0, 0]
    playerTic="X" #default start is X, this will not matter if singleplayer is chosen
-   master.configure(bg = "#000000") #Sets intial background colour to black
+   master.configure(bg = "#000000") #Sets initial background colour to black
    Label(master, bg = "#000000", fg="#fff", text="TicTacToe2.0").grid(row = 0, column = 1) #just says the game name, bg means background (black) and fg means foreground (white)
    tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we") #right now ends the program, later will redirect
    tk.Button(master, text = "Multiplayer", height = 5, width = 20, bg = "#fff", command = lambda: reloadTic()).grid(row = 1, column = 0) #command=lambda stops the programs from running when the window is first created
@@ -101,7 +101,7 @@ def againTic(): #if the user wants to play again
       else: #ai goes first
          if levelTic == 1: #tiggers easy ai
             aiTic(1)
-         elif levelTic == 2: #triggers meidum ai
+         elif levelTic == 2: #triggers medium ai
             aiTic(2)
          elif levelTic == 3: #triggers hard ai
             aiTic(3)
@@ -115,7 +115,7 @@ def singleplayerTic():
    tk.Button(master, text = "Medium", height = 5, width = 20, bg = "#fff", command = lambda: hardTic("medium")).grid(row = 1, column = 1) #ai that knows how to win, user goes first
    tk.Button(master, text = "Hard", height = 5, width = 20, bg = "#fff", command = lambda: hardTic("hard")).grid(row = 1, column = 2) #same ai as above, user goes second
 
-def hardTic(difficulty): #difficulty changes depending on whtehr medium or hard was clicked
+def hardTic(difficulty): #difficulty changes depending on whether medium or hard was clicked
    global levelTic
    if difficulty=="easy": #easy ai
       levelTic=1
@@ -123,7 +123,7 @@ def hardTic(difficulty): #difficulty changes depending on whtehr medium or hard 
    elif difficulty=="medium": #medium ai
       levelTic=2
       reloadTic()
-   else: #the only other possbility is hard
+   else: #the only other possibility is hard
       levelTic=3
       reloadTic()
 
@@ -134,7 +134,7 @@ def reloadTic():
    for widget in master.winfo_children():
       widget.destroy()
    Label(master, bg = "#000000", fg="#fff", text="TicTacToe2.0").grid(row = 0, column = 1)
-   Label(master, bg = "#000000", fg="#fff", text=playerTic + "'s turn").grid(row = 4, column = 1) #to keep it constant has a blank label at the bottom with no words, this is where winner is displayed or where it tells you you cant play there
+   Label(master, bg = "#000000", fg="#fff", text=playerTic + "'s turn").grid(row = 4, column = 1) #to keep it constant has a blank label at the bottom with no words, this is where winner is displayed or where it tells you you can't play there
    tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: TicTacToe()).grid(row = 0, column = 0, sticky = "we") #menu goes right back to start
    tk.Button(master, text = "How To Play", height = 1, width = 10, bg = "#fff", command = lambda: howToPlayTic()).grid(row = 0, column = 2, sticky = "we") #menu goes right back to start
    frameTic=[]
@@ -145,7 +145,7 @@ def reloadTic():
          frameTic[r*3+c].grid(row=r+1, column=c, sticky="nsew")
          frameTic[r*3+c].propagate(False)
          if r*3+c == 0:
-            tk.Button(frameTic[r*3+c], text = gridTic[r*3+c], font=myFont,  bg = "#fff", command = lambda: turnTic(0)).pack(expand=True, fill="both") #drops it down a bit so the bold doesnt make the squre bigger than the other (57 instead of 60)
+            tk.Button(frameTic[r*3+c], text = gridTic[r*3+c], font=myFont,  bg = "#fff", command = lambda: turnTic(0)).pack(expand=True, fill="both") #drops it down a bit so the bold does not make the square bigger than the other (57 instead of 60)
          elif r*3+c == 1:
             tk.Button(frameTic[r*3+c], text = gridTic[r*3+c], font=myFont,  bg = "#fff", command = lambda: turnTic(1)).pack(expand=True, fill="both")
          elif r*3+c == 2:
@@ -191,27 +191,26 @@ def endTic(result):
          frameTic.append(tk.Frame(master, width = sizeTic, height = sizeTic))
          frameTic[r*3+c].grid(row=r+1, column=c, sticky="nsew", padx = 0, pady = 0)
          frameTic[r*3+c].propagate(False)
-         if gridWinTic[r*3+c]==1: #the row number minus 1 multiplied by 3 added by the column gets the spot on the grid, the 1 was set by an ealier function if there was a winner, if the line contained these characetrs then they will be bold for player to see
-            tk.Button(frameTic[r*3+c], text = gridTic[r*3+c], font=winFont,  bg = "#fff").pack(expand=True, fill="both") #drops it down a bit so the bold doesnt make the squre bigger than the other (57 instead of 60)
+         if gridWinTic[r*3+c]==1: #the row number minus 1 multiplied by 3 added by the column gets the spot on the grid, the 1 was set by an earlier function if there was a winner, if the line contained these characters then they will be bold for player to see
+            tk.Button(frameTic[r*3+c], text = gridTic[r*3+c], font=winFont,  bg = "#fff").pack(expand=True, fill="both") #drops it down a bit so the bold does not make the square bigger than the other (57 instead of 60)
          else:
             tk.Button(frameTic[r*3+c], text = gridTic[r*3+c], font=myFont, bg = "#fff").pack(expand=True, fill="both") #normal text
       #once this is done it will sit and wait for user to click menu and restart
-
 
 def turnTic(number): #number is whichever button was clicked
    global playerTic
    global gridWinTic
    global levelTic
    if gridTic[number] == " ": #if it is valid (if no one has played there yet)
-      gridTic[number] = playerTic #grid gets relaced with the player, if going against ai it will always be X, if multiplayer it starts as X but switched later in this function
+      gridTic[number] = playerTic #grid gets replaced with the player, if going against ai it will always be X, if multiplayer it starts as X but switched later in this function
       for counter in range(0,3): #this is just to make less code, happens 3 times (0,1,2, ends when at 3)
          if gridTic[0+counter*3] == gridTic[1+counter*3] == gridTic[2+counter*3] == playerTic: #left to right wins
-            gridWinTic[0+counter*3]=gridWinTic[1+counter*3]=gridWinTic[2+counter*3]=1 #sets these to 1 (they started as 0) so that theyw ill be bold at the end, and so program knows a winner was declaired
+            gridWinTic[0+counter*3]=gridWinTic[1+counter*3]=gridWinTic[2+counter*3]=1 #sets these to 1 (they started as 0) so that they will be bold at the end, and so program knows a winner was declared
          if gridTic[0+counter] == gridTic[3+counter] == gridTic[6+counter] == playerTic: #up and down wins
             gridWinTic[0+counter]=gridWinTic[3+counter]=gridWinTic[6+counter]=1
-      if gridTic[0] == gridTic[4] == gridTic[8] == playerTic: #cross and the enxt is cross otehr way
+      if gridTic[0] == gridTic[4] == gridTic[8] == playerTic: #cross and the next is cross other way
          gridWinTic[0]=gridWinTic[4]=gridWinTic[8]=1
-      if gridTic[2] == gridTic[4] == gridTic[6] == playerTic:#Using only if statements here because it is possibel for more than one to make a row at the same time, elif would cancel out the rest afetr the first is found
+      if gridTic[2] == gridTic[4] == gridTic[6] == playerTic:#Using only if statements here because it is possible for more than one to make a row at the same time, elif would cancel out the rest after the first is found
          gridWinTic[2]=gridWinTic[4]=gridWinTic[6]=1
       if gridWinTic[0] == gridWinTic[4] == gridWinTic[8] == 0: #Every possible winning combo has one of these numbers in it, for that reason only those 3 need to be checked
          if levelTic == 1: #tiggers easy ai
@@ -226,12 +225,12 @@ def turnTic(number): #number is whichever button was clicked
          else: #switches from o to x, remakes window, and goes again
             playerTic="X"
             reloadTic()
-      else: #if there was a winner (not all the earleir 3 were 0s)
+      else: #if there was a winner (not all the earlier 3 were 0s)
          if levelTic==0: #multiplayer
             endTic("multi") #see endtic for explanation
          else: #against ai, player won
             endTic("player")
-   else: #if it wasnt valid, the bottom label gets used and the user goes again      
+   else: #if it wasn't valid, the bottom label gets used and the user goes again      
       Label(master, bg = "#000000", fg="#fff", text="You cannot play there.").grid(row = 4, column = 1)
 
 def aiTic(difficulty):
@@ -244,7 +243,7 @@ def aiTic(difficulty):
       if difficulty>1: #medium or hard
          if gridTic[4]==' ': #always play middle if possible. Since it will be a maximum of 2 turns until this is filled up (this bot will play here in its first move) there is no reason to check for 2 in a rows first
             number=4 #sets number as middle one
-      if number==-1: #if the middle wasnt open and no 2 in the rows, the numebr is still -1. Now go to second priorty
+      if number==-1: #if the middle wasn't open and no 2 in the rows, the number is still -1. Now go to second priority
          if difficulty>1: #medium or hard
             counter=0
             while counter < 3:
@@ -273,7 +272,7 @@ def aiTic(difficulty):
                number=4
             elif gridTic[6] == gridTic[4] == "O" and gridTic[2] == " ":
                number=2
-         if number==-1: #if the middle wasnt open and no 2 in the rows, the numebr is still -1. Now go to second priorty
+         if number==-1: #if the middle wasn't open and no 2 in the rows, the number is still -1. Now go to second priority
             if difficulty>1: #medium or hard
                counter=0
                while counter < 3: 
@@ -302,13 +301,13 @@ def aiTic(difficulty):
                   number=4
                elif gridTic[6] == gridTic[4] == "X" and gridTic[2] == " ":
                   number=2
-            if number==-1: #I dont count this as a priority, because it is a very specific senario which can go anywhere in the code, just decided to put after the 2 ina  rows
+            if number==-1: #I don't count this as a priority, because it is a very specific scenario which can go anywhere in the code, just decided to put after the 2 ina  rows
                if difficulty==3:
                   if gridTic[4] == "O" and gridTic[0] == gridTic[8] == "X" and gridTic[1] == gridTic[2] == gridTic[3] == gridTic[5] == gridTic[6] == gridTic[7] == " ":
                      number=1
                   elif gridTic[4] == "O" and gridTic[2] == gridTic[6] == "X" and gridTic[1] == gridTic[0] == gridTic[3] == gridTic[5] == gridTic[8] == gridTic[7] == " ":
                      number=1
-               if number==-1: #I dont count this as a priority, because it is a very specific senario which can go anywhere in the code, just decided to put after the 2 ina  rows
+               if number==-1: #I don't count this as a priority, because it is a very specific scenario which can go anywhere in the code, just decided to put after the 2 ina  rows
                   if difficulty==3:
                      if gridTic[1] == gridTic[3] == "X" and gridTic[0] == gridTic[2] == gridTic[6] == " ":
                         number=0
@@ -348,7 +347,7 @@ def aiTic(difficulty):
                               number=2
                         if number==-1: #last thing to check
                            if difficulty==3:
-                              if gridTic[0] == gridTic[8] == " " == gridTic[1] == gridTic[3]: #checks for open opposite corners and adjacent open. this is used to make oppertunities when ai has the iddle, or to block opputunities when ai does nto have the middle
+                              if gridTic[0] == gridTic[8] == " " == gridTic[1] == gridTic[3]: #checks for open opposite corners and adjacent open. this is used to make opportunities when ai has the middle, or to block opportunities when ai does not have the middle
                                  number=0
                               elif gridTic[2] == gridTic[6] == " " == gridTic[1] == gridTic[5]:
                                  number=2
@@ -388,8 +387,8 @@ def aiTic(difficulty):
 #Next steps are to speed up the program, add images for bombs and flags and add a leaderboard document.
 
 #MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
-#First function is MineSweeper(). Then chocie of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
-#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first clickw ill never be a bomb. Allows user to chose to play again
+#First function is MineSweeper(). Then choice of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
+#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first click will never be a bomb. Allows user to chose to play again
 
 
 def MineSweeper(errorCheck):
@@ -399,7 +398,7 @@ def MineSweeper(errorCheck):
    global varBombMine
    for widget in master.winfo_children():
       widget.destroy()
-   master.configure(bg = "darkgrey") #Sets intial background colour to darkgrey
+   master.configure(bg = "darkgrey") #Sets initial background colour to dark grey
    Label(master, bg = "darkgrey", text="MineSweeper").grid(row = 0, column = 1) #just says the game name, bg means background (black) and fg means foreground (white)
    tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: unbind()).grid(row = 0, column = 0, sticky = "we") #sticky we causes it to fill all availible space
    varSizeMine=IntVar() #declaired the var variables
@@ -445,7 +444,7 @@ For example, a 1 means that 7 of the adjacent tiles are safe, while an 8 means a
 In the case of the 8 you would need to flag (?) every tile touching the 8, you can put down a flag (?) by right clicking on the mouse.
 
 When you click on a tile that has no number assigned to it this means that no bombs are touching that tile.
-Since Mine Sweeper knows that you can safely click all tiles around it, it automatically clicks them all for you. This is the reason a click can sometimes clear half the board.
+Since Minesweeper knows that you can safely click all tiles around it, it automatically clicks them all for you. This is the reason a click can sometimes clear half the board.
 Now go back to the 1 that was uncovered. If any of the tiles touching the 1 is a flag (therefore a bomb) you know that all the other boxes have no bombs (the 1 means only touching 1 bomb).
 This means the other 7 tiles are safe to left click to uncover new numbers which will lead to new information about bombs.
 
@@ -479,7 +478,7 @@ def gameSetMine(level):
       createBoardMine() #triggers next function
 
 def createBoardMine():
-   global shownMine #Similar to TicTacToe(), most of these are barely called again, but ahve to all be declaired her as global
+   global shownMine #Similar to TicTacToe(), most of these are barely called again, but have to all be declared her as global
    global frameMine
    global reliefMine
    global hiddenMine
@@ -488,9 +487,9 @@ def createBoardMine():
    global flagsMine
    global statusMine
    global bombsLeftMine
-   bombsLeftMine=bombMine #keep track fo flag counter in top corner
+   bombsLeftMine=bombMine #keep track of flag counter in top corner
    statusMine="start"
-   for widget in master.winfo_children(): #same as TicTacToe2.0 this delets all widgets ons creen
+   for widget in master.winfo_children(): #same as TicTacToe2.0 this delete all widgets onscreen
       widget.destroy()
    if screenWidth<screenHeight:
       pixelMine=(screenWidth//(sizeMine+1))
@@ -498,8 +497,8 @@ def createBoardMine():
       pixelMine=(screenHeight//(sizeMine+1))
    
    hiddenMine=[[]] #this will be the minesweeper board fully filled up and user can not see it
-   for r in range(sizeMine): #for the rows, which is the avriable
-      if len(hiddenMine)==r: #if if maxed out amke a new list
+   for r in range(sizeMine): #for the rows, which is the variable
+      if len(hiddenMine)==r: #if if maxed out make a new list
          hiddenMine.append([])
       for c in range(sizeMine): #for columns which si the same variable (square)
          hiddenMine[r].append(" ") #adds an empty space, this is solely to make the list of lists
@@ -509,7 +508,7 @@ def createBoardMine():
          shownMine.append([])
       for c in range(sizeMine):
          shownMine[r].append("") #adds nothing this time instead of  a space so later on the program can see the difference between shown and hidden values
-   reliefMine=[[]] #same as both lists of lists above, but is to set the buttons as raised so they can be chaged to appear pushed down later on when they are clicked
+   reliefMine=[[]] #same as both lists of lists above, but is to set the buttons as raised so they can be changed to appear pushed down later on when they are clicked
    for r in range(sizeMine):
       if len(reliefMine)==r:
          reliefMine.append([])
@@ -522,7 +521,7 @@ def createBoardMine():
       for c in range(sizeMine):
          flagsMine[r].append(" ")
 
-   myFont=Font(family="Helvetica", size=pixelMine//2) #fotn seems to work if it is half the siz eof the block, needs more testing on different monitors
+   myFont=Font(family="Helvetica", size=pixelMine//2) #font seems to work if it is half the size of the block, needs more testing on different monitors
    Label(master, bg = "darkgrey", font=("Helvetica", pixelMine//5), text="MineSweeper").grid(row = 0, columnspan = sizeMine) #column span makes it take up more lines
    tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: MineSweeper(" ")).grid(row = 0, column = 0, columnspan=3, sticky = "we")
    button1=tk.Button(master, text = str(bombsLeftMine)+" bombs left", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff").grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we") #this button is named because it has to be edited later on
@@ -531,24 +530,24 @@ def createBoardMine():
       for c in range(sizeMine):
          frameMine.append(tk.Frame(master, width = pixelMine, height = pixelMine)) #makes frame with the pixel by pixel value
          frameMine[r*sizeMine+c].grid(row=r+1, column=c, sticky="nsew") #makes it so button inside takes up whole frame
-         frameMine[r*sizeMine+c].propagate(False) #makes it so frame doesntr get smaller
-         tk.Button(frameMine[r*sizeMine+c], text = shownMine[r][c], font=myFont, activebackground = "grey", bg = "lightgrey", command = lambda forCommand=[r, c]: clickMine(forCommand[0], forCommand[1])).pack(expand=True, fill="both") #adds teh button into the frame, these act as each sqaure in minesweeper with a predefined textsize, background, etc
+         frameMine[r*sizeMine+c].propagate(False) #makes it so frame doesn't get smaller
+         tk.Button(frameMine[r*sizeMine+c], text = shownMine[r][c], font=myFont, activebackground = "grey", bg = "lightgrey", command = lambda forCommand=[r, c]: clickMine(forCommand[0], forCommand[1])).pack(expand=True, fill="both") #adds teh button into the frame, these act as each square in minesweeper with a predefined textsize, background, etc
 
-def flagMine(event): #This might be one of the msot complicated codes I have created, so many numbers togetehr all of which are variables and most of which are pixels related to screen
-   if statusMine!="end": #makes it so this code oesnt run if bomb has been triggered
+def flagMine(event): #This might be one of the most complicated codes I have created, so many numbers together all of which are variables and most of which are pixels related to screen
+   if statusMine!="end": #makes it so this code doesn't run if bomb has been triggered
       global sizeMine
       global pixelMine
       global bombsLeftMine
       global flagsMine
       for r in range(sizeMine):
          for c in range(sizeMine):
-            if frameMine[r*sizeMine+c].winfo_y() < master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_y()+pixelMine > master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_x() < master.winfo_pointerx() and frameMine[r*sizeMine+c].winfo_x()+pixelMine > master.winfo_pointerx() and reliefMine[r][c]=="raised": #long thing to see if the cusor is within frame window and if it is still rasied (not clicked yet)
+            if frameMine[r*sizeMine+c].winfo_y() < master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_y()+pixelMine > master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_x() < master.winfo_pointerx() and frameMine[r*sizeMine+c].winfo_x()+pixelMine > master.winfo_pointerx() and reliefMine[r][c]=="raised": #long thing to see if the cursor is within frame window and if it is still raised (not checked yet)
                for widget in frameMine[r*sizeMine+c].winfo_children():
                   widget.destroy()
                if flagsMine[r][c] == "?": #if already a flag
                   bombsLeftMine+=1 #adds 1 bomb (because 1 less flag)
                   flagsMine[r][c]=" " #turns off flag
-                  tk.Button(frameMine[r*sizeMine+c], text = shownMine[r][c], font=myFont, activebackground = "grey", bg = "lightgrey", command = lambda forCommand=[r, c]: clickMine(forCommand[0], forCommand[1])).pack(expand=True, fill="both") #creaes button as normal
+                  tk.Button(frameMine[r*sizeMine+c], text = shownMine[r][c], font=myFont, activebackground = "grey", bg = "lightgrey", command = lambda forCommand=[r, c]: clickMine(forCommand[0], forCommand[1])).pack(expand=True, fill="both") #creates button as normal
                else:
                   bombsLeftMine-=1 #takes a away 1 bomb from counter
                   flagsMine[r][c]="?" #makes a flag
@@ -566,7 +565,7 @@ def chordMine(event):
       for r in range(sizeMine):
          for c in range(sizeMine):
             if frameMine[r*sizeMine+c].winfo_y() < master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_y()+pixelMine > master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_x() < master.winfo_pointerx() and frameMine[r*sizeMine+c].winfo_x()+pixelMine > master.winfo_pointerx() and reliefMine[r][c]=="sunken":
-               chording=0 #this variable checks to see if all flags around the number have been declaired
+               chording=0 #this variable checks to see if all flags around the number have been declared
                if r-1>=0 and c-1>=0 and flagsMine[r-1][c-1] == "?": #if it exists and is a ?
                   chording+=1 #add 1 to chord
                if c-1>=0 and flagsMine[r][c-1] == "?":
@@ -583,7 +582,7 @@ def chordMine(event):
                   chording+=1           
                if r+1<sizeMine and c+1<sizeMine and flagsMine[r+1][c+1] == "?":
                   chording+=1
-               if chording == hiddenMine[r][c]: #if there are the saem amount of flags as the number
+               if chording == hiddenMine[r][c]: #if there are the same amount of flags as the number
                   if r-1>=0 and c-1>=0 and flagsMine[r-1][c-1] == " ": #clicks on every open spot around it
                      checkMine(r-1, c-1)
                   if c-1>=0 and flagsMine[r][c-1] == " ":
@@ -601,7 +600,7 @@ def chordMine(event):
                   if r+1<sizeMine and c+1<sizeMine and flagsMine[r+1][c+1] == " ":
                      checkMine(r+1, c+1)
 
-def updateMine(row, column): #this updates only 1 sqaure, before it was updating all of them but that make a slight lag (less than a second) which was not good
+def updateMine(row, column): #this updates only 1 square, before it was updating all of them but that make a slight lag (less than a second) which was not good
    for widget in frameMine[row*sizeMine+column].winfo_children(): #deletes all buttons in the frame (there will only be 1 button in the frame)
       widget.destroy()
    if shownMine[row][column] == " " or shownMine[row][column] == 1:
@@ -632,16 +631,16 @@ def updateMine(row, column): #this updates only 1 sqaure, before it was updating
       tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
       activebackground = "grey", bg = "lightgrey", fg = "black").pack(expand=True, fill="both")
 
-   win="True" #starts as the person asummed one
+   win="True" #starts as the person assumed won
    for r in range(sizeMine):
       for c in range(sizeMine):
          if reliefMine[r][c] == "raised" and hiddenMine[r][c] != "!": #if a block is raised (therefore not clicked) and it is not a bomb
-            win="False" #makes them not wn yet
-   if win == "True": #if that wasnt triggered
+            win="False" #makes them not win yet
+   if win == "True": #if that wasn’t triggered
       endMine("win") #triggers end game won
 
 def endMine(result): #end game
-   button1=tk.Button(master, text = "Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: createBoardMine()).grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we") #allows user to play again witht he same specifications (baord size and amount of bombs)
+   button1=tk.Button(master, text = "Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: createBoardMine()).grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we") #allows user to play again with the same specifications (board size and amount of bombs)
    global statusMine
    statusMine="end"
    for r in range(sizeMine):
@@ -653,7 +652,7 @@ def endMine(result): #end game
          elif hiddenMine[r][c] == "!" and result == "win": #if win
             tk.Button(frameMine[r*sizeMine+c], text = "?", font=myFont).pack(expand=True, fill="both") #make bombs show as defused
          elif shownMine[r][c] == " " or shownMine[r][c] == 1:
-            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "blue").pack(expand=True, fill="both") #all the rest just display their hidden numbers some of which were already shwon
+            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "blue").pack(expand=True, fill="both") #all the rest just display their hidden numbers some of which were already shown
          elif shownMine[r][c] == 2:
             tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "green").pack(expand=True, fill="both")
          elif shownMine[r][c] == 3:
@@ -672,22 +671,22 @@ def endMine(result): #end game
             tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "black").pack(expand=True, fill="both")
 
 
-def clickMine(row, column): #This is used 1 time to make sure the user doesnt get out 1st time
+def clickMine(row, column): #This is used 1 time to make sure the user doesn't get out 1st time
    global statusMine
    global sizeMine
    global hiddenMine
-   if statusMine == "start": #if this function hasnt been triggered yet
+   if statusMine == "start": #if this function has not been triggered yet
       for b in range(bombMine): #to adds bombs to hidden list
          while True:
             rowLocation=random.randint(0, sizeMine-1) #random row in range
             columnLocation=random.randint(0, sizeMine-1) #random column in range
-            if hiddenMine[rowLocation][columnLocation] == " " and (rowLocation != row or columnLocation != column): #if nothing is there and it isnt the match of either row or column to where the user clicked
-               hiddenMine[rowLocation][columnLocation]="!" #sets bomb, other wise the while loop makes new random row and column
+            if hiddenMine[rowLocation][columnLocation] == " " and (rowLocation != row or columnLocation != column): #if nothing is there and it isn't the match of either row or column to where the user clicked
+               hiddenMine[rowLocation][columnLocation]="!" #sets bomb, otherwise the while loop makes new random row and column
                break
       for r in range(sizeMine):
          for c in range(sizeMine):
             if  hiddenMine[r][c] == " ":
-               touching=0 #sets how many it is touchign to 0
+               touching=0 #sets how many it is touching to 0
                if r-1>=0 and c-1>=0 and hiddenMine[r-1][c-1] == "!": #checks for north west
                   touching+=1 #adds 1 to its value
                if c-1>=0 and hiddenMine[r][c-1] == "!": #checks for north
@@ -705,7 +704,7 @@ def clickMine(row, column): #This is used 1 time to make sure the user doesnt ge
                if r+1<sizeMine and c+1<sizeMine and hiddenMine[r+1][c+1] == "!": #checks for south east
                   touching+=1
                if touching==0:
-                  hiddenMine[r][c]=" " #if it is 0 (because we dont want to display 0s)
+                  hiddenMine[r][c]=" " #if it is 0 (because we don't want to display 0s)
                else:
                   hiddenMine[r][c]=touching #if above 0, sets it as that number
       statusMine = " " #switches this to nothing
@@ -718,7 +717,7 @@ def checkMine(row, column): #when a button is clicked
       endMine("lose") #triggers lose
       for widget in frameMine[row*sizeMine+column].winfo_children():
          widget.destroy()
-      tk.Button(frameMine[row*sizeMine+column], text = hiddenMine[row][column], font=myFont, bg = "darkred").pack(expand=True, fill="both") #darkred to make them know it was the bomb that killed them
+      tk.Button(frameMine[row*sizeMine+column], text = hiddenMine[row][column], font=myFont, bg = "darkred").pack(expand=True, fill="both") #dark red to make them know it was the bomb that killed them
       
    elif hiddenMine[row][column]==" ": #if not touching any bomb
       shownMine[row][column]=hiddenMine[row][column] #switches shown to hidden, I need this because shown is " " and hidden is "", so this makes the code run faster as it does not go over the same blocks multiple times
@@ -816,7 +815,7 @@ def Sudoku():
 #Sam Gunter
 #2048 was finished 2:18pm on the 6th of april, 2018
 #This was created to play 2048. The hardest and longest part was making the program appear fluid, not a sudden movement where the entire screen refreshes,
-#but maing it refreash one by oen as the label moves. If the entire screen reloaded it would be too slow, so I had to compeltly change how I made frames on tkinter.
+#but making it refresh one by one as the label moves. If the entire screen reloaded it would be too slow, so I had to completely change how I made frames on tkinter.
 
 #Next step is to make user be able to slide cursor, add how to play and add a leaderboard document (will have to learn how to do file manipulation).
 
@@ -864,7 +863,7 @@ def the2048():
    while True:
       row = random.randint(0, 3) #same as above
       column = random.randint(0, 3)
-      if value2048[row][column] == " ": #checks to make sure 2 isnt already there
+      if value2048[row][column] == " ": #checks to make sure 2 isn't already there
          value2048[row][column] = 4 #places the 4
          break
 
@@ -993,7 +992,7 @@ def buttonrelease2048(event): #when button is released (the mouse was slide in t
    xslide2048=master.winfo_pointerx() - x2048 #checks difference in start and end
    yslide2048=master.winfo_pointery() - y2048
    if xslide2048 > pixel2048: #if x bigger than one block (to the right)
-      if yslide2048 < pixel2048 and yslide2048 > -1 * pixel2048: #checks if opposite (y in this case) was moced less than a block
+      if yslide2048 < pixel2048 and yslide2048 > -1 * pixel2048: #checks if opposite (y in this case) was moved less than a block
          right2048(" ") 
    if xslide2048 < -1 * pixel2048: #if x smaller than negative one block (to the left)
       if yslide2048 < pixel2048 and yslide2048 > -1 * pixel2048:
@@ -1007,7 +1006,12 @@ def buttonrelease2048(event): #when button is released (the mouse was slide in t
 
 def up2048(event):
    if win2048 == "schrodinger": #neither true nor false
-      together=[False, False, False, False] #makes it so only 1 thing happens on each line
+      together=[[]]
+      for r in range(4): #makes it so only 1 thing happens on each line
+         if len(together)==r:
+            together.append([])
+         for c in range(4):
+            together[r].append(False)
       moved=False #checks to see if any move happened
       for r in range(3): #one less because dont need to check the highest row
          for adjustment in range(3): #adjustment makes it go to end, and not just up once
@@ -1018,10 +1022,11 @@ def up2048(event):
                      value2048[r+1-adjustment][c] = " " #delete one under
                      moved=True #it moved at least once
                   else: #if a number above
-                     if value2048[r-adjustment][c] == value2048[r+1-adjustment][c] and (r-adjustment)>=0 and together[c] == False: #if the number below and above are the same
+                     if value2048[r-adjustment][c] == value2048[r+1-adjustment][c] and (r-adjustment)>=0 and together[r-adjustment][c] == False: #if the number below and above are the same
                         value2048[r-adjustment][c] = (value2048[r-adjustment][c])*2 #multiply above
                         value2048[r+1-adjustment][c] = " " #and delete bottom
-                        together[c] = True
+                        together[r-adjustment][c] = True
+                        together[r-adjustment-1][c] = True
                         moved=True #it moved at least once
                   reload2048(r+1-adjustment, c)
                   reload2048(r-adjustment, c)
@@ -1041,7 +1046,12 @@ def up2048(event):
 
 def down2048(event):
    if win2048 == "schrodinger":
-      together=[False, False, False, False]
+      together=[[]]
+      for r in range(4):
+         if len(together)==r:
+            together.append([])
+         for c in range(4):
+            together[r].append(False)
       moved=False
       for r in range(3):
          for adjustment in range(3):
@@ -1052,11 +1062,12 @@ def down2048(event):
                      value2048[(-r-1)-1+adjustment][c] = " "
                      moved=True
                   else:
-                     if value2048[(-r-1)+adjustment][c] == value2048[(-r-1)-1+adjustment][c] and ((-r-1)+adjustment)<0 and together[c] == False:
+                     if value2048[(-r-1)+adjustment][c] == value2048[(-r-1)-1+adjustment][c] and ((-r-1)+adjustment)<0 and together[(-r-1)+adjustment][c] == False:
                         value2048[(-r-1)+adjustment][c] = (value2048[(-r-1)+adjustment][c])*2
                         value2048[(-r-1)-1+adjustment][c] = " "
                         moved=True
-                        together[c] = True
+                        together[(-r-1)+adjustment][c] = True
+                        together[(-r-1)+adjustment+1][c] = True
                   reload2048((-r-1)-1+adjustment, c)
                   reload2048((-r-1)+adjustment, c)
                   master.update_idletasks()
@@ -1075,7 +1086,12 @@ def down2048(event):
 
 def left2048(event): #this is the same code as up2048, but r and c is switched throughout it
    if win2048 == "schrodinger":
-      together=[False, False, False, False]
+      together=[[]]
+      for r in range(4): #makes it so only 1 thing happens on each line
+         if len(together)==r:
+            together.append([])
+         for c in range(4):
+            together[r].append(False)
       moved=False
       for c in range(3):
          for adjustment in range(3):
@@ -1086,11 +1102,12 @@ def left2048(event): #this is the same code as up2048, but r and c is switched t
                      value2048[r][c+1-adjustment] = " "
                      moved=True
                   else:
-                     if value2048[r][c-adjustment] == value2048[r][c+1-adjustment] and (c-adjustment)>=0 and together[r] == False:
+                     if value2048[r][c-adjustment] == value2048[r][c+1-adjustment] and (c-adjustment)>=0 and together[r][c-adjustment] == False:
                         value2048[r][c-adjustment] = (value2048[r][c-adjustment])*2
                         value2048[r][c+1-adjustment] = " "
                         moved=True
-                        together[r] = True                  
+                        together[r][c-adjustment] = True
+                        together[r][c-adjustment-1] = True
                   reload2048(r, c+1-adjustment)
                   reload2048(r, c-adjustment)
                   master.update_idletasks()
@@ -1109,7 +1126,12 @@ def left2048(event): #this is the same code as up2048, but r and c is switched t
       
 def right2048(event): #this is the same code as down,2048 but r and c are switched throughout it
    if win2048 == "schrodinger":
-      together=[False, False, False, False]
+      together=[[]]
+      for r in range(4): #makes it so only 1 thing happens on each line
+         if len(together)==r:
+            together.append([])
+         for c in range(4):
+            together[r].append(False)
       moved=False
       for c in range(3):
          for adjustment in range(3):
@@ -1120,11 +1142,12 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
                      value2048[r][(-c-1)-1+adjustment] = " "
                      moved=True
                   else:
-                     if value2048[r][(-c-1)+adjustment] == value2048[r][(-c-1)-1+adjustment] and ((-c-1)+adjustment)<0 and together[r] == False:
+                     if value2048[r][(-c-1)+adjustment] == value2048[r][(-c-1)-1+adjustment] and ((-c-1)+adjustment)<0 and together[r][(-c-1)+adjustment] == False:
                         value2048[r][(-c-1)+adjustment] = (value2048[r][(-c-1)+adjustment])*2
                         value2048[r][(-c-1)-1+adjustment] = " "
                         moved=True
-                        together[r] = True                  
+                        together[r][(-c-1)+adjustment]= True
+                        together[r][(-c-1)+adjustment+1]= True 
                   reload2048(r, (-c-1)-1+adjustment)
                   reload2048(r, (-c-1)+adjustment)
                   master.update_idletasks()
@@ -1139,8 +1162,6 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
       else:
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
       reloadFull2048()
-
-   
       
 #################################################################################################### 2048 end
 
@@ -1196,7 +1217,7 @@ master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenhe
 screenWidth = master.winfo_screenwidth()
 screenHeight = master.winfo_screenheight()
 
-def unbind(): #unbinds anything I have binded (from multiple games) and goes back to homescreen.
+def unbind(): #unbinds anything I have binded (from multiple games) and goes back to home screen.
    master.unbind("<Up>")
    master.unbind("<Down>")
    master.unbind("<Left>")
@@ -1210,7 +1231,7 @@ def unbind(): #unbinds anything I have binded (from multiple games) and goes bac
 def menu():
    for widget in master.winfo_children(): #clears contents, but not frame meaning it can update without making a new window each time
       widget.destroy()
-   master.configure(bg = "#000000") #Sets intial background colour to blackS
+   master.configure(bg = "#000000") #Sets initial background colour to black
    Label(master, bg = "#000000", fg="#fff", text="2k's Games").grid(row = 0, columnspan = 3) #just says the game name, bg means background (black) and fg means foreground (white)
    tk.Button(master, text = "Quit", height = 1, width = 10, bg = "#fff", command = master.destroy).grid(row = 4, columnspan = 3, sticky = "we")
    tk.Button(master, text = "TicTacToe2.0", height = 5, width = 20, bg = "#fff", command = lambda: TicTacToe()).grid(row = 1, column = 0, sticky = "we")
