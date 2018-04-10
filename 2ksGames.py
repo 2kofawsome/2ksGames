@@ -1210,6 +1210,21 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 
 #################################################################################################### HangMan end
 
+#################################################################################################### Connect4 start
+
+#Sam Gunter
+#MineSweeper was finished 2:05am on the 31st of march, 2018
+#This was created to copy the microsoft minesweeper game that we know and love
+#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computer it does have severe lag
+
+#Next steps are to speed up the program, add images for bombs and flags and add a leaderboard document.
+
+#MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
+#First function is MineSweeper(). Then chocie of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
+#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first clickw ill never be a bomb. Allows user to chose to play again
+
+#################################################################################################### Connect4 end
+      
 master = Tk() #creates the window
 master.title("2k's games")
 master.overrideredirect(1) #gets rid of toolbar
