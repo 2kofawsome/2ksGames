@@ -784,6 +784,9 @@ def generateSu():
    Sudoku()
 
 def Sudoku():
+   global buttonsSu
+   global shownSu
+   global frameSu
    for widget in master.winfo_children():
       widget.destroy()
    if screenWidth<screenHeight:
@@ -791,22 +794,54 @@ def Sudoku():
    else:
       pixelMine=(screenHeight//10)
    myFont=Font(family="Helvetica", size=pixelMine//2)
+   boldFont=Font(family="Helvetica", size=pixelMine//2, weight='bold')
    Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Sudoku").grid(row = 0, columnspan = 9)
    tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, columnspan=3, sticky = "we")
-   frameSu=[]
-
+   frameSu=[[]]
+   buttonsSu=[[]]
    for r in range(9):
+      if len(buttonsSu)==r:
+         buttonsSu.append([])
+         frameSu.append([])
       for c in range(9):
-         frameSu.append(tk.Frame(master, width = pixelMine, height = pixelMine))
-         frameSu[r*9+c].grid(row=r+1, column=c, sticky="nsew") 
-         frameSu[r*9+c].propagate(False)
-         if shownSu[r][c]==" ":
-            tk.Entry(frameSu[r*9+c], font=myFont, bg = "#fff").pack(expand=True, fill="both")
-         else:
-            tk.Label(frameSu[r*9+c], text = shownSu[r][c], font=myFont, fg = "#000000", bg = "#fff").pack(expand=True, fill="both")
+         frameSu[r].append(tk.Frame(master, width = pixelMine, height = pixelMine, borderwidth = "1"))
+         frameSu[r][c].grid(row=r+1, column=c, sticky="nsew") 
+         frameSu[r][c].propagate(False)
+         if shownSu[r][c]==" " and (r//3 + c//3) % 2 == 0:
+            buttonsSu[r].append(tk.Button(frameSu[r][c], relief = 'flat', font=myFont, bg = "white", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1])))
+            buttonsSu[r][c].pack(expand=True, fill="both")
+         elif shownSu[r][c]==" " and (r//3 + c//3) % 2 == 1:
+            buttonsSu[r].append(tk.Button(frameSu[r][c], relief= 'flat', font=myFont, bg = "light grey", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1])))
+            buttonsSu[r][c].pack(expand=True, fill="both")
+         elif (r//3 + c//3) % 2 == 0:
+            buttonsSu[r].append(tk.Label(frameSu[r][c], text = shownSu[r][c], font=boldFont, bg = "white", ))
+            buttonsSu[r][c].pack(expand=True, fill="both")
+         elif (r//3 + c//3) % 2 == 1:
+            buttonsSu[r].append(tk.Label(frameSu[r][c], text = shownSu[r][c], font=boldFont, bg = "light grey"))
+            buttonsSu[r][c].pack(expand=True, fill="both")
 
-#get()
-#Entry not button
+
+def clickSu(row, column):
+   global buttonsSu
+   global frameSu
+   global shownSu
+   for widget in frameSu[row][column].winfo_children():
+      widget.destroy()
+
+   takefocus=
+   
+   entry1 = Entry(frameSu[row][column]).pack(expand=True, fill="both")
+   entry1.focus_set()
+   value = entry1.get() #right now this runs right away, need delay until user clicks enter
+
+   shownSu[row][column]=int(value)
+
+   if shownSu[row][column]==" " and (row//3 + column//3) % 2 == 0:
+      buttonsSu[row].append(tk.Button(frameSu[row][column], relief = 'flat', font=myFont, bg = "white", borderwidth = "0", text = shownSu[row][column], command = lambda forCommand=[row, column]: clickSu(forCommand[0], forCommand[1])))
+      buttonsSu[row][column].pack(expand=True, fill="both")
+   elif shownSu[row][column]==" " and (row//3 + column//3) % 2 == 1:
+      buttonsSu[row].append(tk.Button(frameSu[row][column], relief= 'flat', font=myFont, bg = "light grey", borderwidth = "0", text = shownSu[row][column], command = lambda forCommand=[row, column]: clickSu(forCommand[0], forCommand[1])))
+      buttonsSu[row][column].pack(expand=True, fill="both")
 
 #################################################################################################### Sudoku end
 
