@@ -784,11 +784,19 @@ def generateSu():
    Sudoku()
 
 def Sudoku():
+   global myFont
+   global pixelMine
    global buttonsSu
    global shownSu
    global frameSu
+   global rowSu
+   global columnSu
+   global errorSu
+   master.bind("<Return>", enterSu)
    for widget in master.winfo_children():
       widget.destroy()
+   rowSu=-1
+   columnSu=-1
    if screenWidth<screenHeight:
       pixelMine=(screenWidth//10)
    else:
@@ -797,6 +805,7 @@ def Sudoku():
    boldFont=Font(family="Helvetica", size=pixelMine//2, weight='bold')
    Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Sudoku").grid(row = 0, columnspan = 9)
    tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, columnspan=3, sticky = "we")
+   errorSu = tk.Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Use numbers only!")
    frameSu=[[]]
    buttonsSu=[[]]
    for r in range(9):
@@ -809,39 +818,47 @@ def Sudoku():
          frameSu[r][c].propagate(False)
          if shownSu[r][c]==" " and (r//3 + c//3) % 2 == 0:
             buttonsSu[r].append(tk.Button(frameSu[r][c], relief = 'flat', font=myFont, bg = "white", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1])))
-            buttonsSu[r][c].pack(expand=True, fill="both")
          elif shownSu[r][c]==" " and (r//3 + c//3) % 2 == 1:
             buttonsSu[r].append(tk.Button(frameSu[r][c], relief= 'flat', font=myFont, bg = "light grey", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1])))
-            buttonsSu[r][c].pack(expand=True, fill="both")
          elif (r//3 + c//3) % 2 == 0:
             buttonsSu[r].append(tk.Label(frameSu[r][c], text = shownSu[r][c], font=boldFont, bg = "white", ))
-            buttonsSu[r][c].pack(expand=True, fill="both")
          elif (r//3 + c//3) % 2 == 1:
             buttonsSu[r].append(tk.Label(frameSu[r][c], text = shownSu[r][c], font=boldFont, bg = "light grey"))
-            buttonsSu[r][c].pack(expand=True, fill="both")
-
+         buttonsSu[r][c].pack(expand=True, fill="both")
 
 def clickSu(row, column):
    global buttonsSu
    global frameSu
    global shownSu
-   for widget in frameSu[row][column].winfo_children():
-      widget.destroy()
+   global rowSu
+   global columnSu
+   global entry
+   if rowSu >= 0 and columnSu >=0:
+      entry.pack_forget()
+      buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
+   rowSu=row
+   columnSu=column
+   buttonsSu[row][column].pack_forget()
+   if (row//3 + column//3) % 2 == 0:
+      entry = tk.Entry(frameSu[row][column], bg = "white", font = myFont, justify = "center")
+   elif (row//3 + column//3) % 2 == 1:
+      entry = tk.Entry(frameSu[row][column], bg = "light grey", font = myFont, justify = "center")
+   entry.pack(expand=True, fill="both")
+   entry.focus_set()
 
-   takefocus=
-   
-   entry1 = Entry(frameSu[row][column]).pack(expand=True, fill="both")
-   entry1.focus_set()
-   value = entry1.get() #right now this runs right away, need delay until user clicks enter
-
-   shownSu[row][column]=int(value)
-
-   if shownSu[row][column]==" " and (row//3 + column//3) % 2 == 0:
-      buttonsSu[row].append(tk.Button(frameSu[row][column], relief = 'flat', font=myFont, bg = "white", borderwidth = "0", text = shownSu[row][column], command = lambda forCommand=[row, column]: clickSu(forCommand[0], forCommand[1])))
-      buttonsSu[row][column].pack(expand=True, fill="both")
-   elif shownSu[row][column]==" " and (row//3 + column//3) % 2 == 1:
-      buttonsSu[row].append(tk.Button(frameSu[row][column], relief= 'flat', font=myFont, bg = "light grey", borderwidth = "0", text = shownSu[row][column], command = lambda forCommand=[row, column]: clickSu(forCommand[0], forCommand[1])))
-      buttonsSu[row][column].pack(expand=True, fill="both")
+def enterSu(event):
+   global shownSu
+   try:
+      errorSu.grid_forget()
+      shownSu[rowSu][columnSu]=int(entry.get()[-1])
+      entry.pack_forget()
+      buttonsSu[rowSu][columnSu].config(text = shownSu[rowSu][columnSu])
+      buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
+   except: 
+      if (entry.get()) == "" or (entry.get()) == " ":
+         shownSu[rowSu][columnSu]=" "
+      else:
+         errorSu.grid(row = 10, columnspan = 9)
 
 #################################################################################################### Sudoku end
 
@@ -1276,6 +1293,7 @@ def unbind(): #unbinds anything I have binded (from multiple games) and goes bac
    master.unbind("<ButtonRelease-1>")
    master.unbind("<Button-3>")
    master.unbind("<Button-2>")
+   master.unbind("<Return>")
    menu()
 
 def menu():
