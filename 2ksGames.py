@@ -792,6 +792,7 @@ def Sudoku():
    global rowSu
    global columnSu
    global errorSu
+   global mistakeSu
    master.bind("<Return>", enterSu)
    for widget in master.winfo_children():
       widget.destroy()
@@ -806,6 +807,14 @@ def Sudoku():
    Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Sudoku").grid(row = 0, columnspan = 9)
    tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, columnspan=3, sticky = "we")
    errorSu = tk.Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Use numbers only!")
+
+   mistakeSu=[[]]
+   for r in range(9):
+      if len(mistakeSu)==r:
+         mistakeSu.append([])
+      for c in range(9):
+         mistakeSu[r].append(False)
+         
    frameSu=[[]]
    buttonsSu=[[]]
    for r in range(9):
@@ -833,21 +842,33 @@ def clickSu(row, column):
    global rowSu
    global columnSu
    global entry
+
+   try:
+      enterSu("event")
+   except:
+      a=1
+   
    if rowSu >= 0 and columnSu >=0:
       entry.pack_forget()
       buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
    rowSu=row
    columnSu=column
    buttonsSu[row][column].pack_forget()
-   if (row//3 + column//3) % 2 == 0:
+   
+   if (row//3 + column//3) % 2 == 0 and mistakeSu[row][column]==False:
       entry = tk.Entry(frameSu[row][column], bg = "white", font = myFont, justify = "center")
-   elif (row//3 + column//3) % 2 == 1:
+   elif (row//3 + column//3) % 2 == 1 and mistakeSu[row][column]==False:
       entry = tk.Entry(frameSu[row][column], bg = "light grey", font = myFont, justify = "center")
+   elif (row//3 + column//3) % 2 == 0 and mistakeSu[row][column]==True:
+      entry = tk.Entry(frameSu[row][column], bg = "firebrick1", font = myFont, justify = "center")
+   elif (row//3 + column//3) % 2 == 1 and mistakeSu[row][column]==True:
+      entry = tk.Entry(frameSu[row][column], bg = "firebrick3", font = myFont, justify = "center")
    entry.pack(expand=True, fill="both")
    entry.focus_set()
 
 def enterSu(event):
    global shownSu
+   global mistakeSu
    try:
       errorSu.grid_forget()
       shownSu[rowSu][columnSu]=int(entry.get()[-1])
@@ -855,10 +876,40 @@ def enterSu(event):
       buttonsSu[rowSu][columnSu].config(text = shownSu[rowSu][columnSu])
       buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
    except: 
-      if (entry.get()) == "" or (entry.get()) == " ":
-         shownSu[rowSu][columnSu]=" "
+      if str(entry.get()) == "" or str(entry.get()) == " ":
+         shownSu[rowSu][columnSu] = " "
+         entry.pack_forget()
+         buttonsSu[rowSu][columnSu].config(text = shownSu[rowSu][columnSu])
+         buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
       else:
          errorSu.grid(row = 10, columnspan = 9)
+
+   for c in range(9):
+      mistakeSu[rowSu][c]=False
+      mistakeSu[c][columnSu]=False #RIGHT NOW CLICKING ON ANYTHING ELSE GETS RID OF RED LINE!!!
+
+   for r in range(8):
+      if shownSu[rowSu-(r+1)][columnSu] == shownSu[rowSu][columnSu] and shownSu[rowSu-(r+1)][columnSu] != " ":
+         for c in range(9):
+            mistakeSu[c][columnSu]=True
+         break
+   for r in range(8):
+      if shownSu[rowSu][columnSu-(r+1)] == shownSu[rowSu][columnSu] and shownSu[rowSu][columnSu-(r+1)] != " ":
+         for c in range(9):
+            mistakeSu[rowSu][c]=True
+         break
+   for r in range(9):
+      for c in range(9):
+         if (c//3 + r//3) % 2 == 0 and mistakeSu[r][c]==False:
+            buttonsSu[r][c].config(bg='white')
+         elif (c//3 + r//3) % 2 == 1 and mistakeSu[r][c]==False:
+            buttonsSu[r][c].config(bg='light grey')
+         elif (c//3 + r//3) % 2 == 0 and mistakeSu[r][c]==True:
+            buttonsSu[r][c].config(bg='firebrick1')
+         elif (c//3 + r//3) % 2 == 1 and mistakeSu[r][c]==True:
+            buttonsSu[r][c].config(bg='firebrick3')
+
+      
 
 #################################################################################################### Sudoku end
 
