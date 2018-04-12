@@ -806,6 +806,7 @@ def Sudoku():
    boldFont=Font(family="Helvetica", size=pixelMine//2, weight='bold')
    Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Sudoku").grid(row = 0, columnspan = 9)
    tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, columnspan=3, sticky = "we")
+   tk.Button(master, text = "How To Play", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: howToPlaySu()).grid(row = 0, column = 6, columnspan=3, sticky = "we")
    errorSu = tk.Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Use numbers only!")
 
    mistakeSu=[[]]
@@ -834,6 +835,30 @@ def Sudoku():
          elif (r//3 + c//3) % 2 == 1:
             buttonsSu[r].append(tk.Label(frameSu[r][c], text = shownSu[r][c], font=boldFont, bg = "light grey"))
          buttonsSu[r][c].pack(expand=True, fill="both")
+
+def howToPlaySu():
+   for widget in master.winfo_children():
+      widget.destroy()
+   if screenWidth<screenHeight:
+      pixelMine=(screenWidth)
+   else:
+      pixelMine=(screenHeight)
+   Label(master, bg = "#000000", fg = "#fff", text="Sudoku").grid(row = 0, column = 1)
+   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 0, sticky = "we")
+
+   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/5))
+   frameMine1.grid(row=2, columnspan=2, sticky="nsew")
+   frameMine1.propagate(False)
+   frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
+   frameMine2.grid(row=3, columnspan=2, sticky="nsew")
+   frameMine2.propagate(False)
+
+   
+   Label(frameMine1, bg = "silver", font = "Helvetica " + str(pixelMine//45) + " bold", text="""Click on a space you want to edit, then us your keyboard to type a number.
+To save the number either click enter or click on another tile. Leave a tile empty to delete.
+Red squares mean that there are numebrs that conflict.""").pack(expand=True, fill="both")
+
+   Label(frameMine2, bg = "silver", font = "Helvetica " + str(pixelMine//45), text="""Rules to sudoku""").pack(expand=True, fill="both")
 
 def clickSu(row, column):
    global buttonsSu
@@ -885,19 +910,29 @@ def enterSu(event):
          errorSu.grid(row = 10, columnspan = 9)
 
    for c in range(9):
-      mistakeSu[rowSu][c]=False
-      mistakeSu[c][columnSu]=False #RIGHT NOW CLICKING ON ANYTHING ELSE GETS RID OF RED LINE!!!
-
-   for r in range(8):
-      if shownSu[rowSu-(r+1)][columnSu] == shownSu[rowSu][columnSu] and shownSu[rowSu-(r+1)][columnSu] != " ":
-         for c in range(9):
-            mistakeSu[c][columnSu]=True
-         break
-   for r in range(8):
-      if shownSu[rowSu][columnSu-(r+1)] == shownSu[rowSu][columnSu] and shownSu[rowSu][columnSu-(r+1)] != " ":
-         for c in range(9):
-            mistakeSu[rowSu][c]=True
-         break
+      for r in range(9):
+         mistakeSu[r][c]=False
+         
+   for c in range(9):
+      for r in range(9):
+         for n in range(8):
+            if shownSu[r-(n+1)][c] == shownSu[r][c] and shownSu[r-(n+1)][c] != " ":
+               for x in range(9):
+                  mistakeSu[r-(x)][c]=True
+               break
+         for n in range(8):
+            if shownSu[r][c-(n+1)] == shownSu[r][c] and shownSu[r][c-(n+1)] != " ":
+               for x in range(9):
+                  mistakeSu[r][c-(x)]=True
+               break
+         for n in range(3):
+            for m in range(3):
+               if shownSu[(r//3)*3+n][(c//3)*3+m] == shownSu[r][c] and shownSu[r][c] != " " and (r != (r//3)*3+n or c != (c//3)*3+m):
+                  for x in range(3):
+                     for y in range(3):
+                        mistakeSu[(r//3)*3+x][(c//3)*3+y]=True
+                  break
+      
    for r in range(9):
       for c in range(9):
          if (c//3 + r//3) % 2 == 0 and mistakeSu[r][c]==False:
@@ -909,7 +944,17 @@ def enterSu(event):
          elif (c//3 + r//3) % 2 == 1 and mistakeSu[r][c]==True:
             buttonsSu[r][c].config(bg='firebrick3')
 
-      
+   gameEnd=True
+   for c in range(9):
+      for r in range(9):
+         if mistakeSu[r][c]==True:
+            gameEnd=False
+         elif shownSu[r][c]==" ":
+            gameEnd=False
+   if gameEnd==True:
+      tk.Button(master, text = "Play Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: generateSu()).grid(row = 0, column = 6, columnspan=3, sticky = "we")
+      errorSu.config(text="You win!")
+      errorSu.grid(row = 10, columnspan = 9)
 
 #################################################################################################### Sudoku end
 
