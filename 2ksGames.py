@@ -771,16 +771,56 @@ def generateSu():
              [4, 6, 1, 7, 3, 5, 9, 8, 2],
              [3, 5, 9, 2, 8, 4, 7, 1, 6],
              [8, 7, 2, 9, 1, 6, 5, 4, 3]]
+
+   patternSu=[[False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False]]
+
+   patternSu=[[False, False, False, False, True, False, False, False, False],
+              [False, False, False, True, False, True, False, False, False],
+              [False, False, True, False, False, False, True, False, False],
+              [False, True, False, False, False, False, False, True, False],
+              [True, False, False, False, True, False, False, False, True],
+              [False, True, False, False, False, False, False, True, False],
+              [False, False, True, False, False, False, True, False, False],
+              [False, False, False, True, False, True, False, False, False],
+              [False, False, False, False, True, False, False, False, False]]
+
+   patternSu=[[True, False, False, True, True, True, False, False, True],
+              [False, False, True, False, False, False, True, False, False],
+              [False, True, False, False, True, False, False, True, False],
+              [True, False, False, True, False, True, False, False, True],
+              [True, False, True, False, True, False, True, False, True],
+              [True, False, False, True, False, True, False, False, True],
+              [False, True, False, False, True, False, False, True, False],
+              [False, False, True, False, False, False, True, False, False],
+              [True, False, False, True, True, True, False, False, True]]
    
-   shownSu= [[9, 4, " ", 6, " ", 7, " ", " ", 1],
-             [2, " ", 7, " ", " ", " ", " ", 9, 4],
-             [1, " ", 6, " ", 4, 9, " ", " ", " "],
-             [" ", 2, " ", 3, 7, 8, " ", " ", 9],
-             [" ", 1, " ", 4, " ", 2, " ", 6, " "],
-             [7, " ", " ", 5, 6, 1, " ", 2, " "],
-             [" ", " ", " ", 7, 3, " ", 9, " ", 2],
-             [3, 5, " ", " ", " ", " ", 7, " ", 6],
-             [8, " ", " ", 9, " ", 6, " ", 4, 3]]
+   shownSu=[[]]
+   for r in range(9):
+      if len(shownSu)==r:
+         shownSu.append([])
+      for c in range(9):
+         if patternSu[r][c] == True:
+            shownSu[r].append(hiddenSu[r][c])
+         else:
+            shownSu[r].append(" ")
+   
+   #shownSu= [[9, 4, " ", 6, " ", 7, " ", " ", 1],
+    #         [2, " ", 7, " ", " ", " ", " ", 9, 4],
+     #        [1, " ", 6, " ", 4, 9, " ", " ", " "],
+      #       [" ", 2, " ", 3, 7, 8, " ", " ", 9],
+       #      [" ", 1, " ", 4, " ", 2, " ", 6, " "],
+        #     [7, " ", " ", 5, 6, 1, " ", 2, " "],
+         #    [" ", " ", " ", 7, 3, " ", 9, " ", 2],
+          #   [3, 5, " ", " ", " ", " ", 7, " ", 6],
+           #  [8, " ", " ", 9, " ", 6, " ", 4, 3]]
    Sudoku()
 
 def Sudoku():
