@@ -57,22 +57,30 @@ def howToPlayTic():
    else:
       pixelMine=(screenHeight)
    Label(master, bg = "#000000", fg = "#fff", text="TicTacToe2.0").grid(row = 0, column = 1)
-   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: TicTacToe()).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: TicTacToe()).grid(row = 0, column = 0, sticky = "we")
 
-   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/5))
-   frameMine1.grid(row=2, columnspan=2, sticky="nsew")
+   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameMine1.grid(row=1, columnspan=2, sticky="nsew")
    frameMine1.propagate(False)
    frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
-   frameMine2.grid(row=3, columnspan=2, sticky="nsew")
+   frameMine2.grid(row=2, columnspan=2, sticky="nsew")
    frameMine2.propagate(False)
 
    
-   Label(frameMine1, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//45) + " bold", text="""Click on an empty tile to place an X or an O.
-If single player the AI will automatically put down an 0 right after your X.""").pack(expand=True, fill="both")
+   Label(frameMine1, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
+Program specific instructions
 
-   Label(frameMine2, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//45), text="""The goal of Tic Tac Toe is to beat your opponent by being the first to score a row.
-One player is O's and another is X's and the players alternate putting down their letter.
-If one player is able to get 3 of their letter in a row (up to down, left to right, or diagonal) then they win.""").pack(expand=True, fill="both")
+1. Click on an empty tile to place an X or an O.
+2. If playing multiplayer, alternate with the other player.
+3. If playing single player, the AI will automatically play instantly.""").pack(expand=True, fill="both")
+
+   Label(frameMine2, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
+
+The game is played on a grid that's 3 squares by 3 squares.
+Players take turns putting their marks in empty squares.
+The first player to get 3 marks in a row (up, down, across, or diagonally) is the winner.
+If all 9 squares are full, the game is over.
+If no player has 3 marks in a row, the game ends in a tie.""").pack(expand=True, fill="both")
 
 
 def againTic(): #if the user wants to play again
@@ -111,11 +119,11 @@ def singleplayerTic():
       widget.destroy()
    Label(master, bg = "#000000", fg="#fff", text="TicTacToe2.0").grid(row = 0, column = 1)
    tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: TicTacToe()).grid(row = 0, column = 0, sticky = "we") #sends back to first TicTacToe screen 
-   tk.Button(master, text = "Easy", height = 5, width = 20, bg = "#fff", command = lambda: hardTic("easy")).grid(row = 1, column = 0) #random ai
-   tk.Button(master, text = "Medium", height = 5, width = 20, bg = "#fff", command = lambda: hardTic("medium")).grid(row = 1, column = 1) #ai that knows how to win, user goes first
-   tk.Button(master, text = "Hard", height = 5, width = 20, bg = "#fff", command = lambda: hardTic("hard")).grid(row = 1, column = 2) #same ai as above, user goes second
+   tk.Button(master, text = "Easy", height = 5, width = 20, bg = "#fff", command = lambda: setTic("easy")).grid(row = 1, column = 0) #random ai
+   tk.Button(master, text = "Medium", height = 5, width = 20, bg = "#fff", command = lambda: setTic("medium")).grid(row = 1, column = 1) #ai that knows how to win, user goes first
+   tk.Button(master, text = "Hard", height = 5, width = 20, bg = "#fff", command = lambda: setTic("hard")).grid(row = 1, column = 2) #same ai as above, user goes second
 
-def hardTic(difficulty): #difficulty changes depending on whether medium or hard was clicked
+def setTic(difficulty): #difficulty changes depending on whether medium or hard was clicked
    global levelTic
    if difficulty=="easy": #easy ai
       levelTic=1
@@ -421,40 +429,36 @@ def howToPlayMine():
    else:
       pixelMine=(screenHeight)
    Label(master, bg = "darkgrey", text="MineSweeper").grid(row = 0, column = 1)
-   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: MineSweeper(" ")).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: MineSweeper(" ")).grid(row = 0, column = 0, sticky = "we")
 
-   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/5))
-   frameMine1.grid(row=2, columnspan=2, sticky="nsew")
+   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameMine1.grid(row=1, columnspan=2, sticky="nsew")
    frameMine1.propagate(False)
    frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
-   frameMine2.grid(row=3, columnspan=2, sticky="nsew")
+   frameMine2.grid(row=2, columnspan=2, sticky="nsew")
    frameMine2.propagate(False)
 
    
-   Label(frameMine1, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//60) + " bold", text="""Left Click: Click on Tile
+   Label(frameMine1, bg = "white smoke", font = "Helvetica " + str(pixelMine//35) + " bold", text="""Program specific instructions
 
-Right Click: Place flag
+1. Left Click: Click on Tile
+2. Right Click: Place flag
+3. Middle Click: Chord""").pack(expand=True, fill="both")
 
-Middle Click: Chord""").pack(expand=True, fill="both")
+   Label(frameMine2, bg = "white smoke", font = "Helvetica " + str(pixelMine//40), text="""Rules to Game:
 
-   Label(frameMine2, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//60), text="""The goal of Mine Sweeper is to clear every single tile that has no bomb (!) in it, while placing flags (?) on all tiles with bombs.
-This can be achieved by paying close attention to the numbers on all tiles that have been clicked.
-The different numbers in each clicked (sunken) tile show how many bombs that tile is touching (above, below, side or diagonal) with a maximum of 8.
-For example, a 1 means that 7 of the adjacent tiles are safe, while an 8 means all of the touching tiles have bombs.
-In the case of the 8 you would need to flag (?) every tile touching the 8, you can put down a flag (?) by right clicking on the mouse.
+In order to win the game, you must reveal all the squares that DO NOT contain a mine,
+whether you flag them or not is a matter of personal preference.
+If a mine is revealed, you lose.
+When you click a tile, you get a number.
+That number is the number of how many mines that are surrounding it.
+If you find the mine, you can open the tiles around it, gainning more numbers.
+for example if you have a tile saying "1", and only 1 tile touching it.
+You know that the one tile is a bomb, if another tile says "1" and
+is touching that bomb and 2 other tiles,
+you know the 2 other tiles are safe to click.""").pack(expand=True, fill="both")
 
-When you click on a tile that has no number assigned to it this means that no bombs are touching that tile.
-Since Minesweeper knows that you can safely click all tiles around it, it automatically clicks them all for you. This is the reason a click can sometimes clear half the board.
-Now go back to the 1 that was uncovered. If any of the tiles touching the 1 is a flag (therefore a bomb) you know that all the other boxes have no bombs (the 1 means only touching 1 bomb).
-This means the other 7 tiles are safe to left click to uncover new numbers which will lead to new information about bombs.
 
-Although you could click on each tile around the 1, there is a quicker way to complete the same task. A method called "chording".
-If a number is uncovered (such as the 1) and the required amount of flags are touching that tile (meaning no other bombs possible), then you can chord.
-Chording will automatically click every adjacent tile to the number that you chorded as long as there is no flag on the tile.
-Be warned though, if you incorrectly placed your flags it could click on a spot with a bomb and end the game. To chord use the middle button on the mouse (not on all mouses).
-
-The first click is guaranteed to be safe, but after that you must make choices for yourself, good luck!""").pack(expand=True, fill="both")
-   
 def gameSetMine(level):
    global sizeMine
    global bombMine
@@ -749,19 +753,20 @@ def checkMine(row, column): #when a button is clicked
 #################################################################################################### Sudoku start
 
 #Sam Gunter
-#MineSweeper was finished 2:05am on the 31st of march, 2018
-#This was created to copy the microsoft minesweeper game that we know and love
-#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computer it does have severe lag
+#Sudoku was finished 1:03am on the 14th of april, 2018
+#This was created to allow the user to play sudoku on the computer
+#later I have tried my best to add a random generator to make the games less static, it works good enough right now
 
-#Next steps are to speed up the program, add images for bombs and flags and add a leaderboard document.
+#Next steps are to fix error when going to how to play, add how to play, add more boards, possibly fix generation, make leaderboard document
 
 #MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
 #First function is MineSweeper(). Then chocie of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
 #Then creates the board, depending on the click either ends game or shows number and allows player to go again, first clickw ill never be a bomb. Allows user to chose to play again
 
-def generateSu():
+def solvedBoardSu(number):
    global shownSu
    global hiddenSu
+   
    hiddenSu=[[9, 4, 5, 6, 2, 7, 8, 3, 1],
              [2, 8, 7, 1, 5, 3, 6, 9, 4],
              [1, 3, 6, 8, 4, 9, 2, 7, 5],
@@ -771,6 +776,21 @@ def generateSu():
              [4, 6, 1, 7, 3, 5, 9, 8, 2],
              [3, 5, 9, 2, 8, 4, 7, 1, 6],
              [8, 7, 2, 9, 1, 6, 5, 4, 3]]
+
+def Sudoku():
+   for widget in master.winfo_children():
+      widget.destroy()
+   Label(master, bg = "#000000", fg="#fff", text="Sudoku").grid(row = 0, column = 1)
+   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "Easy", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(20)).grid(row = 1, column = 0) 
+   tk.Button(master, text = "Medium", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(15)).grid(row = 1, column = 1) 
+   tk.Button(master, text = "Hard", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(10)).grid(row = 1, column = 2)
+
+def generateSu(difficulty):
+   global shownSu
+   global hiddenSu
+
+   solvedBoardSu(random.randint(0, 9))
 
    patternSu=[[False, False, False, False, False, False, False, False, False],
               [False, False, False, False, False, False, False, False, False],
@@ -782,26 +802,30 @@ def generateSu():
               [False, False, False, False, False, False, False, False, False],
               [False, False, False, False, False, False, False, False, False]]
 
-   patternSu=[[False, False, False, False, True, False, False, False, False],
-              [False, False, False, True, False, True, False, False, False],
-              [False, False, True, False, False, False, True, False, False],
-              [False, True, False, False, False, False, False, True, False],
-              [True, False, False, False, True, False, False, False, True],
-              [False, True, False, False, False, False, False, True, False],
-              [False, False, True, False, False, False, True, False, False],
-              [False, False, False, True, False, True, False, False, False],
-              [False, False, False, False, True, False, False, False, False]]
+   for n in range(9):
+      for m in range(3):
+         x=0
+         y=0
+         r=random.randint(0,8)
+         c=random.randint(0,8)
+         while True:
+            if hiddenSu[r+x][c+y] == (n+1) and patternSu[r+x][c+y] == False:
+               patternSu[r+x][c+y] = True
+               break
+            x+=1
+            if r+x == 9:
+               x = x - 9
+               y+=1
+               if c+y == 9:
+                  y = y - 9
+   for n in range(difficulty):
+      while True:
+         r=random.randint(0,8)
+         c=random.randint(0,8)
+         if patternSu[r][c] == False:
+            patternSu[r][c] = True
+            break
 
-   patternSu=[[True, False, False, True, True, True, False, False, True],
-              [False, False, True, False, False, False, True, False, False],
-              [False, True, False, False, True, False, False, True, False],
-              [True, False, False, True, False, True, False, False, True],
-              [True, False, True, False, True, False, True, False, True],
-              [True, False, False, True, False, True, False, False, True],
-              [False, True, False, False, True, False, False, True, False],
-              [False, False, True, False, False, False, True, False, False],
-              [True, False, False, True, True, True, False, False, True]]
-   
    shownSu=[[]]
    for r in range(9):
       if len(shownSu)==r:
@@ -811,19 +835,10 @@ def generateSu():
             shownSu[r].append(hiddenSu[r][c])
          else:
             shownSu[r].append(" ")
-   
-   #shownSu= [[9, 4, " ", 6, " ", 7, " ", " ", 1],
-    #         [2, " ", 7, " ", " ", " ", " ", 9, 4],
-     #        [1, " ", 6, " ", 4, 9, " ", " ", " "],
-      #       [" ", 2, " ", 3, 7, 8, " ", " ", 9],
-       #      [" ", 1, " ", 4, " ", 2, " ", 6, " "],
-        #     [7, " ", " ", 5, 6, 1, " ", 2, " "],
-         #    [" ", " ", " ", 7, 3, " ", 9, " ", 2],
-          #   [3, 5, " ", " ", " ", " ", 7, " ", 6],
-           #  [8, " ", " ", 9, " ", 6, " ", 4, 3]]
-   Sudoku()
 
-def Sudoku():
+   loadBoardSu()
+
+def loadBoardSu():
    global myFont
    global pixelMine
    global buttonsSu
@@ -834,6 +849,7 @@ def Sudoku():
    global errorSu
    global mistakeSu
    master.bind("<Return>", enterSu)
+   
    for widget in master.winfo_children():
       widget.destroy()
    rowSu=-1
@@ -845,7 +861,7 @@ def Sudoku():
    myFont=Font(family="Helvetica", size=pixelMine//2)
    boldFont=Font(family="Helvetica", size=pixelMine//2, weight='bold')
    Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Sudoku").grid(row = 0, columnspan = 9)
-   tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, columnspan=3, sticky = "we")
+   tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 0, columnspan=3, sticky = "we")
    tk.Button(master, text = "How To Play", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: howToPlaySu()).grid(row = 0, column = 6, columnspan=3, sticky = "we")
    errorSu = tk.Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Use numbers only!")
 
@@ -884,21 +900,32 @@ def howToPlaySu():
    else:
       pixelMine=(screenHeight)
    Label(master, bg = "#000000", fg = "#fff", text="Sudoku").grid(row = 0, column = 1)
-   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: loadBoardSu()).grid(row = 0, column = 0, sticky = "we")
 
-   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/5))
-   frameMine1.grid(row=2, columnspan=2, sticky="nsew")
+   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameMine1.grid(row=1, columnspan=2, sticky="nsew")
    frameMine1.propagate(False)
    frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
-   frameMine2.grid(row=3, columnspan=2, sticky="nsew")
+   frameMine2.grid(row=2, columnspan=2, sticky="nsew")
    frameMine2.propagate(False)
 
    
-   Label(frameMine1, bg = "silver", font = "Helvetica " + str(pixelMine//45) + " bold", text="""Click on a space you want to edit, then us your keyboard to type a number.
-To save the number either click enter or click on another tile. Leave a tile empty to delete.
-Red squares mean that there are numebrs that conflict.""").pack(expand=True, fill="both")
+   Label(frameMine1, bg = "white smoke", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
 
-   Label(frameMine2, bg = "silver", font = "Helvetica " + str(pixelMine//45), text="""Rules to sudoku""").pack(expand=True, fill="both")
+
+Program specific instructions
+
+1. Click on a space you want to edit,
+then us your keyboard to type a number.
+2. To save the number either click enter or click on another tile.
+3. Leave a tile empty to delete.
+4. Red squares mean that there are numbers that conflict.""").pack(expand=True, fill="both")
+
+   Label(frameMine2, bg = "white smoke", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
+
+The objective is to fill a 9x9 grid so that each column,
+each row, and each of the nine 3x3 boxes (also called
+blocks or regions) contains the digits from 1 to 9. """).pack(expand=True, fill="both")
 
 def clickSu(row, column):
    global buttonsSu
@@ -992,7 +1019,7 @@ def enterSu(event):
          elif shownSu[r][c]==" ":
             gameEnd=False
    if gameEnd==True:
-      tk.Button(master, text = "Play Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: generateSu()).grid(row = 0, column = 6, columnspan=3, sticky = "we")
+      tk.Button(master, text = "Play Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 6, columnspan=3, sticky = "we")
       errorSu.config(text="You win!")
       errorSu.grid(row = 10, columnspan = 9)
 
@@ -1066,25 +1093,31 @@ def howToPlay2048():
    else:
       pixelMine=(screenHeight)
    Label(master, bg = "#000000", fg = "#fff", text="2048").grid(row = 0, column = 1)
-   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 0, sticky = "we")
 
-   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/5))
-   frameMine1.grid(row=2, columnspan=2, sticky="nsew")
+   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameMine1.grid(row=1, columnspan=2, sticky="nsew")
    frameMine1.propagate(False)
    frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
-   frameMine2.grid(row=3, columnspan=2, sticky="nsew")
+   frameMine2.grid(row=2, columnspan=2, sticky="nsew")
    frameMine2.propagate(False)
 
    
-   Label(frameMine1, bg = "silver", font = "Helvetica " + str(pixelMine//45) + " bold", text="""Use the arrow keys to go up, down, left or right.
-You can also use your finger (or mouse) and drag across the screen to shift the board.""").pack(expand=True, fill="both")
+   Label(frameMine1, bg = "grey", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
 
-   Label(frameMine2, bg = "silver", font = "Helvetica " + str(pixelMine//45), text="""The goal of 2048 is to get a tile containing the number "2048".
-To achieve this goal you must merge numbers together to create larger numbers.
-When you shift the board ALL numbers on the board move as far as they can over.
-If 2 numbers are the same they will merge to create the sum of those numbers (2s become 4, 4s  become 8 and so on.
-Everytime you shift the board a new 2 will appear at the opposite end of the board.""").pack(expand=True, fill="both")
 
+Program specific instructions
+
+1.Use the arrow keys to go up, down, left or right.
+2.You can also use your finger (or mouse)
+to drag across the screen to shift the board.""").pack(expand=True, fill="both")
+
+   Label(frameMine2, bg = "grey", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
+
+When two tiles with the same number touch they merge into one,
+that means 2s become a 4, 4s a 8, 8s a 16 and so on.
+You are attempting to try to get a block of 2048 (2^11),
+which makes you win the game!""").pack(expand=True, fill="both")
 
 def reloadFull2048():
    global win2048
@@ -1440,7 +1473,7 @@ def menu():
    tk.Button(master, text = "Quit", height = 1, width = 10, bg = "#fff", command = master.destroy).grid(row = 4, columnspan = 3, sticky = "we")
    tk.Button(master, text = "TicTacToe2.0", height = 5, width = 20, bg = "#fff", command = lambda: TicTacToe()).grid(row = 1, column = 0, sticky = "we")
    tk.Button(master, text = "MineSweeper", height = 5, width = 20, bg = "#fff", command = lambda: MineSweeper(" ")).grid(row = 1, column = 1, sticky = "we")
-   tk.Button(master, text = "SudokuNF", height = 5, width = 20, bg = "#fff", command = lambda: generateSu()).grid(row = 1, column = 2, sticky = "we")
+   tk.Button(master, text = "SudokuNF", height = 5, width = 20, bg = "#fff", command = lambda: Sudoku()).grid(row = 1, column = 2, sticky = "we")
    tk.Button(master, text = "2048", height = 5, width = 20, bg = "#fff", command = lambda: the2048()).grid(row = 2, column = 0, sticky = "we")
    tk.Button(master, text = "ThreesNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).grid(row = 2, column = 1, sticky = "we")
    tk.Button(master, text = "CheckersNF", height = 5, width = 20, bg = "#fff", command = lambda: Checkers()).grid(row = 2, column = 2, sticky = "we")
