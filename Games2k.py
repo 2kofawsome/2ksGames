@@ -49,7 +49,7 @@ def TicTacToe():
    tk.Button(master, text = "Multiplayer", height = 5, width = 20, bg = "#fff", command = lambda: reloadTic()).grid(row = 1, column = 0) #command=lambda stops the programs from running when the window is first created
    tk.Button(master, text = "Singleplayer", height = 5, width = 20, bg = "#fff", command = lambda: singleplayerTic()).grid(row = 1, column = 1) #when clicked redirects to whichever function is command
 
-def howToPlayTic():
+def howToPlayTic(): #just tutorial on how to play
    for widget in master.winfo_children():
       widget.destroy()
    if screenWidth<screenHeight:
@@ -57,22 +57,22 @@ def howToPlayTic():
    else:
       pixelMine=(screenHeight)
    Label(master, bg = "#000000", fg = "#fff", text="TicTacToe2.0").grid(row = 0, column = 1)
-   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: TicTacToe()).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: TicTacToe()).grid(row = 0, column = 0, sticky = "we") #play instead of menu
 
-   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3)) #a third of the screen, leaves room for top bar
    frameMine1.grid(row=1, columnspan=2, sticky="nsew")
    frameMine1.propagate(False)
-   frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
+   frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2)) #half the screen
    frameMine2.grid(row=2, columnspan=2, sticky="nsew")
    frameMine2.propagate(False)
 
    
-   Label(frameMine1, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
+   Label(frameMine1, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//35) + " bold", text=""" 
 Program specific instructions
 
 1. Click on an empty tile to place an X or an O.
 2. If playing multiplayer, alternate with the other player.
-3. If playing single player, the AI will automatically play instantly.""").pack(expand=True, fill="both")
+3. If playing single player, the AI will automatically play instantly.""").pack(expand=True, fill="both") #game specfic instructions (buttons)
 
    Label(frameMine2, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
 
@@ -80,7 +80,7 @@ The game is played on a grid that's 3 squares by 3 squares.
 Players take turns putting their marks in empty squares.
 The first player to get 3 marks in a row (up, down, across, or diagonally) is the winner.
 If all 9 squares are full, the game is over.
-If no player has 3 marks in a row, the game ends in a tie.""").pack(expand=True, fill="both")
+If no player has 3 marks in a row, the game ends in a tie.""").pack(expand=True, fill="both") #how to play, taken from some website probably
 
 
 def againTic(): #if the user wants to play again
@@ -179,7 +179,7 @@ def endTic(result):
    global sizeTic
    global frameTic
    myFont=Font(family="Helvetica", size=((sizeTic//7)*4))
-   winFont=Font(family="Helvetica", size=((sizeTic//5)*3), weight='bold')
+   winFont=Font(family="Helvetica", size=((sizeTic//5)*3), weight='bold') #different fonts for win or game in progress
    for widget in master.winfo_children():
       widget.destroy()
    tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: TicTacToe()).grid(row = 0, column = 0, sticky = "we")
@@ -392,7 +392,7 @@ def aiTic(difficulty):
 #This was created to copy the microsoft minesweeper game that we know and love
 #I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computer it does have severe lag
 
-#Next steps are to speed up the program, add images for bombs and flags and add a leaderboard document.
+#Next steps are to add images for bombs and flags and add a leaderboard document.
 
 #MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
 #First function is MineSweeper(). Then choice of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
@@ -421,7 +421,7 @@ def MineSweeper(errorCheck):
    if errorCheck=="True":
       Label(master, bg = "darkgrey", fg = "darkred", text="You have too many bombs").grid(row = 9, columnspan = 3, sticky="we")
 
-def howToPlayMine():
+def howToPlayMine(): #see TicTacToe how to play, all others will have no comments
    for widget in master.winfo_children():
       widget.destroy()
    if screenWidth<screenHeight:
@@ -482,15 +482,15 @@ def gameSetMine(level):
       createBoardMine() #triggers next function
 
 def createBoardMine():
-   global shownMine #Similar to TicTacToe(), most of these are barely called again, but have to all be declared her as global
+   global shownMine #Similar to TicTacToe(), most of these are barely called again, but have to all be declared here as global
    global frameMine
    global reliefMine
    global hiddenMine
    global myFont
    global pixelMine
-   global flagsMine
    global statusMine
    global bombsLeftMine
+   global buttonMine
    bombsLeftMine=bombMine #keep track of flag counter in top corner
    statusMine="start"
    for widget in master.winfo_children(): #same as TicTacToe2.0 this delete all widgets onscreen
@@ -501,29 +501,19 @@ def createBoardMine():
       pixelMine=(screenHeight//(sizeMine+1))
    
    hiddenMine=[[]] #this will be the minesweeper board fully filled up and user can not see it
+   shownMine=[[]] #what the user gets shown
+   reliefMine=[[]] #same as both lists of lists above, but is to set the buttons as raised so they can be changed to appear pushed down later on when they are clicked
+   buttonMine=[[]]
    for r in range(sizeMine): #for the rows, which is the variable
       if len(hiddenMine)==r: #if if maxed out make a new list
          hiddenMine.append([])
+         shownMine.append([])
+         reliefMine.append([])
+         buttonMine.append([])
       for c in range(sizeMine): #for columns which si the same variable (square)
          hiddenMine[r].append(" ") #adds an empty space, this is solely to make the list of lists
-   shownMine=[[]] #what the user gets shown
-   for r in range(sizeMine):
-      if len(shownMine)==r:
-         shownMine.append([])
-      for c in range(sizeMine):
          shownMine[r].append("") #adds nothing this time instead of  a space so later on the program can see the difference between shown and hidden values
-   reliefMine=[[]] #same as both lists of lists above, but is to set the buttons as raised so they can be changed to appear pushed down later on when they are clicked
-   for r in range(sizeMine):
-      if len(reliefMine)==r:
-         reliefMine.append([])
-      for c in range(sizeMine):
          reliefMine[r].append("raised")
-   flagsMine=[[]] #same as all lists above, but for flags
-   for r in range(sizeMine):
-      if len(flagsMine)==r:
-         flagsMine.append([])
-      for c in range(sizeMine):
-         flagsMine[r].append(" ")
 
    myFont=Font(family="Helvetica", size=pixelMine//2) #font seems to work if it is half the size of the block, needs more testing on different monitors
    Label(master, bg = "darkgrey", font=("Helvetica", pixelMine//5), text="MineSweeper").grid(row = 0, columnspan = sizeMine) #column span makes it take up more lines
@@ -535,27 +525,25 @@ def createBoardMine():
          frameMine.append(tk.Frame(master, width = pixelMine, height = pixelMine)) #makes frame with the pixel by pixel value
          frameMine[r*sizeMine+c].grid(row=r+1, column=c, sticky="nsew") #makes it so button inside takes up whole frame
          frameMine[r*sizeMine+c].propagate(False) #makes it so frame doesn't get smaller
-         tk.Button(frameMine[r*sizeMine+c], text = shownMine[r][c], font=myFont, activebackground = "grey", bg = "lightgrey", command = lambda forCommand=[r, c]: clickMine(forCommand[0], forCommand[1])).pack(expand=True, fill="both") #adds teh button into the frame, these act as each square in minesweeper with a predefined textsize, background, etc
+         buttonMine[r].append(tk.Button(frameMine[r*sizeMine+c], text = shownMine[r][c], font=myFont, activebackground = "grey", bg = "lightgrey", command = lambda forCommand=[r, c]: clickMine(forCommand[0], forCommand[1])))
+         buttonMine[r][c].pack(expand=True, fill="both") #adds the button into the frame, these act as each square in minesweeper with a predefined textsize, background, etc
 
 def flagMine(event): #This might be one of the most complicated codes I have created, so many numbers together all of which are variables and most of which are pixels related to screen
    if statusMine!="end": #makes it so this code doesn't run if bomb has been triggered
-      global sizeMine
-      global pixelMine
       global bombsLeftMine
-      global flagsMine
+      global shownMine
+      global buttonMine
       for r in range(sizeMine):
          for c in range(sizeMine):
             if frameMine[r*sizeMine+c].winfo_y() < master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_y()+pixelMine > master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_x() < master.winfo_pointerx() and frameMine[r*sizeMine+c].winfo_x()+pixelMine > master.winfo_pointerx() and reliefMine[r][c]=="raised": #long thing to see if the cursor is within frame window and if it is still raised (not checked yet)
-               for widget in frameMine[r*sizeMine+c].winfo_children():
-                  widget.destroy()
-               if flagsMine[r][c] == "?": #if already a flag
+               if shownMine[r][c] == "?": #if already a flag
                   bombsLeftMine+=1 #adds 1 bomb (because 1 less flag)
-                  flagsMine[r][c]=" " #turns off flag
-                  tk.Button(frameMine[r*sizeMine+c], text = shownMine[r][c], font=myFont, activebackground = "grey", bg = "lightgrey", command = lambda forCommand=[r, c]: clickMine(forCommand[0], forCommand[1])).pack(expand=True, fill="both") #creates button as normal
+                  shownMine[r][c]="" #turns off flag
+                  buttonMine[r][c].config(text = shownMine[r][c], state = 'normal') #creates button as normal
                else:
                   bombsLeftMine-=1 #takes a away 1 bomb from counter
-                  flagsMine[r][c]="?" #makes a flag
-                  tk.Button(frameMine[r*sizeMine+c], text = flagsMine[r][c], font=myFont, activebackground = "grey", bg = "lightgrey").pack(expand=True, fill="both") #button that has no command, just to display question mark until clicked again
+                  shownMine[r][c]="?" #makes a flag
+                  buttonMine[r][c].config(state = 'disabled', disabledforeground = "#000000", text = shownMine[r][c]) #button that has no command, just to display question mark until clicked again
       if bombsLeftMine>=0: #if not negative it will display bombs left
          button1=tk.Button(master, text = str(bombsLeftMine)+" bombs left", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff").grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we")
       else: #if negative it says too many flags
@@ -565,76 +553,63 @@ def chordMine(event):
    if statusMine!="end":
       global sizeMine
       global pixelMine
-      global flagsMine
       for r in range(sizeMine):
          for c in range(sizeMine):
             if frameMine[r*sizeMine+c].winfo_y() < master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_y()+pixelMine > master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_x() < master.winfo_pointerx() and frameMine[r*sizeMine+c].winfo_x()+pixelMine > master.winfo_pointerx() and reliefMine[r][c]=="sunken":
                chording=0 #this variable checks to see if all flags around the number have been declared
-               if r-1>=0 and c-1>=0 and flagsMine[r-1][c-1] == "?": #if it exists and is a ?
+               if r-1>=0 and c-1>=0 and shownMine[r-1][c-1] == "?": #if it exists and is a ?
                   chording+=1 #add 1 to chord
-               if c-1>=0 and flagsMine[r][c-1] == "?":
+               if c-1>=0 and shownMine[r][c-1] == "?":
                   chording+=1
-               if r+1<sizeMine and c-1>=0 and flagsMine[r+1][c-1] == "?":
+               if r+1<sizeMine and c-1>=0 and shownMine[r+1][c-1] == "?":
                   chording+=1          
-               if r-1>=0 and flagsMine[r-1][c] == "?":
+               if r-1>=0 and shownMine[r-1][c] == "?":
                   chording+=1            
-               if r+1<sizeMine and flagsMine[r+1][c] == "?":
+               if r+1<sizeMine and shownMine[r+1][c] == "?":
                   chording+=1
-               if r-1>=0 and c+1<sizeMine and flagsMine[r-1][c+1] == "?":
+               if r-1>=0 and c+1<sizeMine and shownMine[r-1][c+1] == "?":
                   chording+=1           
-               if c+1<sizeMine and flagsMine[r][c+1] == "?":
+               if c+1<sizeMine and shownMine[r][c+1] == "?":
                   chording+=1           
-               if r+1<sizeMine and c+1<sizeMine and flagsMine[r+1][c+1] == "?":
+               if r+1<sizeMine and c+1<sizeMine and shownMine[r+1][c+1] == "?":
                   chording+=1
                if chording == hiddenMine[r][c]: #if there are the same amount of flags as the number
-                  if r-1>=0 and c-1>=0 and flagsMine[r-1][c-1] == " ": #clicks on every open spot around it
+                  if r-1>=0 and c-1>=0 and shownMine[r-1][c-1] == "": #clicks on every open spot around it
                      checkMine(r-1, c-1)
-                  if c-1>=0 and flagsMine[r][c-1] == " ":
+                  if c-1>=0 and shownMine[r][c-1] == "":
                      checkMine(r, c-1)            
-                  if r+1<sizeMine and c-1>=0 and flagsMine[r+1][c-1] == " ":
+                  if r+1<sizeMine and c-1>=0 and shownMine[r+1][c-1] == "":
                      checkMine(r+1, c-1)            
-                  if r-1>=0 and flagsMine[r-1][c] == " ":
+                  if r-1>=0 and shownMine[r-1][c] == "":
                      checkMine(r-1, c)            
-                  if r+1<sizeMine and flagsMine[r+1][c] == " ":
+                  if r+1<sizeMine and shownMine[r+1][c] == "":
                      checkMine(r+1, c)
-                  if r-1>=0 and c+1<sizeMine and flagsMine[r-1][c+1] == " ":
+                  if r-1>=0 and c+1<sizeMine and shownMine[r-1][c+1] == "":
                      checkMine(r-1, c+1)            
-                  if c+1<sizeMine and flagsMine[r][c+1] == " ":
+                  if c+1<sizeMine and shownMine[r][c+1] == "":
                      checkMine(r, c+1)            
-                  if r+1<sizeMine and c+1<sizeMine and flagsMine[r+1][c+1] == " ":
+                  if r+1<sizeMine and c+1<sizeMine and shownMine[r+1][c+1] == "":
                      checkMine(r+1, c+1)
 
 def updateMine(row, column): #this updates only 1 square, before it was updating all of them but that make a slight lag (less than a second) which was not good
-   for widget in frameMine[row*sizeMine+column].winfo_children(): #deletes all buttons in the frame (there will only be 1 button in the frame)
-      widget.destroy()
+   global buttonMine
    if shownMine[row][column] == " " or shownMine[row][column] == 1:
-      tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", activeforeground = "navy", bg = "lightgrey", fg = "blue").pack(expand=True, fill="both") #makes a new button which is the same as the last, but with new value
+      buttonMine[row][column].config(text = shownMine[row][column], activebackground = "grey", activeforeground = "navy", bg = "lightgrey", fg = "blue", relief = "sunken") #active colours so they dont turn white and black when clicked
    elif shownMine[row][column] == 2:
-      tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", activeforeground = "dark green", bg = "lightgrey", fg = "green4").pack(expand=True, fill="both")
+      buttonMine[row][column].config(text = shownMine[row][column], activebackground = "grey", activeforeground = "dark green", bg = "lightgrey", fg = "green4", relief = "sunken")
    elif shownMine[row][column] == 3:
-      tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", activeforeground = "red4", bg = "lightgrey", fg = "red").pack(expand=True, fill="both")
+      buttonMine[row][column].config(text = shownMine[row][column], activebackground = "grey", activeforeground = "red4", bg = "lightgrey", fg = "red", relief = "sunken")
    elif shownMine[row][column] == 4:
-      tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", activeforeground = "midnight blue", bg = "lightgrey", fg = "navy").pack(expand=True, fill="both")
+      buttonMine[row][column].config(text = shownMine[row][column], activebackground = "grey", activeforeground = "midnight blue", bg = "lightgrey", fg = "navy", relief = "sunken")
    elif shownMine[row][column] == 5:
-      tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", activeforeground = "brown4", bg = "lightgrey", fg = "crimson").pack(expand=True, fill="both")
+      buttonMine[row][column].config(text = shownMine[row][column], activebackground = "grey", activeforeground = "brown4", bg = "lightgrey", fg = "crimson", relief = "sunken")
    elif shownMine[row][column] == 6:
-      tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", activeforeground = "dark slate grey", bg = "lightgrey", fg = "darkcyan").pack(expand=True, fill="both")
+      buttonMine[row][column].config(text = shownMine[row][column], activebackground = "grey", activeforeground = "dark slate grey", bg = "lightgrey", fg = "darkcyan", relief = "sunken")
    elif shownMine[row][column] == 7:
-      tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", bg = "lightgrey", fg = "black" ).pack(expand=True, fill="both")
+      buttonMine[row][column].config(text = shownMine[row][column], activebackground = "grey", bg = "lightgrey", fg = "black", relief = "sunken")
    elif shownMine[row][column] == 8:
-      tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", bg = "lightgrey", fg = "silver").pack(expand=True, fill="both")
-   else:
-      tk.Button(frameMine[row*sizeMine+column], relief = reliefMine[row][column], text = shownMine[row][column], font=myFont,
-      activebackground = "grey", bg = "lightgrey", fg = "black").pack(expand=True, fill="both")
-
+      buttonMine[row][column].config(text = shownMine[row][column], activebackground = "grey", bg = "lightgrey", fg = "silver", relief = "sunken")
+      
    win="True" #starts as the person assumed won
    for r in range(sizeMine):
       for c in range(sizeMine):
@@ -646,34 +621,14 @@ def updateMine(row, column): #this updates only 1 square, before it was updating
 def endMine(result): #end game
    button1=tk.Button(master, text = "Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: createBoardMine()).grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we") #allows user to play again with the same specifications (board size and amount of bombs)
    global statusMine
+   global buttonMine
    statusMine="end"
    for r in range(sizeMine):
       for c in range(sizeMine):
-         for widget in frameMine[r*sizeMine+c].winfo_children():
-            widget.destroy()
          if hiddenMine[r][c] == "!" and result == "lose": #if lose
-            tk.Button(frameMine[r*sizeMine+c], text = hiddenMine[r][c], font=myFont, bg = "indianred").pack(expand=True, fill="both") #makes bombs show as red
+            buttonMine[r][c].config(text = hiddenMine[r][c], bg = "indianred")  #make bombs show as red
          elif hiddenMine[r][c] == "!" and result == "win": #if win
-            tk.Button(frameMine[r*sizeMine+c], text = "?", font=myFont).pack(expand=True, fill="both") #make bombs show as defused
-         elif shownMine[r][c] == " " or shownMine[r][c] == 1:
-            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "blue").pack(expand=True, fill="both") #all the rest just display their hidden numbers some of which were already shown
-         elif shownMine[r][c] == 2:
-            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "green").pack(expand=True, fill="both")
-         elif shownMine[r][c] == 3:
-            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "red").pack(expand=True, fill="both")
-         elif shownMine[r][c] == 4:
-            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "navy").pack(expand=True, fill="both")
-         elif shownMine[r][c] == 5:
-            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "crimson").pack(expand=True, fill="both")
-         elif shownMine[r][c] == 6:
-            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "darkcyan").pack(expand=True, fill="both")
-         elif shownMine[r][c] == 7:
-            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "black" ).pack(expand=True, fill="both")
-         elif shownMine[r][c] == 8:
-            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "silver").pack(expand=True, fill="both")
-         else:
-            tk.Button(frameMine[r*sizeMine+c], relief = reliefMine[r][c], text = shownMine[r][c], font=myFont, bg = "lightgrey", fg = "black").pack(expand=True, fill="both")
-
+            buttonMine[r][c].config(text = "?") #make bombs show as defused
 
 def clickMine(row, column): #This is used 1 time to make sure the user doesn't get out 1st time
    global statusMine
@@ -713,7 +668,7 @@ def clickMine(row, column): #This is used 1 time to make sure the user doesn't g
                   hiddenMine[r][c]=touching #if above 0, sets it as that number
       statusMine = " " #switches this to nothing
       checkMine(row, column) #triggers the actually function to play minesweeper
-   else:
+   elif statusMine != "end":
       checkMine(row, column) #after the first time just goes through this function instantly everytime
 
 def checkMine(row, column): #when a button is clicked
@@ -755,46 +710,47 @@ def checkMine(row, column): #when a button is clicked
 #Sam Gunter
 #Sudoku was finished 1:03am on the 14th of april, 2018
 #This was created to allow the user to play sudoku on the computer
-#later I have tried my best to add a random generator to make the games less static, it works good enough right now
+#I have tried my best to add a random generator to make the games less static, but it came down to the tried and true method of "f--- it, it is good enough"
 
-#Next steps are to fix error when going to how to play, add how to play, add more boards, possibly fix generation, make leaderboard document
+#Next steps is to make a leaderboard document
 
-#MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
-#First function is MineSweeper(). Then chocie of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
-#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first clickw ill never be a bomb. Allows user to chose to play again
-
-def solvedBoardSu(number):
-
-   hiddenSu = open(".\SudokuBoards.txt").readlines()
-   hiddenSu = hiddenSu[number]
-   hiddenSu=hiddenSu.split('|')
-
-   for n in range(9):
-      hiddenSu[n]=hiddenSu[n].split(" ")
-
-   for r in range(9):
-      for c in range(9):
-         hiddenSu[r][c]=int(hiddenSu[r][c])
-   return hiddenSu
+#Sudoku: Global variables and functions normally have a "Su" at the end incase another game uses similar variables later on (or earlier on).
+#First function is Sudoku(). Then chocie of easy, medium or hard. Then triggers a board to be generated from one of the preset fully complete and semi-random tiles chosen to show.
+#Next it loads the board, then when users click and type in numbers it saves, always checking for errors or to end the game. At the end you can play again.
 
 def Sudoku():
    for widget in master.winfo_children():
       widget.destroy()
    Label(master, bg = "#000000", fg="#fff", text="Sudoku").grid(row = 0, column = 1)
    tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we")
-   tk.Button(master, text = "Easy", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(20)).grid(row = 1, column = 0) 
-   tk.Button(master, text = "Medium", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(15)).grid(row = 1, column = 1) 
+   tk.Button(master, text = "Easy", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(20)).grid(row = 1, column = 0) #different difficulties are solely how many clues at the beginning
+   tk.Button(master, text = "Medium", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(15)).grid(row = 1, column = 1) #I wanted to improve this, but alas I could not
    tk.Button(master, text = "Hard", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(10)).grid(row = 1, column = 2)
+
+def solvedBoardSu(number):
+
+   hiddenSu = open(".\SudokuBoards.txt").readlines()
+   hiddenSu = hiddenSu[number] #takes that line specfied
+   hiddenSu=hiddenSu.split('|') #splits at | each 9
+
+   for n in range(9):
+      hiddenSu[n]=hiddenSu[n].split(" ") #then each one at " "
+
+   for r in range(9):
+      for c in range(9):
+         hiddenSu[r][c]=int(hiddenSu[r][c]) #turns str to in
+   return hiddenSu #returns the board
 
 def generateSu(difficulty):
    global shownSu
+   global staticSu
    global hiddenSu
 
-   fileSu = open(".\SudokuBoards.txt").readlines()
+   fileSu = open(".\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its wroking see "CreateBoardsSudoku.py"
    
-   hiddenSu = solvedBoardSu(random.randint(0, (len(fileSu)-1)))
+   hiddenSu = solvedBoardSu(random.randint(0, (len(fileSu)-1))) #choses board from random number within the amount of boards
 
-   patternSu=[[False, False, False, False, False, False, False, False, False],
+   patternSu=[[False, False, False, False, False, False, False, False, False], #sets pattern as non shown
               [False, False, False, False, False, False, False, False, False],
               [False, False, False, False, False, False, False, False, False],
               [False, False, False, False, False, False, False, False, False],
@@ -805,94 +761,41 @@ def generateSu(difficulty):
               [False, False, False, False, False, False, False, False, False]]
 
    for n in range(9):
-      for m in range(3):
-         x=0
-         y=0
-         r=random.randint(0,8)
-         c=random.randint(0,8)
-         while True:
-            if hiddenSu[r+x][c+y] == (n+1) and patternSu[r+x][c+y] == False:
-               patternSu[r+x][c+y] = True
-               break
-            x+=1
-            if r+x == 9:
-               x = x - 9
-               y+=1
-               if c+y == 9:
-                  y = y - 9
-   for n in range(difficulty):
+      for m in range(3): #3 times for each of the 9 numbers to assure mostly solvable boards
+         r=random.randint(0,8) #random row
+         c=random.randint(0,8) #random column
+         while True: #loops next process until it works
+            if hiddenSu[r][c] == (n+1) and patternSu[r][c] == False: #if not yet chosen and it is the number
+               patternSu[r][c] = True # make it appear
+               break #move on to next one
+            r+=1 #no need for else because of break, adds one to row
+            if r == 9: #if past row, row = 0 and column + 1
+               r = r - 9
+               c+=1
+               if c == 9: #if column past, column = 0 and back at start
+                  c = c - 9
+   for n in range(difficulty): #depending on difficulty adds a number of hints to help user
       while True:
          r=random.randint(0,8)
          c=random.randint(0,8)
-         if patternSu[r][c] == False:
+         if patternSu[r][c] == False: #this time can be any number, so only checks for if shown yet
             patternSu[r][c] = True
             break
-
-   shownSu=[[]]
+   staticSu=[[]] #determines labels vs buttons
+   shownSu=[[]] #creates what to show
    for r in range(9):
       if len(shownSu)==r:
          shownSu.append([])
+         staticSu.append([])
       for c in range(9):
          if patternSu[r][c] == True:
-            shownSu[r].append(hiddenSu[r][c])
+            shownSu[r].append(hiddenSu[r][c]) #adds number
+            staticSu[r].append(hiddenSu[r][c]) #adds number
          else:
-            shownSu[r].append(" ")
+            shownSu[r].append(" ") #hidden one
+            staticSu[r].append(" ")
 
-   loadBoardSu()
-
-def loadBoardSu():
-   global myFont
-   global pixelMine
-   global buttonsSu
-   global shownSu
-   global frameSu
-   global rowSu
-   global columnSu
-   global errorSu
-   global mistakeSu
-   master.bind("<Return>", enterSu)
-   
-   for widget in master.winfo_children():
-      widget.destroy()
-   rowSu=-1
-   columnSu=-1
-   if screenWidth<screenHeight:
-      pixelMine=(screenWidth//10)
-   else:
-      pixelMine=(screenHeight//10)
-   myFont=Font(family="Helvetica", size=pixelMine//2)
-   boldFont=Font(family="Helvetica", size=pixelMine//2, weight='bold')
-   Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Sudoku").grid(row = 0, columnspan = 9)
-   tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 0, columnspan=3, sticky = "we")
-   tk.Button(master, text = "How To Play", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: howToPlaySu()).grid(row = 0, column = 6, columnspan=3, sticky = "we")
-   errorSu = tk.Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Use numbers only!")
-
-   mistakeSu=[[]]
-   for r in range(9):
-      if len(mistakeSu)==r:
-         mistakeSu.append([])
-      for c in range(9):
-         mistakeSu[r].append(False)
-         
-   frameSu=[[]]
-   buttonsSu=[[]]
-   for r in range(9):
-      if len(buttonsSu)==r:
-         buttonsSu.append([])
-         frameSu.append([])
-      for c in range(9):
-         frameSu[r].append(tk.Frame(master, width = pixelMine, height = pixelMine, borderwidth = "1"))
-         frameSu[r][c].grid(row=r+1, column=c, sticky="nsew") 
-         frameSu[r][c].propagate(False)
-         if shownSu[r][c]==" " and (r//3 + c//3) % 2 == 0:
-            buttonsSu[r].append(tk.Button(frameSu[r][c], relief = 'flat', font=myFont, bg = "white", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1])))
-         elif shownSu[r][c]==" " and (r//3 + c//3) % 2 == 1:
-            buttonsSu[r].append(tk.Button(frameSu[r][c], relief= 'flat', font=myFont, bg = "light grey", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1])))
-         elif (r//3 + c//3) % 2 == 0:
-            buttonsSu[r].append(tk.Label(frameSu[r][c], text = shownSu[r][c], font=boldFont, bg = "white", ))
-         elif (r//3 + c//3) % 2 == 1:
-            buttonsSu[r].append(tk.Label(frameSu[r][c], text = shownSu[r][c], font=boldFont, bg = "light grey"))
-         buttonsSu[r][c].pack(expand=True, fill="both")
+   loadBoardSu() #triggers next fucntion
 
 def howToPlaySu():
    for widget in master.winfo_children():
@@ -929,6 +832,56 @@ The objective is to fill a 9x9 grid so that each column,
 each row, and each of the nine 3x3 boxes (also called
 blocks or regions) contains the digits from 1 to 9. """).pack(expand=True, fill="both")
 
+def loadBoardSu():
+   global myFont #most variables are only called a few times
+   global pixelMine
+   global buttonsSu
+   global shownSu
+   global frameSu
+   global rowSu
+   global columnSu
+   global errorSu
+   global mistakeSu
+   master.bind("<Return>", enterSu)
+   
+   for widget in master.winfo_children():
+      widget.destroy()
+   rowSu=-1 #for clickSu() later on
+   columnSu=-1
+   if screenWidth<screenHeight: #screen size as normal
+      pixelMine=(screenWidth//10)
+   else:
+      pixelMine=(screenHeight//10)
+   myFont=Font(family="Helvetica", size=pixelMine//2)
+   boldFont=Font(family="Helvetica", size=pixelMine//2, weight='bold')
+   Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Sudoku").grid(row = 0, columnspan = 9)
+   tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 0, columnspan=3, sticky = "we")
+   tk.Button(master, text = "How To Play", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: howToPlaySu()).grid(row = 0, column = 6, columnspan=3, sticky = "we")
+   errorSu = tk.Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Use numbers only!")
+
+   mistakeSu=[[]] #if numbers conflict, first made with no conflictions
+   frameSu=[[]] #frames for size
+   buttonsSu=[[]] #buttons in frames
+   for r in range(9):
+      if len(buttonsSu)==r:
+         mistakeSu.append([])
+         buttonsSu.append([])
+         frameSu.append([])
+      for c in range(9):
+         mistakeSu[r].append(False) #all made with no conflictions
+         frameSu[r].append(tk.Frame(master, width = pixelMine, height = pixelMine, borderwidth = "1")) #borderwidth of 1 gives it that nice look of slight lines between
+         frameSu[r][c].grid(row=r+1, column=c, sticky="nsew") 
+         frameSu[r][c].propagate(False)
+         if staticSu[r][c]==" " and (r//3 + c//3) % 2 == 0: #floored divison where it causes the blocks of 9 to be different colors
+            buttonsSu[r].append(tk.Button(frameSu[r][c], relief = 'flat', font=myFont, bg = "white", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1]))) #relief flat makes it look flat (duh)
+         elif staticSu[r][c]==" " and (r//3 + c//3) % 2 == 1: #If you cant understand from looking at this, I will need to draw it out as cant explain in words
+            buttonsSu[r].append(tk.Button(frameSu[r][c], relief= 'flat', font=myFont, bg = "light grey", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1])))
+         elif (r//3 + c//3) % 2 == 0:
+            buttonsSu[r].append(tk.Label(frameSu[r][c], text = staticSu[r][c], font=boldFont, bg = "white", )) #if a number is already there, makes a label, not button
+         elif (r//3 + c//3) % 2 == 1:
+            buttonsSu[r].append(tk.Label(frameSu[r][c], text = staticSu[r][c], font=boldFont, bg = "light grey"))
+         buttonsSu[r][c].pack(expand=True, fill="both")
+
 def clickSu(row, column):
    global buttonsSu
    global frameSu
@@ -937,73 +890,76 @@ def clickSu(row, column):
    global columnSu
    global entry
 
-   try:
-      enterSu("event")
+   try: #tries to do this, will only work if not first one
+      enterSu("event") #runs the same as if user clicks enter, saves last number
    except:
-      a=1
+      a=1 #this is soley ot allow the except statement
    
-   if rowSu >= 0 and columnSu >=0:
+   if rowSu >= 0 and columnSu >=0: #if after first time, gets rid of entry box for last one
       entry.pack_forget()
       buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
    rowSu=row
    columnSu=column
    buttonsSu[row][column].pack_forget()
    
-   if (row//3 + column//3) % 2 == 0 and mistakeSu[row][column]==False:
-      entry = tk.Entry(frameSu[row][column], bg = "white", font = myFont, justify = "center")
+   if (row//3 + column//3) % 2 == 0 and mistakeSu[row][column]==False: #if no mistake its white
+      entry = tk.Entry(frameSu[row][column], bg = "white", font = myFont, justify = "center") #for user to enter number, justfies to center
    elif (row//3 + column//3) % 2 == 1 and mistakeSu[row][column]==False:
       entry = tk.Entry(frameSu[row][column], bg = "light grey", font = myFont, justify = "center")
-   elif (row//3 + column//3) % 2 == 0 and mistakeSu[row][column]==True:
+   elif (row//3 + column//3) % 2 == 0 and mistakeSu[row][column]==True: #if mistake it is red
       entry = tk.Entry(frameSu[row][column], bg = "firebrick1", font = myFont, justify = "center")
    elif (row//3 + column//3) % 2 == 1 and mistakeSu[row][column]==True:
       entry = tk.Entry(frameSu[row][column], bg = "firebrick3", font = myFont, justify = "center")
    entry.pack(expand=True, fill="both")
-   entry.focus_set()
+   entry.focus_set() #sets focus to the netry so user does not have to click
 
 def enterSu(event):
    global shownSu
    global mistakeSu
-   try:
+   try: #tries to save the number and bring up button
       errorSu.grid_forget()
-      shownSu[rowSu][columnSu]=int(entry.get()[-1])
+      if int(entry.get()[-1]) == 0: #if a 0
+         shownSu[rowSu][columnSu] = " " #delete that, we dont want no 0s
+      else:
+         shownSu[rowSu][columnSu]=int(entry.get()[-1]) #only the last digit
       entry.pack_forget()
       buttonsSu[rowSu][columnSu].config(text = shownSu[rowSu][columnSu])
       buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
-   except: 
-      if str(entry.get()) == "" or str(entry.get()) == " ":
-         shownSu[rowSu][columnSu] = " "
+   except: #if not a number
+      if str(entry.get()) == "" or str(entry.get()) == " ": #if space and empty
+         shownSu[rowSu][columnSu] = " " #clear tile
          entry.pack_forget()
          buttonsSu[rowSu][columnSu].config(text = shownSu[rowSu][columnSu])
          buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
-      else:
-         errorSu.grid(row = 10, columnspan = 9)
+      else: #if anything else
+         errorSu.grid(row = 10, columnspan = 9) #tell them they broke the game
 
-   for c in range(9):
-      for r in range(9):
-         mistakeSu[r][c]=False
+   for r in range(9):
+      for c in range(9):
+         mistakeSu[r][c]=False #deletes all mistakes eahc time and rechecks for errors
          
-   for c in range(9):
-      for r in range(9):
+   for r in range(9):
+      for c in range(9): #choses a specfic block
          for n in range(8):
-            if shownSu[r-(n+1)][c] == shownSu[r][c] and shownSu[r-(n+1)][c] != " ":
-               for x in range(9):
+            if shownSu[r-(n+1)][c] == shownSu[r][c] and shownSu[r-(n+1)][c] != " ": #checks for mistake in same row
+               for x in range(9): #makes every tile in row an error
                   mistakeSu[r-(x)][c]=True
-               break
+               break #speeds up by ending before full loop
          for n in range(8):
-            if shownSu[r][c-(n+1)] == shownSu[r][c] and shownSu[r][c-(n+1)] != " ":
-               for x in range(9):
+            if shownSu[r][c-(n+1)] == shownSu[r][c] and shownSu[r][c-(n+1)] != " ": #checks for mistake in same column
+               for x in range(9): #makes every tile in column an error
                   mistakeSu[r][c-(x)]=True
                break
-         for n in range(3):
+         for n in range(3): #3 by 3 block
             for m in range(3):
-               if shownSu[(r//3)*3+n][(c//3)*3+m] == shownSu[r][c] and shownSu[r][c] != " " and (r != (r//3)*3+n or c != (c//3)*3+m):
+               if shownSu[(r//3)*3+n][(c//3)*3+m] == shownSu[r][c] and shownSu[r][c] != " " and (r != (r//3)*3+n or c != (c//3)*3+m): #checks for mistake in block
                   for x in range(3):
                      for y in range(3):
-                        mistakeSu[(r//3)*3+x][(c//3)*3+y]=True
+                        mistakeSu[(r//3)*3+x][(c//3)*3+y]=True #makes all tiles in block an error
                   break
       
    for r in range(9):
-      for c in range(9):
+      for c in range(9): #replaces colour of each tile
          if (c//3 + r//3) % 2 == 0 and mistakeSu[r][c]==False:
             buttonsSu[r][c].config(bg='white')
          elif (c//3 + r//3) % 2 == 1 and mistakeSu[r][c]==False:
@@ -1013,16 +969,18 @@ def enterSu(event):
          elif (c//3 + r//3) % 2 == 1 and mistakeSu[r][c]==True:
             buttonsSu[r][c].config(bg='firebrick3')
 
-   gameEnd=True
+   gameEnd=True #sets game as over
    for c in range(9):
       for r in range(9):
-         if mistakeSu[r][c]==True:
-            gameEnd=False
-         elif shownSu[r][c]==" ":
-            gameEnd=False
-   if gameEnd==True:
-      tk.Button(master, text = "Play Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 6, columnspan=3, sticky = "we")
-      errorSu.config(text="You win!")
+         if mistakeSu[r][c]==True: #if any mistakes
+            gameEnd=False #keeps playing
+            break
+         elif shownSu[r][c]==" ": #if any blank
+            gameEnd=False #keeps playing
+            break
+   if gameEnd==True: #if neither of those were met
+      tk.Button(master, text = "Play Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 6, columnspan=3, sticky = "we") #allows the user to play again
+      errorSu.config(text="You win!") #changes from preset error message (earlier) to winner message
       errorSu.grid(row = 10, columnspan = 9)
 
 #################################################################################################### Sudoku end
@@ -1034,25 +992,25 @@ def enterSu(event):
 #This was created to play 2048. The hardest and longest part was making the program appear fluid, not a sudden movement where the entire screen refreshes,
 #but making it refresh one by one as the label moves. If the entire screen reloaded it would be too slow, so I had to completely change how I made frames on tkinter.
 
-#Next step is to make user be able to slide cursor, add how to play and add a leaderboard document (will have to learn how to do file manipulation).
+#Next step is to add a leaderboard document.
 
 #2048: Global variables and functions normally have a 2048 at the end, main one is called the2048 because had to have letters.
-#First function is gamemode, then if single player was chosen difficulty, then a function to set difficulty.
-#No matter if single or multiplayer the next function creates the tkinter window and then one of the turns happen either turnTic or one of the ai, ends with endTic. User can go back to menu or click again and the person starting alternates
-#It is always set up so the next function is last in the current function (using if and else statements)
+#Creates board with 2 numbers inside it. Then user can click arrow or swipe mouse/finger across screen.
+#All numbers move in that direction and combine if possible. Constantly checking for game end.
 
 def the2048():
    global pixel2048
    global value2048
    global frame2048
+   global label2048
    global win2048
    win2048="schrodinger"
    master.bind("<Up>", up2048) #binds the up, down, left, right arrows on keyboard
    master.bind("<Down>", down2048)
    master.bind("<Left>", left2048)
    master.bind("<Right>", right2048)
-   master.bind("<Button-1>", buttonclick2048)
-   master.bind("<ButtonRelease-1>", buttonrelease2048)
+   master.bind("<Button-1>", buttonclick2048) #so arrows arent needed, allows swiping (finger down...
+   master.bind("<ButtonRelease-1>", buttonrelease2048) #... finger up
    for widget in master.winfo_children():
       widget.destroy()
    if screenWidth<screenHeight:
@@ -1063,14 +1021,17 @@ def the2048():
    tk.Button(master, text = "Menu", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: unbind()).grid(row = 0, column = 0, sticky = "we")
    tk.Button(master, text = "How To Play", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: howToPlay2048()).grid(row = 0, column = 3, sticky = "we")
 
+   label2048=[[]]
    frame2048=[[]] #same as all lists above, but for flags
    for r in range(4):
       if len(frame2048)==r:
          frame2048.append([])
+         label2048.append([])
       for c in range(4):
          frame2048[r].append(tk.Frame(master, bd = 2, width = pixel2048, height = pixel2048))
          frame2048[r][c].grid(row=r+1, column=c, sticky="nsew") 
          frame2048[r][c].propagate(False)
+         label2048[r].append("")
 
    value2048=[[" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]] #creates empty grid
 
@@ -1084,7 +1045,15 @@ def the2048():
          value2048[row][column] = 4 #places the 4
          break
 
-   
+   for r in range(4):
+      for c in range(4):
+         if value2048[r][c] == " ":
+            label2048[r][c] = tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey") #only need " ", 2 and 4 for this first one
+         elif value2048[r][c] == 2:
+            label2048[r][c] = tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "white")
+         elif value2048[r][c] == 4:
+            label2048[r][c] = tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "lemonchiffon")
+         label2048[r][c].pack(expand=True, fill="both")
    reloadFull2048()
 
 def howToPlay2048():
@@ -1103,7 +1072,6 @@ def howToPlay2048():
    frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
    frameMine2.grid(row=2, columnspan=2, sticky="nsew")
    frameMine2.propagate(False)
-
    
    Label(frameMine1, bg = "grey", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
 
@@ -1123,12 +1091,13 @@ which makes you win the game!""").pack(expand=True, fill="both")
 
 def reloadFull2048():
    global win2048
-   win2048="False"
+   global label2048
+   win2048="False" #game set as over
    for r in range(4):
       for c in range(4):
          if value2048[r][c] == " ":
-            win2048="schrodinger"
-         if r>0:
+            win2048="schrodinger" #if any of these things are met, game continues (see schrodingers cat thought experiment)
+         if r>0: #need layers here because an error code would happen for out of range
             if value2048[r][c] == value2048[r-1][c]:
                win2048="schrodinger"
          if r<3:
@@ -1140,76 +1109,72 @@ def reloadFull2048():
          if c<3:
             if value2048[r][c] == value2048[r][c+1]:
                win2048="schrodinger"
-
+               
          if value2048[r][c] == 2048:
             win2048="True"
-         for widget in frame2048[r][c].winfo_children(): #deletes all
-            widget.destroy()
          if value2048[r][c] == " ":
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "grey", font=("Helvetica", pixel2048//2)) #changes colour, text and size
          elif value2048[r][c] == 2:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "white").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "white", font=("Helvetica", pixel2048//2))
          elif value2048[r][c] == 4:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "lemonchiffon").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "lemonchiffon", font=("Helvetica", pixel2048//2))
          elif value2048[r][c] == 8:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "sandybrown").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "sandybrown", font=("Helvetica", pixel2048//2))
          elif value2048[r][c] == 16:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "chocolate").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "chocolate", font=("Helvetica", pixel2048//2))
          elif value2048[r][c] == 32:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "salmon").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "salmon", font=("Helvetica", pixel2048//2))
          elif value2048[r][c] == 64:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "tomato").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "tomato", font=("Helvetica", pixel2048//2))
          elif value2048[r][c] == 128:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "khaki").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "khaki", font=("Helvetica", pixel2048//3))
          elif value2048[r][c] == 256:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "yellow").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "yellow", font=("Helvetica", pixel2048//3))
          elif value2048[r][c] == 512:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "gold").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "gold", font=("Helvetica", pixel2048//3))
          elif value2048[r][c] == 1024:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "orange").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "orange", font=("Helvetica", pixel2048//4))
          elif value2048[r][c] == 2048:
-            tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "goldenrod").pack(expand=True, fill="both")
+            label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
    if win2048 == "True":
       Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="You Win!").grid(row = 5, columnspan = 4, sticky = "we")
       tk.Button(master, text = "Play Again", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 3, sticky = "we")
-   if win2048 == "False":
+   elif win2048 == "False":
       Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="You Lose").grid(row = 5, columnspan = 4, sticky = "we")
       tk.Button(master, text = "Play Again", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 3, sticky = "we")
 
    
-def reload2048(r, c):
-   for widget in frame2048[r][c].winfo_children(): #deletes one
-      widget.destroy()
+def reload2048(r, c): #reloads one at a  time, this gives the game its cascading effect
    if value2048[r][c] == " ":
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "grey", font=("Helvetica", pixel2048//2))
    elif value2048[r][c] == 2:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "white").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "white", font=("Helvetica", pixel2048//2))
    elif value2048[r][c] == 4:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "lemonchiffon").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "lemonchiffon", font=("Helvetica", pixel2048//2))
    elif value2048[r][c] == 8:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "sandybrown").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "sandybrown", font=("Helvetica", pixel2048//2))
    elif value2048[r][c] == 16:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "chocolate").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "chocolate", font=("Helvetica", pixel2048//2))
    elif value2048[r][c] == 32:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "salmon").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "salmon", font=("Helvetica", pixel2048//2))
    elif value2048[r][c] == 64:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "tomato").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "tomato", font=("Helvetica", pixel2048//2))
    elif value2048[r][c] == 128:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "khaki").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "khaki", font=("Helvetica", pixel2048//3))
    elif value2048[r][c] == 256:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "yellow").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "yellow", font=("Helvetica", pixel2048//3))
    elif value2048[r][c] == 512:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//3), fg = "#000000", bg = "gold").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "gold", font=("Helvetica", pixel2048//3))
    elif value2048[r][c] == 1024:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "orange").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "orange", font=("Helvetica", pixel2048//4))
    elif value2048[r][c] == 2048:
-      tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//4), fg = "#000000", bg = "goldenrod").pack(expand=True, fill="both")
+      label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
 
 def buttonclick2048(event): #checks x and y value with first click
    global x2048
    global y2048
-   x2048=master.winfo_pointerx()
-   y2048=master.winfo_pointery()
+   x2048=master.winfo_pointerx() #x value
+   y2048=master.winfo_pointery() #y value
 
 def buttonrelease2048(event): #when button is released (the mouse was slide in this time)
    xslide2048=master.winfo_pointerx() - x2048 #checks difference in start and end
@@ -1254,7 +1219,7 @@ def up2048(event):
                   reload2048(r+1-adjustment, c)
                   reload2048(r-adjustment, c)
                   master.update_idletasks()
-                  time.sleep(.01)
+                  time.sleep(.005)
       if moved == True: #if something moved, create a new number
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
          column = random.randint(0, 3) #random column
@@ -1294,7 +1259,7 @@ def down2048(event):
                   reload2048((-r-1)-1+adjustment, c)
                   reload2048((-r-1)+adjustment, c)
                   master.update_idletasks()
-                  time.sleep(.01)
+                  time.sleep(.005)
       if moved == True:
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
          column = random.randint(0, 3)
@@ -1334,7 +1299,7 @@ def left2048(event): #this is the same code as up2048, but r and c is switched t
                   reload2048(r, c+1-adjustment)
                   reload2048(r, c-adjustment)
                   master.update_idletasks()
-                  time.sleep(.01)
+                  time.sleep(.005)
       if moved == True:
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
          row = random.randint(0, 3)
@@ -1374,7 +1339,7 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
                   reload2048(r, (-c-1)-1+adjustment)
                   reload2048(r, (-c-1)+adjustment)
                   master.update_idletasks()
-                  time.sleep(.01)
+                  time.sleep(.005)
       if moved == True:
          Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
          row = random.randint(0, 3)
@@ -1391,60 +1356,64 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 #################################################################################################### Threes start
 
 #Sam Gunter
-#MineSweeper was finished 2:05am on the 31st of march, 2018
-#This was created to copy the microsoft minesweeper game that we know and love
-#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computer it does have severe lag
+#Threes was finished 2:05am on the 31st of march, 2018
+#This was created to create the threes game, similar to 2048
+#
 
-#Next steps are to speed up the program, add images for bombs and flags and add a leaderboard document.
+#Next steps are to 
 
-#MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
-#First function is MineSweeper(). Then chocie of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
-#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first clickw ill never be a bomb. Allows user to chose to play again
+#Threes: Global variables and functions normally have a "The" at the end incase another game uses similar variables later on (or earlier on).
+#
+#
+#
 
 #################################################################################################### Threes end
 
 #################################################################################################### Checkers start
 
 #Sam Gunter
-#MineSweeper was finished 2:05am on the 31st of march, 2018
-#This was created to copy the microsoft minesweeper game that we know and love
-#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computer it does have severe lag
+#Checkers was finished 2:05am on the 31st of march, 2018
+#This was created to play checkers either single player or against AI
+#
 
-#Next steps are to speed up the program, add images for bombs and flags and add a leaderboard document.
+#Next steps are to 
 
-#MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
-#First function is MineSweeper(). Then chocie of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
-#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first clickw ill never be a bomb. Allows user to chose to play again
+#Checkers: Global variables and functions normally have a "Chec" at the end incase another game uses similar variables later on or earlier on.
+#
+#
+#
 
 #################################################################################################### Checkers end
 
 #################################################################################################### HangMan start
 
 #Sam Gunter
-#MineSweeper was finished 2:05am on the 31st of march, 2018
-#This was created to copy the microsoft minesweeper game that we know and love
-#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computer it does have severe lag
+#HangMan was finished 2:05am on the 31st of march, 2018
+#This was created to play hang man either against another player or against the database
+#
 
-#Next steps are to speed up the program, add images for bombs and flags and add a leaderboard document.
+#Next steps are to 
 
-#MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
-#First function is MineSweeper(). Then chocie of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
-#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first clickw ill never be a bomb. Allows user to chose to play again
+#HangMan: Global variables and functions normally have a "Hang" at the end incase another game uses similar variables later on or earlier on.
+#
+#
+#
 
 #################################################################################################### HangMan end
 
 #################################################################################################### Connect4 start
 
 #Sam Gunter
-#MineSweeper was finished 2:05am on the 31st of march, 2018
-#This was created to copy the microsoft minesweeper game that we know and love
-#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computer it does have severe lag
+#Connect4 was finished 2:05am on the 31st of march, 2018
+#This was created to play Connect 4 either against another player or against itself
+#
 
-#Next steps are to speed up the program, add images for bombs and flags and add a leaderboard document.
+#Next steps are to 
 
-#MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
-#First function is MineSweeper(). Then chocie of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
-#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first clickw ill never be a bomb. Allows user to chose to play again
+#Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
+#
+#
+#
 
 #################################################################################################### Connect4 end
       

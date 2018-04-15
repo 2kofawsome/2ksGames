@@ -125,6 +125,7 @@ def enterSu(event):
          buttonsSu[rowSu][columnSu].config(text = shownSu[rowSu][columnSu])
          buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
       else:
+         errorSu.config(text = "Use numbers only!")
          errorSu.grid(row = 10, columnspan = 9)
 
    for c in range(9):
@@ -179,12 +180,21 @@ def saveSu():
                saveSu= saveSu + "|"
             elif c != 8:
                saveSu= saveSu + " "
-            
-      helloFile = open(".\SudokuBoards.txt", 'a')
-      helloFile.write("\n")
-      helloFile.write(saveSu)
-      helloFile.close()
-      master.destroy()
+
+      fileSu = open(".\SudokuBoards.txt").readlines()
+      duplicate=False
+      for n in range(len(fileSu)):
+         if saveSu == fileSu[n]:
+            duplicate=True
+      if duplicate == False:
+         helloFile = open(".\SudokuBoards.txt", 'a')
+         helloFile.write("\n")
+         helloFile.write(saveSu)
+         helloFile.close()
+         master.destroy()
+      else:
+         errorSu.config(text = "Already have this one")
+         errorSu.grid(row = 10, columnspan = 9)
 
 #################################################################################################### Sudoku end
       
