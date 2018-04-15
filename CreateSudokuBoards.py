@@ -1,21 +1,17 @@
 from tkinter import *
 import tkinter as tk
-import random, time
+import random
 from tkinter.font import Font
 
-#################################################################################################### Sudoku start
-
 #Sam Gunter
-#Sudoku was finished 1:03am on the 14th of april, 2018
-#This was created to allow the user to play sudoku on the computer
-#later I have tried my best to add a random generator to make the games less static, it works good enough right now
+#Sudoku was finished 2:52pm on the 15th of april, 2018
+#This was created to allow the user to add new sudoku boards
 
-#Next steps are to fix error when going to how to play, add how to play, add more boards, possibly fix generation, make leaderboard document
+#No next steps! Yay!
 
-#MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
-#First function is MineSweeper(). Then chocie of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
-#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first clickw ill never be a bomb. Allows user to chose to play again
-
+#Uses same Su variables as the sudoku game
+#User simply adds in the numbers, boom if it works it gets saved
+#See sudoku game for most of how this works, only comments on last function
 
 def Sudoku():
    global myFont
@@ -164,45 +160,58 @@ def enterSu(event):
             buttonsSu[r][c].config(bg='firebrick3')
 
 def saveSu():
-   filled=True
+   filled=True #sets it to believe that all full
    for c in range(9):
       for r in range(9):
-         if mistakeSu[r][c]==True:
+         if mistakeSu[r][c]==True: #if any mistakes, not good
             filled=False
-         elif shownSu[r][c]==" ":
+         elif shownSu[r][c]==" ": #if any empty, not good
             filled=False
    if filled==True:
-      saveSu=""
-      for r in range(9):
-         for c in range(9):
-            saveSu= saveSu + str(shownSu[r][c])
-            if c == 8 and r != 8:
-               saveSu= saveSu + "|"
-            elif c != 8:
-               saveSu= saveSu + " "
 
-      fileSu = open(".\SudokuBoards.txt").readlines()
-      duplicate=False
-      for n in range(len(fileSu)):
-         if saveSu == fileSu[n]:
-            duplicate=True
-      if duplicate == False:
-         helloFile = open(".\SudokuBoards.txt", 'a')
-         helloFile.write("\n")
-         helloFile.write(saveSu)
-         helloFile.close()
-         master.destroy()
-      else:
-         errorSu.config(text = "Already have this one")
-         errorSu.grid(row = 10, columnspan = 9)
+      for x in range(3): #makes it so one board turns into 9 boards through manipulation
+         shownSu.append(shownSu[0]) #changes rows by 3
+         shownSu.append(shownSu[1])
+         shownSu.append(shownSu[2])
+         del shownSu[0]
+         del shownSu[0]
+         del shownSu[0]
+         for y in range(3):
+            for r in range(9):
+               shownSu[r].append(shownSu[r][0]) #changes columns by 3
+               shownSu[r].append(shownSu[r][1])
+               shownSu[r].append(shownSu[r][2])
+               del shownSu[r][0]
+               del shownSu[r][0]
+               del shownSu[r][0]
+            saveSu="" #string that goes into file
+            for r in range(9):
+               for c in range(9):
+                  saveSu= saveSu + str(shownSu[r][c]) #adds in the number
+                  if c == 8 and r != 8:
+                     saveSu= saveSu + "|" #splits rows
+                  elif c != 8:
+                     saveSu= saveSu + " " #splits columns
 
-#################################################################################################### Sudoku end
+            fileSu = open(".\SudokuBoards.txt").readlines() #opens in list form
+            duplicate=False
+            for n in range(len(fileSu)): #for length of the file
+               if (saveSu+"\n") == fileSu[n]: #checks to see if already in the file
+                  duplicate=True
+            if duplicate == False: #if it is not in code
+               helloFile = open(".\SudokuBoards.txt", 'a') #opens board in append mode
+               helloFile.write(saveSu) #adds the board
+               helloFile.write("\n") #clicks enter for next board
+               helloFile.close()
+            else: 
+               errorSu.config(text = "Already have this one") #tells user to try again
+               errorSu.grid(row = 10, columnspan = 9)
       
-master = Tk() #creates the window
+master = Tk() 
 master.title("2k's games")
 master.config(bg = "#000000")
-master.overrideredirect(1) #gets rid of toolbar
-master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight())) #makes it fill full screen
+master.overrideredirect(1)
+master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight())) 
 screenWidth = master.winfo_screenwidth()
 screenHeight = master.winfo_screenheight()
 

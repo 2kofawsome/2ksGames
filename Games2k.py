@@ -748,7 +748,7 @@ def generateSu(difficulty):
 
    fileSu = open(".\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its wroking see "CreateBoardsSudoku.py"
    
-   hiddenSu = solvedBoardSu(random.randint(0, (len(fileSu)-1))) #choses board from random number within the amount of boards
+   hiddenSu = solvedBoardSu(random.randint(0, (len(fileSu)-2))) #choses board from random number within the amount of boards
 
    patternSu=[[False, False, False, False, False, False, False, False, False], #sets pattern as non shown
               [False, False, False, False, False, False, False, False, False],
