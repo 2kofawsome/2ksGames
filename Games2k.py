@@ -774,6 +774,24 @@ def generateSu(difficulty):
                c+=1
                if c == 9: #if column past, column = 0 and back at start
                   c = c - 9
+                  
+   for n in range(3): #checks for eahc box
+      for m in range(3):
+         amount=0 #the amount of numbers shown
+         for x in range(3): #checks each tile in box
+            for y in range(3):
+               if patternSu[n*3+x][m*3+y] == True: #if shown
+                  amount+=1
+         while amount < 3: #at least 3 must be shown
+            while True: #or another will be put in to assure solvability
+               r=random.randint(0, 2)
+               c=random.randint(0, 2)
+               if patternSu[n*3+r][m*3+c] == False:
+                  patternSu[n*3+r][m*3+c] = True
+                  amount+=1 #adjusts amount and checks again
+                  difficulty = difficulty - 1 #1 less random one later
+                  break
+
    for n in range(difficulty): #depending on difficulty adds a number of hints to help user
       while True:
          r=random.randint(0,8)
@@ -936,7 +954,7 @@ def enterSu(event):
 
    for r in range(9):
       for c in range(9):
-         mistakeSu[r][c]=False #deletes all mistakes eahc time and rechecks for errors
+         mistakeSu[r][c]=False #deletes all mistakes each time and rechecks for errors
          
    for r in range(9):
       for c in range(9): #choses a specfic block
