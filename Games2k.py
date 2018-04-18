@@ -1162,7 +1162,7 @@ def reloadFull2048():
       tk.Button(master, text = "Play Again", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 3, sticky = "we")
 
    
-def reload2048(r, c): #reloads one at a  time, this gives the game its cascading effect
+def reload2048(r, c): #reloads one at a time, this gives the game its cascading effect
    if value2048[r][c] == " ":
       label2048[r][c].config(text = value2048[r][c], bg = "grey", font=("Helvetica", pixel2048//2))
    elif value2048[r][c] == 2:
