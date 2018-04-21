@@ -2,6 +2,7 @@ from tkinter import *
 import tkinter as tk
 import random, time, os
 from tkinter.font import Font
+from PIL import ImageTk, Image
 
 #################################################################################################### TicTacToe2.0 start
 
@@ -491,6 +492,7 @@ def createBoardMine():
    global statusMine
    global bombsLeftMine
    global buttonMine
+   global flagImgMine
    bombsLeftMine=bombMine #keep track of flag counter in top corner
    statusMine="start"
    for widget in master.winfo_children(): #same as TicTacToe2.0 this delete all widgets onscreen
@@ -499,6 +501,8 @@ def createBoardMine():
       pixelMine=(screenWidth//(sizeMine+1))
    else:
       pixelMine=(screenHeight//(sizeMine+1))
+   flagImgMine = ImageTk.PhotoImage(Image.open("flagMine.png").resize((pixelMine, pixelMine), Image.ANTIALIAS))
+
    
    hiddenMine=[[]] #this will be the minesweeper board fully filled up and user can not see it
    shownMine=[[]] #what the user gets shown
@@ -531,7 +535,7 @@ def createBoardMine():
 def flagMine(event): #This might be one of the most complicated codes I have created, so many numbers together all of which are variables and most of which are pixels related to screen
    if statusMine!="end": #makes it so this code doesn't run if bomb has been triggered
       global bombsLeftMine
-      global shownMine
+      global shownMine #flagImgMine
       global buttonMine
       for r in range(sizeMine):
          for c in range(sizeMine):
@@ -539,11 +543,11 @@ def flagMine(event): #This might be one of the most complicated codes I have cre
                if shownMine[r][c] == "?": #if already a flag
                   bombsLeftMine+=1 #adds 1 bomb (because 1 less flag)
                   shownMine[r][c]="" #turns off flag
-                  buttonMine[r][c].config(text = shownMine[r][c], state = 'normal') #creates button as normal
+                  buttonMine[r][c].config(image="", text = shownMine[r][c], state = 'normal') #creates button as normal
                else:
                   bombsLeftMine-=1 #takes a away 1 bomb from counter
                   shownMine[r][c]="?" #makes a flag
-                  buttonMine[r][c].config(state = 'disabled', disabledforeground = "#000000", text = shownMine[r][c]) #button that has no command, just to display question mark until clicked again
+                  buttonMine[r][c].config(image=flagImgMine, state = 'disabled', disabledforeground = "#000000", text = "") #button that has no command, just to display question mark until clicked again
       if bombsLeftMine>=0: #if not negative it will display bombs left
          button1=tk.Button(master, text = str(bombsLeftMine)+" bombs left", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff").grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we")
       else: #if negative it says too many flags
@@ -628,7 +632,7 @@ def endMine(result): #end game
          if hiddenMine[r][c] == "!" and result == "lose": #if lose
             buttonMine[r][c].config(text = hiddenMine[r][c], bg = "indianred")  #make bombs show as red
          elif hiddenMine[r][c] == "!" and result == "win": #if win
-            buttonMine[r][c].config(text = "?") #make bombs show as defused
+            buttonMine[r][c].config(image=flagImgMine, text = "?") #make bombs show as defused
 
 def clickMine(row, column): #This is used 1 time to make sure the user doesn't get out 1st time
    global statusMine
