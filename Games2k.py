@@ -493,6 +493,7 @@ def createBoardMine():
    global bombsLeftMine
    global buttonMine
    global flagImgMine
+   global bombImgMine
    bombsLeftMine=bombMine #keep track of flag counter in top corner
    statusMine="start"
    for widget in master.winfo_children(): #same as TicTacToe2.0 this delete all widgets onscreen
@@ -501,8 +502,8 @@ def createBoardMine():
       pixelMine=(screenWidth//(sizeMine+1))
    else:
       pixelMine=(screenHeight//(sizeMine+1))
-   flagImgMine = ImageTk.PhotoImage(Image.open("flagMine.png").resize((pixelMine, pixelMine), Image.ANTIALIAS))
-
+   flagImgMine = ImageTk.PhotoImage(Image.open("flagMine.png").resize((pixelMine, pixelMine), resample=0))
+   bombImgMine = ImageTk.PhotoImage(Image.open("bombMine.png").resize((pixelMine, pixelMine), resample=0))
    
    hiddenMine=[[]] #this will be the minesweeper board fully filled up and user can not see it
    shownMine=[[]] #what the user gets shown
@@ -543,11 +544,11 @@ def flagMine(event): #This might be one of the most complicated codes I have cre
                if shownMine[r][c] == "?": #if already a flag
                   bombsLeftMine+=1 #adds 1 bomb (because 1 less flag)
                   shownMine[r][c]="" #turns off flag
-                  buttonMine[r][c].config(image="", text = shownMine[r][c], state = 'normal') #creates button as normal
+                  buttonMine[r][c].config(image="", text = shownMine[r][c], command = lambda forCommand=[r, c]: clickMine(forCommand[0], forCommand[1])) #creates button as normal
                else:
                   bombsLeftMine-=1 #takes a away 1 bomb from counter
                   shownMine[r][c]="?" #makes a flag
-                  buttonMine[r][c].config(image=flagImgMine, state = 'disabled', disabledforeground = "#000000", text = "") #button that has no command, just to display question mark until clicked again
+                  buttonMine[r][c].config(image=flagImgMine, command = 0, disabledforeground = "#000000") #button that has no command, just to display question mark until clicked again
       if bombsLeftMine>=0: #if not negative it will display bombs left
          button1=tk.Button(master, text = str(bombsLeftMine)+" bombs left", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff").grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we")
       else: #if negative it says too many flags
@@ -630,7 +631,7 @@ def endMine(result): #end game
    for r in range(sizeMine):
       for c in range(sizeMine):
          if hiddenMine[r][c] == "!" and result == "lose": #if lose
-            buttonMine[r][c].config(text = hiddenMine[r][c], bg = "indianred")  #make bombs show as red
+            buttonMine[r][c].config(image=bombImgMine, bg = "indianred")  #make bombs show as red
          elif hiddenMine[r][c] == "!" and result == "win": #if win
             buttonMine[r][c].config(image=flagImgMine, text = "?") #make bombs show as defused
 
@@ -680,7 +681,7 @@ def checkMine(row, column): #when a button is clicked
       endMine("lose") #triggers lose
       for widget in frameMine[row*sizeMine+column].winfo_children():
          widget.destroy()
-      tk.Button(frameMine[row*sizeMine+column], text = hiddenMine[row][column], font=myFont, bg = "darkred").pack(expand=True, fill="both") #dark red to make them know it was the bomb that killed them
+      tk.Button(frameMine[row*sizeMine+column], image=bombImgMine, font=myFont, bg = "darkred").pack(expand=True, fill="both") #dark red to make them know it was the bomb that killed them
       
    elif hiddenMine[row][column]==" ": #if not touching any bomb
       shownMine[row][column]=hiddenMine[row][column] #switches shown to hidden, I need this because shown is " " and hidden is "", so this makes the code run faster as it does not go over the same blocks multiple times
@@ -1375,6 +1376,93 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
       
 #################################################################################################### 2048 end
 
+#################################################################################################### Connect4 start
+
+#Sam Gunter
+#Connect4 was finished 2:05am on the 31st of march, 2018
+#This was created to play Connect 4 either against another player or against itself
+#
+
+#Next steps are to 
+
+#Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
+#
+#
+#
+
+def Connect4():
+   for widget in master.winfo_children():
+      widget.destroy()
+   Label(master, bg = "#000000", fg="#fff", text="Connect4").grid(row = 0, column = 1)
+   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "Single Player", height = 5, width = 20, bg = "#fff", command = lambda: singleCon()).grid(row = 1, column = 0)
+   tk.Button(master, text = "Multiplayer", height = 5, width = 20, bg = "#fff", command = lambda: boardCon()).grid(row = 1, column = 1)
+
+def howToPlayCon():
+   for widget in master.winfo_children():
+      widget.destroy()
+   if screenWidth<screenHeight:
+      pixelMine=(screenWidth)
+   else:
+      pixelMine=(screenHeight)
+   Label(master, bg = "#000000", fg = "#fff", text="Connect4").grid(row = 0, column = 1)
+   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: Connect4()).grid(row = 0, column = 0, sticky = "we")
+
+   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameMine1.grid(row=1, columnspan=2, sticky="nsew")
+   frameMine1.propagate(False)
+   frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
+   frameMine2.grid(row=2, columnspan=2, sticky="nsew")
+   frameMine2.propagate(False)
+   
+   Label(frameMine1, bg = "#000000", fg = "#fff", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
+
+
+Program specific instructions
+
+1.Use the arrow keys to go up, down, left or right.
+2.You can also use your finger (or mouse)
+to drag across the screen to shift the board.""").pack(expand=True, fill="both")
+
+   Label(frameMine2, bg = "#000000", fg = "#fff", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
+
+When two tiles with the same number touch they merge into one,
+that means 2s become a 4, 4s a 8, 8s a 16 and so on.
+You are attempting to try to get a block of 2048 (2^11),
+which makes you win the game!""").pack(expand=True, fill="both")
+
+def singleCon():
+   Label(master, bg = "#000000", fg="#fff", text="That has not been made yet").grid(row = 2, columnspan = 2)
+
+def boardCon():
+   global frameCon
+   global labelCon
+   global pixelCon
+   for widget in master.winfo_children():
+      widget.destroy()
+   Label(master, bg = "#000000", fg="#fff", text="Connect4").grid(row = 0, column = 2, columnspan = 3)
+   tk.Button(master, text = "Menu", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: Connect4()).grid(row = 0, column = 0, columnspan = 2, sticky = "we")
+   tk.Button(master, text = "How to Play", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: howToPlayCon()).grid(row = 0, column = 5, columnspan = 2, sticky = "we")
+   if screenWidth<screenHeight:
+      pixelCon=(screenWidth//7)
+   else:
+      pixelCon=(screenHeight//7)
+   frameCon=[[]]
+   labelCon=[[]]
+   for r in range(6):
+      if len(frameCon)==r:
+         frameCon.append([])
+         labelCon.append([])
+      for c in range(7):
+         frameCon[r].append(tk.Frame(master, width = pixelCon, height = pixelCon))
+         frameCon[r][c].grid(row=r+1, column=c, sticky="nsew") 
+         frameCon[r][c].propagate(False) 
+         labelCon[r].append(tk.Label(frameCon[r][c], text = "", bg = "blue2"))
+         labelCon[r][c].pack(expand=True, fill="both")
+
+
+#################################################################################################### Connect4 end
+
 #################################################################################################### Threes start
 
 #Sam Gunter
@@ -1423,22 +1511,8 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 
 #################################################################################################### HangMan end
 
-#################################################################################################### Connect4 start
 
-#Sam Gunter
-#Connect4 was finished 2:05am on the 31st of march, 2018
-#This was created to play Connect 4 either against another player or against itself
-#
 
-#Next steps are to 
-
-#Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
-#
-#
-#
-
-#################################################################################################### Connect4 end
-      
 master = Tk() #creates the window
 master.title("2k's games")
 master.overrideredirect(1) #gets rid of toolbar
