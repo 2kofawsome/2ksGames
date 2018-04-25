@@ -1438,6 +1438,8 @@ def boardCon():
    global frameCon
    global labelCon
    global pixelCon
+   global blackImgCon
+   global redImgCon
    for widget in master.winfo_children():
       widget.destroy()
    Label(master, bg = "#000000", fg="#fff", text="Connect4").grid(row = 0, column = 2, columnspan = 3)
@@ -1447,6 +1449,9 @@ def boardCon():
       pixelCon=(screenWidth//7)
    else:
       pixelCon=(screenHeight//7)
+   blackImgCon = ImageTk.PhotoImage(Image.open("blackChec.png").resize((pixelCon, pixelCon), resample=0))
+   redImgCon = ImageTk.PhotoImage(Image.open("redChec.png").resize((pixelCon, pixelCon), resample=0))
+
    frameCon=[[]]
    labelCon=[[]]
    for r in range(6):
@@ -1457,7 +1462,7 @@ def boardCon():
          frameCon[r].append(tk.Frame(master, width = pixelCon, height = pixelCon))
          frameCon[r][c].grid(row=r+1, column=c, sticky="nsew") 
          frameCon[r][c].propagate(False) 
-         labelCon[r].append(tk.Label(frameCon[r][c], text = "", bg = "blue2"))
+         labelCon[r].append(tk.Label(frameCon[r][c], image = redImgCon, bg = "blue2"))
          labelCon[r][c].pack(expand=True, fill="both")
 
 
