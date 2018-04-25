@@ -1440,6 +1440,9 @@ def boardCon():
    global pixelCon
    global blackImgCon
    global redImgCon
+   global blankImgCon
+   global gridCon
+   master.bind("<ButtonRelease-1>", clickCon)
    for widget in master.winfo_children():
       widget.destroy()
    Label(master, bg = "#000000", fg="#fff", text="Connect4").grid(row = 0, column = 2, columnspan = 3)
@@ -1451,19 +1454,40 @@ def boardCon():
       pixelCon=(screenHeight//7)
    blackImgCon = ImageTk.PhotoImage(Image.open("blackChec.png").resize((pixelCon, pixelCon), resample=0))
    redImgCon = ImageTk.PhotoImage(Image.open("redChec.png").resize((pixelCon, pixelCon), resample=0))
-
+   blankImgCon = ImageTk.PhotoImage(Image.open("blankChec.png").resize((pixelCon, pixelCon), resample=0))
    frameCon=[[]]
    labelCon=[[]]
+   gridCon=[[]]
    for r in range(6):
       if len(frameCon)==r:
          frameCon.append([])
+         gridCon.append([])
          labelCon.append([])
       for c in range(7):
+         gridCon[r].append(False)
          frameCon[r].append(tk.Frame(master, width = pixelCon, height = pixelCon))
          frameCon[r][c].grid(row=r+1, column=c, sticky="nsew") 
          frameCon[r][c].propagate(False) 
-         labelCon[r].append(tk.Label(frameCon[r][c], image = redImgCon, bg = "blue2"))
+         labelCon[r].append(tk.Label(frameCon[r][c], image = blankImgCon, bg = "blue2"))
          labelCon[r][c].pack(expand=True, fill="both")
+
+def clickCon(event):
+   global gridCon
+   global labelCon
+   #if master.winfo_x() < master.winfo_pointerx() and master.winfo_x()+pixelMine > master.winfo_pointerx()
+   for c in range(7):
+      if master.winfo_x() > (pixelCon*c) and master.winfo_x() < (pixelCon*(c+1)):
+         for f in range(6):
+            if gridCon[f][c] == False:
+               if f-1 > 0:
+                  labelCon[f-1][c].config(image = blankImgCon)
+               labelCon[f][c].config(image = redImgCon)
+            else:
+               if f-1 > 0:
+                  gridcon[f-1][c] = True
+               else:
+                  Label(master, bg = "#000000", fg="#fff", text="You cannot play there.").grid(row = 8, columnspan = 7)
+   
 
 
 #################################################################################################### Connect4 end
