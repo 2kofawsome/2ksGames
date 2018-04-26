@@ -1391,6 +1391,7 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 #
 
 def Connect4():
+   master.unbind("<ButtonRelease-1>")
    for widget in master.winfo_children():
       widget.destroy()
    Label(master, bg = "#000000", fg="#fff", text="Connect4").grid(row = 0, column = 1)
@@ -1442,9 +1443,12 @@ def boardCon():
    global redImgCon
    global blankImgCon
    global gridCon
+   global turnLabelCon
    master.bind("<ButtonRelease-1>", clickCon)
    for widget in master.winfo_children():
       widget.destroy()
+   turnLabelCon = tk.Label(master, bg = "#000000", fg="#fff", text=" ")
+   turnLabelCon.grid(row = 8, columnspan = 7)
    Label(master, bg = "#000000", fg="#fff", text="Connect4").grid(row = 0, column = 2, columnspan = 3)
    tk.Button(master, text = "Menu", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: Connect4()).grid(row = 0, column = 0, columnspan = 2, sticky = "we")
    tk.Button(master, text = "How to Play", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: howToPlayCon()).grid(row = 0, column = 5, columnspan = 2, sticky = "we")
@@ -1474,20 +1478,26 @@ def boardCon():
 def clickCon(event):
    global gridCon
    global labelCon
-   #if master.winfo_x() < master.winfo_pointerx() and master.winfo_x()+pixelMine > master.winfo_pointerx()
+   global turnLabelCon
+   turnLabelCon.config(text=" ")
    for c in range(7):
-      if master.winfo_x() > (pixelCon*c) and master.winfo_x() < (pixelCon*(c+1)):
+      if master.winfo_pointerx() > (pixelCon*c) and master.winfo_pointerx() < (pixelCon*(c+1)) and master.winfo_pointery() > 20:
          for f in range(6):
+            fallCon=f
             if gridCon[f][c] == False:
-               if f-1 > 0:
+               if f-1 >= 0:
                   labelCon[f-1][c].config(image = blankImgCon)
                labelCon[f][c].config(image = redImgCon)
+               master.update_idletasks()
+               time.sleep(.03)
             else:
-               if f-1 > 0:
-                  gridcon[f-1][c] = True
-               else:
-                  Label(master, bg = "#000000", fg="#fff", text="You cannot play there.").grid(row = 8, columnspan = 7)
-   
+               break
+         if fallCon-1 >= 0:
+            gridCon[fallCon][c] = True
+         else:
+            print('blah')
+            turnLabelCon.config(text="You cannot play there.")
+         break
 
 
 #################################################################################################### Connect4 end
