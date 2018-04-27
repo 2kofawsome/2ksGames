@@ -6,6 +6,8 @@ from PIL import ImageTk, Image
 
 #################################################################################################### TicTacToe2.0 start
 
+#print("LOADING...")
+#print("Please wait...")
 
 #Sam Gunter
 #TicTacToe2.14 was finished 5:50pm on the 18th of march, 2018
@@ -1509,26 +1511,55 @@ def clickCon(event):
                time.sleep(.03)
                if f == 5:
                   gridCon[f][c] = turnCon
+                  turnLabelCon.config(text= (turnCon + "'s turn"))
+                  checkCon(turnCon)
                   if turnCon == "Black":
                      turnCon = "Red"
                   elif turnCon == "Red":
                      turnCon = "Black"
-                  turnLabelCon.config(text= (turnCon + "'s turn"))
                   master.update()
             else:
                if f-1 >= 0:
                   gridCon[f-1][c] = turnCon
+                  turnLabelCon.config(text= (turnCon + "'s turn"))
+                  checkCon(turnCon)
                   if turnCon == "Black":
                      turnCon = "Red"
                   elif turnCon == "Red":
                      turnCon = "Black"
-                  turnLabelCon.config(text= (turnCon + "'s turn"))
                   master.update()
                else:
                   turnLabelCon.config(text="You cannot play there.")
                break
+         break
 
+def checkCon(turnCon):
+   for c in range(7): #up-down check
+      for x in range(3):
+         gameWin=True
+         for r in range(4):
+            if gridCon[r+x][c] != turnCon:
+               gameWin=False
+               break
+         if gameWin == True:
+            endCon(turnCon)
 
+   for r in range(6): #left-right check
+      for x in range(4):
+         gameWin=True
+         for c in range(4):
+            if gridCon[r][c+x] != turnCon:
+               gameWin=False
+               break
+         if gameWin == True:
+            endCon(turnCon)
+
+def endCon(turnCon):
+   global turnLabelCon
+   master.unbind("<ButtonRelease-1>")
+   turnLabelCon.config(text=turnCon + " wins!")
+   tk.Button(master, text = "Play Again", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: Connect4()).grid(row = 0, column = 0, columnspan = 2, sticky = "we")
+   
 #################################################################################################### Connect4 end
 
 #################################################################################################### Threes start
