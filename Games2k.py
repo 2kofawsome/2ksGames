@@ -502,8 +502,8 @@ def createBoardMine():
       pixelMine=(screenWidth//(sizeMine+1))
    else:
       pixelMine=(screenHeight//(sizeMine+1))
-   flagImgMine = ImageTk.PhotoImage(Image.open("flagMine.png").resize((pixelMine, pixelMine), resample=0))
-   bombImgMine = ImageTk.PhotoImage(Image.open("bombMine.png").resize((pixelMine, pixelMine), resample=0))
+   flagImgMine = ImageTk.PhotoImage(Image.open("gameFiles/flagMine.png").resize((pixelMine, pixelMine), resample=0))
+   bombImgMine = ImageTk.PhotoImage(Image.open("gameFiles/bombMine.png").resize((pixelMine, pixelMine), resample=0))
    
    hiddenMine=[[]] #this will be the minesweeper board fully filled up and user can not see it
    shownMine=[[]] #what the user gets shown
@@ -734,7 +734,7 @@ def Sudoku():
 
 def solvedBoardSu(number):
 
-   hiddenSu = open(".\SudokuBoards.txt").readlines()
+   hiddenSu = open(".\gameFiles\SudokuBoards.txt").readlines()
    hiddenSu = hiddenSu[number] #takes that line specfied
    hiddenSu=hiddenSu.split('|') #splits at | each 9
 
@@ -751,7 +751,7 @@ def generateSu(difficulty):
    global staticSu
    global hiddenSu
 
-   fileSu = open(".\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its wroking see "CreateBoardsSudoku.py"
+   fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its wroking see "CreateBoardsSudoku.py"
    
    hiddenSu = solvedBoardSu(random.randint(0, (len(fileSu)-2))) #choses board from random number within the amount of boards
 
@@ -1027,6 +1027,8 @@ def the2048():
    global frame2048
    global label2048
    global win2048
+   global delay2048
+   delay2048=time.time()
    win2048="schrodinger"
    master.bind("<Up>", up2048) #binds the up, down, left, right arrows on keyboard
    master.bind("<Down>", down2048)
@@ -1216,163 +1218,174 @@ def buttonrelease2048(event): #when button is released (the mouse was slide in t
          up2048(" ")
 
 def up2048(event):
-   if win2048 == "schrodinger": #neither true nor false
-      together=[[]]
-      for r in range(4): #makes it so only 1 thing happens on each line
-         if len(together)==r:
-            together.append([])
-         for c in range(4):
-            together[r].append(False)
-      moved=False #checks to see if any move happened
-      for r in range(3): #one less because dont need to check the highest row
-         for adjustment in range(3): #adjustment makes it go to end, and not just up once
+   global delay2048
+   if (time.time()-delay2048) > .05:
+      if win2048 == "schrodinger": #neither true nor false
+         together=[[]]
+         for r in range(4): #makes it so only 1 thing happens on each line
+            if len(together)==r:
+               together.append([])
             for c in range(4):
-               if value2048[r+1-adjustment][c] != " " and (r+1-adjustment)>=0: #if the tile is not empty, saves code time
-                  if value2048[r-adjustment][c] == " " and (r-adjustment)>=0: #if the one above is empty
-                     value2048[r-adjustment][c] = value2048[r+1-adjustment][c] #replace with one under
-                     value2048[r+1-adjustment][c] = " " #delete one under
-                     moved=True #it moved at least once
-                  else: #if a number above
-                     if value2048[r-adjustment][c] == value2048[r+1-adjustment][c] and (r-adjustment)>=0 and together[r-adjustment][c] == False: #if the number below and above are the same
-                        value2048[r-adjustment][c] = (value2048[r-adjustment][c])*2 #multiply above
-                        value2048[r+1-adjustment][c] = " " #and delete bottom
-                        together[r-adjustment][c] = True
-                        together[r-adjustment-1][c] = True
+               together[r].append(False)
+         moved=False #checks to see if any move happened
+         for r in range(3): #one less because dont need to check the highest row
+            for adjustment in range(3): #adjustment makes it go to end, and not just up once
+               for c in range(4):
+                  if value2048[r+1-adjustment][c] != " " and (r+1-adjustment)>=0: #if the tile is not empty, saves code time
+                     if value2048[r-adjustment][c] == " " and (r-adjustment)>=0: #if the one above is empty
+                        value2048[r-adjustment][c] = value2048[r+1-adjustment][c] #replace with one under
+                        value2048[r+1-adjustment][c] = " " #delete one under
                         moved=True #it moved at least once
-                  reload2048(r+1-adjustment, c)
-                  reload2048(r-adjustment, c)
-                  master.update_idletasks()
-                  time.sleep(.005)
-      if moved == True: #if something moved, create a new number
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
-         column = random.randint(0, 3) #random column
-         for c in range(4): #makes it so it will check all fast and not just random
-            if value2048[3][(column+c)%4] == " ": #if empty. % is modular so remainder
-               value2048[3][(column+c)%4] = 2 #put in a 2
-               break #then break, else do again with 1 higher
-      else: #else, display a message saying no
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
-      reloadFull2048()
-
+                     else: #if a number above
+                        if value2048[r-adjustment][c] == value2048[r+1-adjustment][c] and (r-adjustment)>=0 and together[r-adjustment][c] == False: #if the number below and above are the same
+                           value2048[r-adjustment][c] = (value2048[r-adjustment][c])*2 #multiply above
+                           value2048[r+1-adjustment][c] = " " #and delete bottom
+                           together[r-adjustment][c] = True
+                           together[r-adjustment-1][c] = True
+                           moved=True #it moved at least once
+                     reload2048(r+1-adjustment, c)
+                     reload2048(r-adjustment, c)
+                     master.update_idletasks()
+                     time.sleep(.005)
+         if moved == True: #if something moved, create a new number
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
+            column = random.randint(0, 3) #random column
+            for c in range(4): #makes it so it will check all fast and not just random
+               if value2048[3][(column+c)%4] == " ": #if empty. % is modular so remainder
+                  value2048[3][(column+c)%4] = 2 #put in a 2
+                  break #then break, else do again with 1 higher
+         else: #else, display a message saying no
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
+         reloadFull2048()
+   delay2048 = time.time()
 
 def down2048(event):
-   if win2048 == "schrodinger":
-      together=[[]]
-      for r in range(4):
-         if len(together)==r:
-            together.append([])
-         for c in range(4):
-            together[r].append(False)
-      moved=False
-      for r in range(3):
-         for adjustment in range(3):
+   global delay2048
+   if (time.time()-delay2048) > .05:
+      if win2048 == "schrodinger":
+         together=[[]]
+         for r in range(4):
+            if len(together)==r:
+               together.append([])
             for c in range(4):
-               if value2048[(-r-1)-1+adjustment][c] != " " and (-r-1)-1+adjustment<0: #row is reversed
-                  if value2048[(-r-1)+adjustment][c] == " " and ((-r-1)+adjustment)<0: #plus adjustment not minus
-                     value2048[(-r-1)+adjustment][c] = value2048[(-r-1)-1+adjustment][c] #minus 1, not plus 1
-                     value2048[(-r-1)-1+adjustment][c] = " "
-                     moved=True
-                  else:
-                     if value2048[(-r-1)+adjustment][c] == value2048[(-r-1)-1+adjustment][c] and ((-r-1)+adjustment)<0 and together[(-r-1)+adjustment][c] == False:
-                        value2048[(-r-1)+adjustment][c] = (value2048[(-r-1)+adjustment][c])*2
+               together[r].append(False)
+         moved=False
+         for r in range(3):
+            for adjustment in range(3):
+               for c in range(4):
+                  if value2048[(-r-1)-1+adjustment][c] != " " and (-r-1)-1+adjustment<0: #row is reversed
+                     if value2048[(-r-1)+adjustment][c] == " " and ((-r-1)+adjustment)<0: #plus adjustment not minus
+                        value2048[(-r-1)+adjustment][c] = value2048[(-r-1)-1+adjustment][c] #minus 1, not plus 1
                         value2048[(-r-1)-1+adjustment][c] = " "
                         moved=True
-                        together[(-r-1)+adjustment][c] = True
-                        together[(-r-1)+adjustment+1][c] = True
-                  reload2048((-r-1)-1+adjustment, c)
-                  reload2048((-r-1)+adjustment, c)
-                  master.update_idletasks()
-                  time.sleep(.005)
-      if moved == True:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
-         column = random.randint(0, 3)
-         for c in range(4):
-            if value2048[0][(column+c)%4] == " ": #0 not 3
-               value2048[0][(column+c)%4] = 2
-               break
-      else:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
+                     else:
+                        if value2048[(-r-1)+adjustment][c] == value2048[(-r-1)-1+adjustment][c] and ((-r-1)+adjustment)<0 and together[(-r-1)+adjustment][c] == False:
+                           value2048[(-r-1)+adjustment][c] = (value2048[(-r-1)+adjustment][c])*2
+                           value2048[(-r-1)-1+adjustment][c] = " "
+                           moved=True
+                           together[(-r-1)+adjustment][c] = True
+                           together[(-r-1)+adjustment+1][c] = True
+                     reload2048((-r-1)-1+adjustment, c)
+                     reload2048((-r-1)+adjustment, c)
+                     master.update_idletasks()
+                     time.sleep(.005)
+         if moved == True:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
+            column = random.randint(0, 3)
+            for c in range(4):
+               if value2048[0][(column+c)%4] == " ": #0 not 3
+                  value2048[0][(column+c)%4] = 2
+                  break
+         else:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
 
-      reloadFull2048()
+         reloadFull2048()
+   delay2048 = time.time()
 
 def left2048(event): #this is the same code as up2048, but r and c is switched throughout it
-   if win2048 == "schrodinger":
-      together=[[]]
-      for r in range(4): #makes it so only 1 thing happens on each line
-         if len(together)==r:
-            together.append([])
-         for c in range(4):
-            together[r].append(False)
-      moved=False
-      for c in range(3):
-         for adjustment in range(3):
-            for r in range(4):
-               if value2048[r][c+1-adjustment] != " " and (c+1-adjustment)>=0:
-                  if value2048[r][c-adjustment] == " " and (c-adjustment)>=0:
-                     value2048[r][c-adjustment] = value2048[r][c+1-adjustment]
-                     value2048[r][c+1-adjustment] = " "
-                     moved=True
-                  else:
-                     if value2048[r][c-adjustment] == value2048[r][c+1-adjustment] and (c-adjustment)>=0 and together[r][c-adjustment] == False:
-                        value2048[r][c-adjustment] = (value2048[r][c-adjustment])*2
+   global delay2048
+   if (time.time()-delay2048) > .05:
+      if win2048 == "schrodinger":
+         together=[[]]
+         for r in range(4): #makes it so only 1 thing happens on each line
+            if len(together)==r:
+               together.append([])
+            for c in range(4):
+               together[r].append(False)
+         moved=False
+         for c in range(3):
+            for adjustment in range(3):
+               for r in range(4):
+                  if value2048[r][c+1-adjustment] != " " and (c+1-adjustment)>=0:
+                     if value2048[r][c-adjustment] == " " and (c-adjustment)>=0:
+                        value2048[r][c-adjustment] = value2048[r][c+1-adjustment]
                         value2048[r][c+1-adjustment] = " "
                         moved=True
-                        together[r][c-adjustment] = True
-                        together[r][c-adjustment-1] = True
-                  reload2048(r, c+1-adjustment)
-                  reload2048(r, c-adjustment)
-                  master.update_idletasks()
-                  time.sleep(.005)
-      if moved == True:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
-         row = random.randint(0, 3)
-         for r in range(4):
-            if value2048[(row+r)%4][3] == " ":
-               value2048[(row+r)%4][3] = 2
-               break 
-      else:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
+                     else:
+                        if value2048[r][c-adjustment] == value2048[r][c+1-adjustment] and (c-adjustment)>=0 and together[r][c-adjustment] == False:
+                           value2048[r][c-adjustment] = (value2048[r][c-adjustment])*2
+                           value2048[r][c+1-adjustment] = " "
+                           moved=True
+                           together[r][c-adjustment] = True
+                           together[r][c-adjustment-1] = True
+                     reload2048(r, c+1-adjustment)
+                     reload2048(r, c-adjustment)
+                     master.update_idletasks()
+                     time.sleep(.005)
+         if moved == True:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
+            row = random.randint(0, 3)
+            for r in range(4):
+               if value2048[(row+r)%4][3] == " ":
+                  value2048[(row+r)%4][3] = 2
+                  break 
+         else:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
 
-      reloadFull2048()
+         reloadFull2048()
+   delay2048 = time.time()
       
 def right2048(event): #this is the same code as down,2048 but r and c are switched throughout it
-   if win2048 == "schrodinger":
-      together=[[]]
-      for r in range(4): #makes it so only 1 thing happens on each line
-         if len(together)==r:
-            together.append([])
-         for c in range(4):
-            together[r].append(False)
-      moved=False
-      for c in range(3):
-         for adjustment in range(3):
-            for r in range(4):
-               if value2048[r][(-c-1)-1+adjustment] != " " and ((-c-1)-1+adjustment)<0:
-                  if value2048[r][(-c-1)+adjustment] == " " and ((-c-1)+adjustment)<0:
-                     value2048[r][(-c-1)+adjustment] = value2048[r][(-c-1)-1+adjustment]
-                     value2048[r][(-c-1)-1+adjustment] = " "
-                     moved=True
-                  else:
-                     if value2048[r][(-c-1)+adjustment] == value2048[r][(-c-1)-1+adjustment] and ((-c-1)+adjustment)<0 and together[r][(-c-1)+adjustment] == False:
-                        value2048[r][(-c-1)+adjustment] = (value2048[r][(-c-1)+adjustment])*2
+   global delay2048
+   if (time.time()-delay2048) > .05:
+      if win2048 == "schrodinger":
+         together=[[]]
+         for r in range(4): #makes it so only 1 thing happens on each line
+            if len(together)==r:
+               together.append([])
+            for c in range(4):
+               together[r].append(False)
+         moved=False
+         for c in range(3):
+            for adjustment in range(3):
+               for r in range(4):
+                  if value2048[r][(-c-1)-1+adjustment] != " " and ((-c-1)-1+adjustment)<0:
+                     if value2048[r][(-c-1)+adjustment] == " " and ((-c-1)+adjustment)<0:
+                        value2048[r][(-c-1)+adjustment] = value2048[r][(-c-1)-1+adjustment]
                         value2048[r][(-c-1)-1+adjustment] = " "
                         moved=True
-                        together[r][(-c-1)+adjustment]= True
-                        together[r][(-c-1)+adjustment+1]= True 
-                  reload2048(r, (-c-1)-1+adjustment)
-                  reload2048(r, (-c-1)+adjustment)
-                  master.update_idletasks()
-                  time.sleep(.005)
-      if moved == True:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
-         row = random.randint(0, 3)
-         for r in range(4):
-            if value2048[(row+r)%4][0] == " ":
-               value2048[(row+r)%4][0] = 2
-               break
-      else:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
-      reloadFull2048()
+                     else:
+                        if value2048[r][(-c-1)+adjustment] == value2048[r][(-c-1)-1+adjustment] and ((-c-1)+adjustment)<0 and together[r][(-c-1)+adjustment] == False:
+                           value2048[r][(-c-1)+adjustment] = (value2048[r][(-c-1)+adjustment])*2
+                           value2048[r][(-c-1)-1+adjustment] = " "
+                           moved=True
+                           together[r][(-c-1)+adjustment]= True
+                           together[r][(-c-1)+adjustment+1]= True 
+                     reload2048(r, (-c-1)-1+adjustment)
+                     reload2048(r, (-c-1)+adjustment)
+                     master.update_idletasks()
+                     time.sleep(.005)
+         if moved == True:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
+            row = random.randint(0, 3)
+            for r in range(4):
+               if value2048[(row+r)%4][0] == " ":
+                  value2048[(row+r)%4][0] = 2
+                  break
+         else:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
+         reloadFull2048()
+   delay2048 = time.time()
       
 #################################################################################################### 2048 end
 
@@ -1444,10 +1457,12 @@ def boardCon():
    global blankImgCon
    global gridCon
    global turnLabelCon
+   global turnCon
+   turnCon = "Black"
    master.bind("<ButtonRelease-1>", clickCon)
    for widget in master.winfo_children():
       widget.destroy()
-   turnLabelCon = tk.Label(master, bg = "#000000", fg="#fff", text=" ")
+   turnLabelCon = tk.Label(master, bg = "#000000", fg="#fff", text=turnCon + "'s turn")
    turnLabelCon.grid(row = 8, columnspan = 7)
    Label(master, bg = "#000000", fg="#fff", text="Connect4").grid(row = 0, column = 2, columnspan = 3)
    tk.Button(master, text = "Menu", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: Connect4()).grid(row = 0, column = 0, columnspan = 2, sticky = "we")
@@ -1456,9 +1471,9 @@ def boardCon():
       pixelCon=(screenWidth//7)
    else:
       pixelCon=(screenHeight//7)
-   blackImgCon = ImageTk.PhotoImage(Image.open("blackChec.png").resize((pixelCon, pixelCon), resample=0))
-   redImgCon = ImageTk.PhotoImage(Image.open("redChec.png").resize((pixelCon, pixelCon), resample=0))
-   blankImgCon = ImageTk.PhotoImage(Image.open("blankChec.png").resize((pixelCon, pixelCon), resample=0))
+   blackImgCon = ImageTk.PhotoImage(Image.open("gameFiles/blackChec.png").resize((pixelCon, pixelCon), resample=0))
+   redImgCon = ImageTk.PhotoImage(Image.open("gameFiles/redChec.png").resize((pixelCon, pixelCon), resample=0))
+   blankImgCon = ImageTk.PhotoImage(Image.open("gameFiles/blankChec.png").resize((pixelCon, pixelCon), resample=0))
    frameCon=[[]]
    labelCon=[[]]
    gridCon=[[]]
@@ -1468,10 +1483,10 @@ def boardCon():
          gridCon.append([])
          labelCon.append([])
       for c in range(7):
-         gridCon[r].append(False)
+         gridCon[r].append(" ")
          frameCon[r].append(tk.Frame(master, width = pixelCon, height = pixelCon))
          frameCon[r][c].grid(row=r+1, column=c, sticky="nsew") 
-         frameCon[r][c].propagate(False) 
+         frameCon[r][c].propagate(False)
          labelCon[r].append(tk.Label(frameCon[r][c], image = blankImgCon, bg = "blue2"))
          labelCon[r][c].pack(expand=True, fill="both")
 
@@ -1479,25 +1494,39 @@ def clickCon(event):
    global gridCon
    global labelCon
    global turnLabelCon
-   turnLabelCon.config(text=" ")
+   global turnCon
    for c in range(7):
       if master.winfo_pointerx() > (pixelCon*c) and master.winfo_pointerx() < (pixelCon*(c+1)) and master.winfo_pointery() > 20:
          for f in range(6):
-            fallCon=f
-            if gridCon[f][c] == False:
+            if gridCon[f][c] == " ":
                if f-1 >= 0:
                   labelCon[f-1][c].config(image = blankImgCon)
-               labelCon[f][c].config(image = redImgCon)
+               if turnCon == "Black":
+                  labelCon[f][c].config(image = blackImgCon)
+               else:
+                  labelCon[f][c].config(image = redImgCon)
                master.update_idletasks()
                time.sleep(.03)
+               if f == 5:
+                  gridCon[f][c] = turnCon
+                  if turnCon == "Black":
+                     turnCon = "Red"
+                  elif turnCon == "Red":
+                     turnCon = "Black"
+                  turnLabelCon.config(text= (turnCon + "'s turn"))
+                  master.update()
             else:
+               if f-1 >= 0:
+                  gridCon[f-1][c] = turnCon
+                  if turnCon == "Black":
+                     turnCon = "Red"
+                  elif turnCon == "Red":
+                     turnCon = "Black"
+                  turnLabelCon.config(text= (turnCon + "'s turn"))
+                  master.update()
+               else:
+                  turnLabelCon.config(text="You cannot play there.")
                break
-         if fallCon-1 >= 0:
-            gridCon[fallCon][c] = True
-         else:
-            print('blah')
-            turnLabelCon.config(text="You cannot play there.")
-         break
 
 
 #################################################################################################### Connect4 end
