@@ -1394,18 +1394,24 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 #################################################################################################### Connect4 start
 
 #Sam Gunter
-#Connect4 was finished 2:05am on the 31st of march, 2018
+#Connect4 was finished 3:31am on the 28th of April, 2018
 #This was created to play Connect 4 either against another player or against itself
-#
+#Ai will be hard, currently just have random number generator
 
-#Next steps are to 
+#Next steps are to add single player AI, play again needs to lead to correct game, fix glitch in single player where you switch to red, comments, leaderboard document
 
 #Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
-#
-#
-#
+#Creates a 6 by 7 board which users can click to drop in connect 4 pieces. The game automatically checks for where the user clicks, no buttons, only labels.
+#Multiplayer is alternating while looking for any wins or for if the game is full, which ends the gaem and allows user to restart
+#Singleplayer mode will have an AI that checks on what to do, might make it good but not perfect.
 
 def Connect4():
+   global oneCon
+   global gameOverCon
+   global delayCon
+   delayCon=time.time()
+   gameOverCon = False
+   oneCon = False
    master.unbind("<ButtonRelease-1>")
    for widget in master.winfo_children():
       widget.destroy()
@@ -1436,19 +1442,20 @@ def howToPlayCon():
 
 Program specific instructions
 
-1.Use the arrow keys to go up, down, left or right.
-2.You can also use your finger (or mouse)
-to drag across the screen to shift the board.""").pack(expand=True, fill="both")
+1.Click in any column to add a connect 4 piece.""").pack(expand=True, fill="both")
 
    Label(frameMine2, bg = "#000000", fg = "#fff", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
 
-When two tiles with the same number touch they merge into one,
-that means 2s become a 4, 4s a 8, 8s a 16 and so on.
-You are attempting to try to get a block of 2048 (2^11),
-which makes you win the game!""").pack(expand=True, fill="both")
+Players first choose a color and then take turns dropping colored discs,
+from the top into a seven-column, six-row vertically suspended grid.
+The pieces fall straight down, occupying the next available space within the column.
+The objective of the game is to be the first
+to form a horizontal, vertical, or diagonal line of four of one's own discs. """).pack(expand=True, fill="both")
 
 def singleCon():
-   Label(master, bg = "#000000", fg="#fff", text="That has not been made yet").grid(row = 2, columnspan = 2)
+   global oneCon
+   oneCon = True
+   boardCon()
 
 def boardCon():
    global frameCon
@@ -1497,40 +1504,63 @@ def clickCon(event):
    global labelCon
    global turnLabelCon
    global turnCon
-   for c in range(7):
-      if master.winfo_pointerx() > (pixelCon*c) and master.winfo_pointerx() < (pixelCon*(c+1)) and master.winfo_pointery() > 20:
-         for f in range(6):
-            if gridCon[f][c] == " ":
-               if f-1 >= 0:
-                  labelCon[f-1][c].config(image = blankImgCon)
-               if turnCon == "Black":
-                  labelCon[f][c].config(image = blackImgCon)
-               else:
-                  labelCon[f][c].config(image = redImgCon)
-               master.update_idletasks()
-               time.sleep(.03)
-               if f == 5:
-                  gridCon[f][c] = turnCon
-                  turnLabelCon.config(text= (turnCon + "'s turn"))
-                  checkCon(turnCon)
+   global delayCon
+   if (time.time()-delayCon) > .1:
+      for c in range(7):
+         if (master.winfo_pointerx() > (pixelCon*c) and master.winfo_pointerx() < (pixelCon*(c+1)) and master.winfo_pointery() > 20) or event == c:
+            turnLabelCon.config(text="")
+            turnLabelCon.update()
+            for f in range(6):
+               if gridCon[f][c] == " ":
+                  if f-1 >= 0:
+                     labelCon[f-1][c].config(image = blankImgCon)
                   if turnCon == "Black":
-                     turnCon = "Red"
-                  elif turnCon == "Red":
-                     turnCon = "Black"
-                  master.update()
-            else:
-               if f-1 >= 0:
-                  gridCon[f-1][c] = turnCon
-                  turnLabelCon.config(text= (turnCon + "'s turn"))
-                  checkCon(turnCon)
-                  if turnCon == "Black":
-                     turnCon = "Red"
-                  elif turnCon == "Red":
-                     turnCon = "Black"
-                  master.update()
+                     labelCon[f][c].config(image = blackImgCon)
+                  else:
+                     labelCon[f][c].config(image = redImgCon)
+                  master.update_idletasks()
+                  time.sleep(.03)
+                  if f == 5:
+                     gridCon[f][c] = turnCon
+                     if turnCon == "Black" and oneCon == False:
+                        turnLabelCon.config(text= ("Red's turn"))
+                     elif turnCon == "Red" and oneCon == False:
+                        turnLabelCon.config(text= ("Black's turn"))
+                     checkCon(turnCon)
+                     if turnCon == "Black":
+                        turnCon = "Red"
+                     elif turnCon == "Red":
+                        turnCon = "Black"
+                     master.update()
                else:
-                  turnLabelCon.config(text="You cannot play there.")
-               break
+                  if f-1 >= 0:
+                     gridCon[f-1][c] = turnCon
+                     if turnCon == "Black" and oneCon == False:
+                        turnLabelCon.config(text= ("Red's turn"))
+                     elif turnCon == "Red" and oneCon == False:
+                        turnLabelCon.config(text= ("Black's turn"))
+                     checkCon(turnCon)
+                     if turnCon == "Black":
+                        turnCon = "Red"
+                     elif turnCon == "Red":
+                        turnCon = "Black"
+                     master.update()
+                  else:
+                     turnLabelCon.config(text="You cannot play there.")
+                  break
+            break
+      try:
+         check = event -1
+      except TypeError:
+         if (oneCon == True) and (gameOverCon==False) and (f-1 >= 0):
+            aiCon()
+   delayCon=time.time()
+
+def aiCon():
+   while True:
+      c = random.randint(0, 6)
+      if gridCon[0][c] == " ":
+         clickCon(c)
          break
 
 def checkCon(turnCon):
@@ -1554,11 +1584,49 @@ def checkCon(turnCon):
          if gameWin == True:
             endCon(turnCon)
 
+   for r in range(3): #\ check
+      for c in range(4):
+         gameWin=True
+         for x in range(4):
+            if gridCon[r+x][c+x] != turnCon:
+               gameWin=False
+               break
+         if gameWin == True:
+            endCon(turnCon)
+
+   for r in range(3): #/ check
+      for c in range(4):
+         gameWin=True
+         for x in range(4):
+            if gridCon[-r-x][c+x] != turnCon:
+               gameWin=False
+               break
+         if gameWin == True:
+            endCon(turnCon)
+
+   gameEnd=True
+   for r in range(6):
+      for c in range(7):
+         if gridCon[r][c] == " ":
+            gameEnd=False
+   if gameEnd == True:
+      endCon("No one")
+
 def endCon(turnCon):
    global turnLabelCon
+   global gameOverCon
+   gameOverCon=True
    master.unbind("<ButtonRelease-1>")
-   turnLabelCon.config(text=turnCon + " wins!")
-   tk.Button(master, text = "Play Again", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: Connect4()).grid(row = 0, column = 0, columnspan = 2, sticky = "we")
+   if oneCon == True:
+      if turnCon == "Black":
+         turnLabelCon.config(text="You win!")
+      elif turnCon == "Red":
+         turnLabelCon.config(text="You lose.")
+      else:
+         turnLabelCon.config(text="It is a tie.")
+   else:
+      turnLabelCon.config(text=turnCon + " wins!")
+   tk.Button(master, text = "Play Again", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: boardCon()).grid(row = 0, column = 5, columnspan = 2, sticky = "we")
    
 #################################################################################################### Connect4 end
 
@@ -1644,7 +1712,7 @@ def menu():
    tk.Button(master, text = "ThreesNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).grid(row = 2, column = 1, sticky = "we")
    tk.Button(master, text = "CheckersNF", height = 5, width = 20, bg = "#fff", command = lambda: Checkers()).grid(row = 2, column = 2, sticky = "we")
    tk.Button(master, text = "HangManNF", height = 5, width = 20, bg = "#fff", command = lambda: HangMan()).grid(row = 3, column = 0, sticky = "we")
-   tk.Button(master, text = "Connect4NF", height = 5, width = 20, bg = "#fff", command = lambda: Connect4()).grid(row = 3, column = 1, sticky = "we")
+   tk.Button(master, text = "Connect4", height = 5, width = 20, bg = "#fff", command = lambda: Connect4()).grid(row = 3, column = 1, sticky = "we")
    tk.Button(master, text = "NF = Not Finished", height = 5, width = 20, bg = "#fff", command = lambda: printBlah()).grid(row = 3, column = 2, sticky = "we")
 
 menu()
