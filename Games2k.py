@@ -1398,7 +1398,7 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 #This was created to play Connect 4 either against another player or against itself
 #Ai will be hard, currently just have random number generator
 
-#Next steps are to add single player AI, play again needs to lead to correct game, fix glitch in single player where you switch to red, comments, leaderboard document
+#Next steps are to add single player AI and leaderboard document
 
 #Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
 #Creates a 6 by 7 board which users can click to drop in connect 4 pieces. The game automatically checks for where the user clicks, no buttons, only labels.
@@ -1407,11 +1407,7 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 
 def Connect4():
    global oneCon
-   global gameOverCon
-   global delayCon
-   delayCon=time.time()
-   gameOverCon = False
-   oneCon = False
+   oneCon = False #preset as multiplayer
    master.unbind("<ButtonRelease-1>")
    for widget in master.winfo_children():
       widget.destroy()
@@ -1420,7 +1416,8 @@ def Connect4():
    tk.Button(master, text = "Single Player", height = 5, width = 20, bg = "#fff", command = lambda: singleCon()).grid(row = 1, column = 0)
    tk.Button(master, text = "Multiplayer", height = 5, width = 20, bg = "#fff", command = lambda: boardCon()).grid(row = 1, column = 1)
 
-def howToPlayCon():
+def howToPlayCon(): #see other how-to-plays
+   master.unbind("<ButtonRelease-1>")
    for widget in master.winfo_children():
       widget.destroy()
    if screenWidth<screenHeight:
@@ -1452,13 +1449,13 @@ The pieces fall straight down, occupying the next available space within the col
 The objective of the game is to be the first
 to form a horizontal, vertical, or diagonal line of four of one's own discs. """).pack(expand=True, fill="both")
 
-def singleCon():
+def singleCon(): #if single player is chosen
    global oneCon
-   oneCon = True
-   boardCon()
+   oneCon = True #sets to single player
+   boardCon() #then continues along multiplayer route
 
 def boardCon():
-   global frameCon
+   global frameCon #SO MANY VARIABLES
    global labelCon
    global pixelCon
    global blackImgCon
@@ -1467,62 +1464,80 @@ def boardCon():
    global gridCon
    global turnLabelCon
    global turnCon
-   turnCon = "Black"
-   master.bind("<ButtonRelease-1>", clickCon)
+   global gameOverCon
+   global delayCon
+   delayCon=time.time() #This is to make sure peoples plays dont overlap, and for single player it makes sure dont play while ai is going
+   gameOverCon=False #sets the game to not over
+   turnCon = "Black" #black plays first
+   master.bind("<ButtonRelease-1>", clickCon) #binds the click to the function causes pieces drop
    for widget in master.winfo_children():
       widget.destroy()
-   turnLabelCon = tk.Label(master, bg = "#000000", fg="#fff", text=turnCon + "'s turn")
+   turnLabelCon = tk.Label(master, bg = "#000000", fg="#fff", text=turnCon + "'s turn") #displays whos turn it is
    turnLabelCon.grid(row = 8, columnspan = 7)
    Label(master, bg = "#000000", fg="#fff", text="Connect4").grid(row = 0, column = 2, columnspan = 3)
    tk.Button(master, text = "Menu", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: Connect4()).grid(row = 0, column = 0, columnspan = 2, sticky = "we")
    tk.Button(master, text = "How to Play", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: howToPlayCon()).grid(row = 0, column = 5, columnspan = 2, sticky = "we")
    if screenWidth<screenHeight:
-      pixelCon=(screenWidth//7)
+      pixelCon=(screenWidth//7)#width is 7 blocks
    else:
-      pixelCon=(screenHeight//7)
-   blackImgCon = ImageTk.PhotoImage(Image.open("gameFiles/blackChec.png").resize((pixelCon, pixelCon), resample=0))
-   redImgCon = ImageTk.PhotoImage(Image.open("gameFiles/redChec.png").resize((pixelCon, pixelCon), resample=0))
-   blankImgCon = ImageTk.PhotoImage(Image.open("gameFiles/blankChec.png").resize((pixelCon, pixelCon), resample=0))
+      pixelCon=(screenHeight//7) #height is 6 plus the top and bottom bars (7)
+   blackImgCon = ImageTk.PhotoImage(Image.open("gameFiles/blackChec.png").resize((pixelCon, pixelCon), resample=0)) #imports images, black piece
+   redImgCon = ImageTk.PhotoImage(Image.open("gameFiles/redChec.png").resize((pixelCon, pixelCon), resample=0)) #red piece
+   blankImgCon = ImageTk.PhotoImage(Image.open("gameFiles/blankChec.png").resize((pixelCon, pixelCon), resample=0)) #blank piece
    frameCon=[[]]
    labelCon=[[]]
    gridCon=[[]]
    for r in range(6):
       if len(frameCon)==r:
-         frameCon.append([])
-         gridCon.append([])
-         labelCon.append([])
+         frameCon.append([]) #where labels go
+         gridCon.append([]) #keeps track of which are empty and full
+         labelCon.append([]) #labels
       for c in range(7):
-         gridCon[r].append(" ")
+         gridCon[r].append(" ") #all empty
          frameCon[r].append(tk.Frame(master, width = pixelCon, height = pixelCon))
-         frameCon[r][c].grid(row=r+1, column=c, sticky="nsew") 
+         frameCon[r][c].grid(row=r+1, column=c, sticky="nsew")
          frameCon[r][c].propagate(False)
-         labelCon[r].append(tk.Label(frameCon[r][c], image = blankImgCon, bg = "blue2"))
+         labelCon[r].append(tk.Label(frameCon[r][c], image = blankImgCon, bg = "blue2")) #always get created with blank piece
          labelCon[r][c].pack(expand=True, fill="both")
 
-def clickCon(event):
+def clickCon(event): #when user clicks, or ai choses a place
+   master.unbind("<ButtonRelease-1>") #unbinds so user cannot click while this is happening
    global gridCon
    global labelCon
    global turnLabelCon
    global turnCon
    global delayCon
-   if (time.time()-delayCon) > .1:
-      for c in range(7):
-         if (master.winfo_pointerx() > (pixelCon*c) and master.winfo_pointerx() < (pixelCon*(c+1)) and master.winfo_pointery() > 20) or event == c:
-            turnLabelCon.config(text="")
-            turnLabelCon.update()
-            for f in range(6):
-               if gridCon[f][c] == " ":
-                  if f-1 >= 0:
-                     labelCon[f-1][c].config(image = blankImgCon)
-                  if turnCon == "Black":
-                     labelCon[f][c].config(image = blackImgCon)
-                  else:
-                     labelCon[f][c].config(image = redImgCon)
+   if (time.time()-delayCon) > .25 and gameOverCon == False: #if game is not over and time is above .25 since last click
+      for c in range(7): #for every column
+         if (master.winfo_pointerx() > (pixelCon*c) and master.winfo_pointerx() < (pixelCon*(c+1)) and master.winfo_pointery() > 20) or event == c: #if clicked in that row, or if ai chose this column
+            turnLabelCon.config(text="") #if single player this will get rid of bar for the rest of the game
+            turnLabelCon.update() #updates instantly
+            for f in range(6): #for the height of the column (starting at top)
+               if gridCon[f][c] == " ": #if nothing is there
+                  if f-1 >= 0: #if it is not the first in the list
+                     labelCon[f-1][c].config(image = blankImgCon) #turn one before to blank
+                  if turnCon == "Black": #if blacks turn
+                     labelCon[f][c].config(image = blackImgCon) #make black
+                  else: #else it is reds turn
+                     labelCon[f][c].config(image = redImgCon) #make red
                   master.update_idletasks()
-                  time.sleep(.03)
-                  if f == 5:
+                  time.sleep(.03) #makes falling effect
+                  if f == 5: #if bottom row
                      gridCon[f][c] = turnCon
-                     if turnCon == "Black" and oneCon == False:
+                     if turnCon == "Black" and oneCon == False: #only in multiplayer
+                        turnLabelCon.config(text= ("Red's turn")) #switches bottom message
+                     elif turnCon == "Red" and oneCon == False:
+                        turnLabelCon.config(text= ("Black's turn")) #switches message
+                     checkCon(turnCon) #goes through checking for end game
+                     if turnCon == "Black": #switches whos turn it is
+                        turnCon = "Red"
+                     elif turnCon == "Red":
+                        turnCon = "Black"
+                     master.update()
+               else: #if something is there
+                  if f-1 >= 0: #if not first in list
+                     gridCon[f-1][c] = turnCon #sets the grid to know where everyone played
+                     if turnCon == "Black" and oneCon == False: #same code as above for next few lines
                         turnLabelCon.config(text= ("Red's turn"))
                      elif turnCon == "Red" and oneCon == False:
                         turnLabelCon.config(text= ("Black's turn"))
@@ -1532,60 +1547,49 @@ def clickCon(event):
                      elif turnCon == "Red":
                         turnCon = "Black"
                      master.update()
-               else:
-                  if f-1 >= 0:
-                     gridCon[f-1][c] = turnCon
-                     if turnCon == "Black" and oneCon == False:
-                        turnLabelCon.config(text= ("Red's turn"))
-                     elif turnCon == "Red" and oneCon == False:
-                        turnLabelCon.config(text= ("Black's turn"))
-                     checkCon(turnCon)
-                     if turnCon == "Black":
-                        turnCon = "Red"
-                     elif turnCon == "Red":
-                        turnCon = "Black"
-                     master.update()
-                  else:
-                     turnLabelCon.config(text="You cannot play there.")
-                  break
+                  else: #if nothing could be dropped
+                     turnLabelCon.config(text="You cannot play there.") #display error message
+                  break #so more than one column can not be clicked with one click
+            try: #if an integer number, therefore ai click ends here
+               delayCon = time.time() - event #creative way to check if event = integer number, and to guarentee that you can click right after ai is triggered
+            except TypeError: #if not an integer (user click)
+               delayCon=time.time() #resets time so user doesnt spam
+               if (oneCon == True) and (gameOverCon==False) and (f-1 >= 0): #if singleplayer, game is not over and the piece was able to eb dropped
+                  aiCon() #ai gets triggered
             break
-      try:
-         check = event -1
-      except TypeError:
-         if (oneCon == True) and (gameOverCon==False) and (f-1 >= 0):
-            aiCon()
-   delayCon=time.time()
+   master.bind("<ButtonRelease-1>", clickCon) #rebinds so user can click again
 
-def aiCon():
+def aiCon(): #decides where ai should place
+   time.sleep(.5)
    while True:
-      c = random.randint(0, 6)
-      if gridCon[0][c] == " ":
-         clickCon(c)
+      c = random.randint(0, 6) #random column
+      if gridCon[0][c] == " ": #if able to be placed
+         clickCon(c) #places in that column
          break
 
-def checkCon(turnCon):
-   for c in range(7): #up-down check
-      for x in range(3):
-         gameWin=True
-         for r in range(4):
-            if gridCon[r+x][c] != turnCon:
-               gameWin=False
+def checkCon(turnCon): #checks for game over
+   for c in range(7): #up-down check, goes column by column
+      for x in range(3): #3 possible wins in each column
+         gameWin=True #sets win to true
+         for r in range(4): #for the length of the winning row
+            if gridCon[r+x][c] != turnCon: #if not a 4 in a row
+               gameWin=False #game not over
                break
-         if gameWin == True:
-            endCon(turnCon)
+         if gameWin == True: #if was winning
+            endCon(turnCon) #end game with winner
 
-   for r in range(6): #left-right check
-      for x in range(4):
+   for r in range(6): #left-right check, goes row by row
+      for x in range(4): #4 possible wins in each row
          gameWin=True
-         for c in range(4):
+         for c in range(4): #rest is same as above
             if gridCon[r][c+x] != turnCon:
                gameWin=False
                break
          if gameWin == True:
             endCon(turnCon)
 
-   for r in range(3): #\ check
-      for c in range(4):
+   for r in range(3): #\ check, 3 possible row wins
+      for c in range(4): #4 possible column wins
          gameWin=True
          for x in range(4):
             if gridCon[r+x][c+x] != turnCon:
@@ -1594,8 +1598,8 @@ def checkCon(turnCon):
          if gameWin == True:
             endCon(turnCon)
 
-   for r in range(3): #/ check
-      for c in range(4):
+   for r in range(3): #/ check, 3 possible row wins
+      for c in range(4): #4 possible column wins
          gameWin=True
          for x in range(4):
             if gridCon[-r-x][c+x] != turnCon:
@@ -1604,30 +1608,29 @@ def checkCon(turnCon):
          if gameWin == True:
             endCon(turnCon)
 
-   gameEnd=True
-   for r in range(6):
-      for c in range(7):
-         if gridCon[r][c] == " ":
-            gameEnd=False
+   gameEnd=True #board full check
+   for r in range(6): #for rows
+      for c in range(7): #for columns
+         if gridCon[r][c] == " ": #if empty
+            gameEnd=False #not over
    if gameEnd == True:
-      endCon("No one")
+      endCon("No one") #triggers end message saying no one won
 
-def endCon(turnCon):
+def endCon(turnCon): #when game is over
    global turnLabelCon
    global gameOverCon
-   gameOverCon=True
-   master.unbind("<ButtonRelease-1>")
-   if oneCon == True:
-      if turnCon == "Black":
+   gameOverCon=True #sets game to over
+   if oneCon == True: #if single player
+      if turnCon == "Black": #user is black
          turnLabelCon.config(text="You win!")
-      elif turnCon == "Red":
+      elif turnCon == "Red": #ai is red
          turnLabelCon.config(text="You lose.")
-      else:
+      else: #tie
          turnLabelCon.config(text="It is a tie.")
-   else:
-      turnLabelCon.config(text=turnCon + " wins!")
-   tk.Button(master, text = "Play Again", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: boardCon()).grid(row = 0, column = 5, columnspan = 2, sticky = "we")
-   
+   else: #if multiplayer
+      turnLabelCon.config(text=turnCon + " wins!") #who evers turn it is wins, if a tie the turnCon is "no one"
+   tk.Button(master, text = "Play Again", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: boardCon()).grid(row = 0, column = 5, columnspan = 2, sticky = "we") #allows user to play again
+
 #################################################################################################### Connect4 end
 
 #################################################################################################### Threes start
