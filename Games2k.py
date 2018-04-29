@@ -6,8 +6,8 @@ from PIL import ImageTk, Image
 
 #################################################################################################### TicTacToe2.0 start
 
-#print("LOADING...")
-#print("Please wait...")
+print("LOADING...")
+print("Please wait...")
 
 #Sam Gunter
 #TicTacToe2.14 was finished 5:50pm on the 18th of march, 2018
@@ -1398,7 +1398,7 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 #This was created to play Connect 4 either against another player or against itself
 #Ai will be hard, currently just have random number generator
 
-#Next steps are to add single player AI and leaderboard document
+#Next steps are AI for \ and / does not work and randomly said "you won" and to add leaderboard document
 
 #Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
 #Creates a 6 by 7 board which users can click to drop in connect 4 pieces. The game automatically checks for where the user clicks, no buttons, only labels.
@@ -1509,7 +1509,15 @@ def clickCon(event): #when user clicks, or ai choses a place
    global delayCon
    if (time.time()-delayCon) > .25 and gameOverCon == False: #if game is not over and time is above .25 since last click
       for c in range(7): #for every column
-         if (master.winfo_pointerx() > (pixelCon*c) and master.winfo_pointerx() < (pixelCon*(c+1)) and master.winfo_pointery() > 20) or event == c: #if clicked in that row, or if ai chose this column
+         moveOn=False
+         try:
+            check = event - 1
+            if c == event:
+               moveOn=True
+         except TypeError:
+            if (master.winfo_pointerx() > (pixelCon*c) and master.winfo_pointerx() < (pixelCon*(c+1)) and master.winfo_pointery() > 20): #if clicked in that row, or if ai chose this column
+               moveOn=True
+         if moveOn == True:
             turnLabelCon.config(text="") #if single player this will get rid of bar for the rest of the game
             turnLabelCon.update() #updates instantly
             for f in range(6): #for the height of the column (starting at top)
@@ -1561,11 +1569,98 @@ def clickCon(event): #when user clicks, or ai choses a place
 
 def aiCon(): #decides where ai should place
    time.sleep(.5)
-   while True:
-      c = random.randint(0, 6) #random column
-      if gridCon[0][c] == " ": #if able to be placed
-         clickCon(c) #places in that column
-         break
+   whereDrop=11
+   for c in range(7): #up and down
+      for x in range(3):
+         playHere=True
+         for r in range(3):
+            if gridCon[-(r+x+1)][c] != "Red":
+               playHere=False
+               break
+         if gridCon[-(x+4)][c] != " ":
+            playHere=False
+         if playHere == True:
+            whereDrop=c
+            break
+
+   for r in range(6): #side to side
+      for c in range(4):
+         playHere=True
+         missing=10
+         for x in range(4):
+            if gridCon[-(r+1)][c+x] == " ":
+               if missing == 10:
+                  missing=c+x
+               else:
+                  playHere=False
+                  break
+            elif gridCon[-(r+1)][c+x] == "Black":
+               playHere=False
+               break
+         if playHere == True:
+            if r == 0:
+               whereDrop=missing
+               break
+            else:
+               if gridCon[-(r)][missing] != " ":
+                  whereDrop=missing
+                  break
+
+   for r in range(3): #/
+      for c in range(4):
+         playHere=True
+         for x in range(4):
+            if gridCon[-(r+x+1)][c+x] == " ":
+               if missing == 10:
+                  missingC=c+x
+                  missingR=-(r+x+1)
+               else:
+                  playHere=False
+                  break
+            elif gridCon[-(r+x+1)][c+x] == "Black":
+               playHere=False
+               break
+         if playHere == True:
+            if missingR == -1:
+               whereDrop=missingC
+               break
+            else:
+               if gridCon[missingR-1][missingC] != " ":
+                  whereDrop=missingC
+                  break
+
+   for r in range(3): #\
+      for c in range(4):
+         playHere=True
+         for x in range(4):
+            if gridCon[-(r+x+1)][-(c+x+1)] == " ":
+               if missing == 10:
+                  missingC=-(c+x+1)
+                  missingR=-(r+x+1)
+               else:
+                  playHere=False
+                  break
+            elif gridCon[-(r+x+1)][c+x] == "Black":
+               playHere=False
+               break
+         if playHere == True:
+            if missingR == -1:
+               whereDrop=missingC
+               break
+            else:
+               if gridCon[missingR-1][missingC] != " ":
+                  whereDrop=missingC
+                  break
+   
+   if whereDrop < 10:
+      clickCon(whereDrop)
+      
+   else:
+      while True:
+         c = random.randint(0, 6) #random column
+         if gridCon[0][c] == " ": #if able to be placed
+            clickCon(c) #places in that column
+            break
 
 def checkCon(turnCon): #checks for game over
    for c in range(7): #up-down check, goes column by column
