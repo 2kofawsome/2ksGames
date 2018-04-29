@@ -2,22 +2,25 @@ from tkinter import *
 import tkinter as tk
 import random, time, os
 from tkinter.font import Font
+from PIL import ImageTk, Image
+
+print("LOADING...")
+print("Please wait...")
 
 #################################################################################################### TicTacToe2.0 start
 
-
 #Sam Gunter
-#TicTacToe2.14 was finished 5:50pm on the 18th of march, 2018
-#This was created to play TicTacToe either 2 player or against varying degrees of AI. The easy Ai should be easy (duh) to win against and the hard should be impossible to beat.
-#Unlike TicTacToe1.0 this has a GUI to make the experience better. The hard ai is much better and now not only gets lines and blocks lines, but sets up plays where it is a guaranteed win.
+#TicTacToe2.14 was finished 5:50pm on the 18th of March, 2018.
+#This was created to play TicTacToe either 2 player or against varying degrees of AI. The easy AI should be easy (duh) to win against and the hard should be impossible to beat.
+#Unlike TicTacToe1.0 this has a GUI to make the experience better. The hard AI is much better and now not only gets lines and blocks lines, but sets up plays where it is a guaranteed win.
 #I created this in functions and procedures instead of linear to allow both single player and multiplayer to use the same blocks of code. This is also so multiple games can be added together in one document.
 
 #Next step is to add a leaderboard document (will have to learn how to do file manipulation).
 
 #TicTacToe: Global variables and functions normally have a "Tic" at the end incase another game uses similar variables later on.
 #First function is gamemode, then if single player was chosen difficulty, then a function to set difficulty.
-#No matter if single or multiplayer the next function creates the tkinter window and then one of the turns happen either turnTic or one of the ai, ends with endTic. User can go back to menu or click again and the person starting alternates
-#It is always set up so the next function is last in the current function (using if and else statements)
+#No matter if single or multiplayer the next function creates the tkinter window and then one of the turns happen either turnTic or one of the AI, ends with endTic. User can go back to menu or click again and the person starting alternates.
+#It is always set up so the next function is last in the current function (using if and else statements).
 
 def TicTacToe():
    for widget in master.winfo_children():
@@ -388,15 +391,15 @@ def aiTic(difficulty):
 #################################################################################################### MineSweeper start
 
 #Sam Gunter
-#MineSweeper was finished 2:05am on the 31st of march, 2018
-#This was created to copy the microsoft minesweeper game that we know and love
-#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computer it does have severe lag
+#MineSweeper was finished 2:05am on the 31st of March, 2018.
+#This was created to copy the microsoft minesweeper game that we know and love.
+#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computers it does have severe lag.
 
-#Next steps are to add images for bombs and flags and add a leaderboard document.
+#Next step is to add a leaderboard document.
 
 #MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
-#First function is MineSweeper(). Then choice of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
-#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first click will never be a bomb. Allows user to chose to play again
+#First function is MineSweeper(). Then choice of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper().
+#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first click will never be a bomb. Allows user to chose to play again.
 
 
 def MineSweeper(errorCheck):
@@ -491,6 +494,8 @@ def createBoardMine():
    global statusMine
    global bombsLeftMine
    global buttonMine
+   global flagImgMine
+   global bombImgMine
    bombsLeftMine=bombMine #keep track of flag counter in top corner
    statusMine="start"
    for widget in master.winfo_children(): #same as TicTacToe2.0 this delete all widgets onscreen
@@ -499,6 +504,8 @@ def createBoardMine():
       pixelMine=(screenWidth//(sizeMine+1))
    else:
       pixelMine=(screenHeight//(sizeMine+1))
+   flagImgMine = ImageTk.PhotoImage(Image.open("gameFiles/flagMine.png").resize((pixelMine, pixelMine), resample=0))
+   bombImgMine = ImageTk.PhotoImage(Image.open("gameFiles/bombMine.png").resize((pixelMine, pixelMine), resample=0))
    
    hiddenMine=[[]] #this will be the minesweeper board fully filled up and user can not see it
    shownMine=[[]] #what the user gets shown
@@ -531,7 +538,7 @@ def createBoardMine():
 def flagMine(event): #This might be one of the most complicated codes I have created, so many numbers together all of which are variables and most of which are pixels related to screen
    if statusMine!="end": #makes it so this code doesn't run if bomb has been triggered
       global bombsLeftMine
-      global shownMine
+      global shownMine #flagImgMine
       global buttonMine
       for r in range(sizeMine):
          for c in range(sizeMine):
@@ -539,11 +546,11 @@ def flagMine(event): #This might be one of the most complicated codes I have cre
                if shownMine[r][c] == "?": #if already a flag
                   bombsLeftMine+=1 #adds 1 bomb (because 1 less flag)
                   shownMine[r][c]="" #turns off flag
-                  buttonMine[r][c].config(text = shownMine[r][c], state = 'normal') #creates button as normal
+                  buttonMine[r][c].config(image="", text = shownMine[r][c], command = lambda forCommand=[r, c]: clickMine(forCommand[0], forCommand[1])) #creates button as normal
                else:
                   bombsLeftMine-=1 #takes a away 1 bomb from counter
                   shownMine[r][c]="?" #makes a flag
-                  buttonMine[r][c].config(state = 'disabled', disabledforeground = "#000000", text = shownMine[r][c]) #button that has no command, just to display question mark until clicked again
+                  buttonMine[r][c].config(image=flagImgMine, command = 0, disabledforeground = "#000000") #button that has no command, just to display question mark until clicked again
       if bombsLeftMine>=0: #if not negative it will display bombs left
          button1=tk.Button(master, text = str(bombsLeftMine)+" bombs left", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff").grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we")
       else: #if negative it says too many flags
@@ -626,9 +633,9 @@ def endMine(result): #end game
    for r in range(sizeMine):
       for c in range(sizeMine):
          if hiddenMine[r][c] == "!" and result == "lose": #if lose
-            buttonMine[r][c].config(text = hiddenMine[r][c], bg = "indianred")  #make bombs show as red
+            buttonMine[r][c].config(image=bombImgMine, bg = "indianred")  #make bombs show as red
          elif hiddenMine[r][c] == "!" and result == "win": #if win
-            buttonMine[r][c].config(text = "?") #make bombs show as defused
+            buttonMine[r][c].config(image=flagImgMine, text = "?") #make bombs show as defused
 
 def clickMine(row, column): #This is used 1 time to make sure the user doesn't get out 1st time
    global statusMine
@@ -676,7 +683,7 @@ def checkMine(row, column): #when a button is clicked
       endMine("lose") #triggers lose
       for widget in frameMine[row*sizeMine+column].winfo_children():
          widget.destroy()
-      tk.Button(frameMine[row*sizeMine+column], text = hiddenMine[row][column], font=myFont, bg = "darkred").pack(expand=True, fill="both") #dark red to make them know it was the bomb that killed them
+      tk.Button(frameMine[row*sizeMine+column], image=bombImgMine, font=myFont, bg = "darkred").pack(expand=True, fill="both") #dark red to make them know it was the bomb that killed them
       
    elif hiddenMine[row][column]==" ": #if not touching any bomb
       shownMine[row][column]=hiddenMine[row][column] #switches shown to hidden, I need this because shown is " " and hidden is "", so this makes the code run faster as it does not go over the same blocks multiple times
@@ -705,14 +712,395 @@ def checkMine(row, column): #when a button is clicked
 
 #################################################################################################### MineSweeper end
 
+#################################################################################################### 2048 start
+
+#Sam Gunter
+#2048 was finished 2:18pm on the 6th of April, 2018.
+#This was created to play 2048. The hardest and longest part was making the program appear fluid, not a sudden movement where the entire screen refreshes,
+#but making it refresh one by one as the label moves. If the entire screen reloaded it would be too slow, so I had to completely change how I made frames on tkinter.
+
+#Next step is to add a leaderboard document.
+
+#2048: Global variables and functions normally have a 2048 at the end, main one is called the2048 because had to have letters.
+#Creates board with 2 numbers inside it. Then user can click arrow or swipe mouse/finger across screen.
+#All numbers move in that direction and combine if possible. Constantly checking for game end.
+
+def the2048():
+   global pixel2048
+   global value2048
+   global frame2048
+   global label2048
+   global win2048
+   global delay2048
+   delay2048=time.time()
+   win2048="schrodinger"
+   master.bind("<Up>", up2048) #binds the up, down, left, right arrows on keyboard
+   master.bind("<Down>", down2048)
+   master.bind("<Left>", left2048)
+   master.bind("<Right>", right2048)
+   master.bind("<Button-1>", buttonclick2048) #so arrows arent needed, allows swiping (finger down...
+   master.bind("<ButtonRelease-1>", buttonrelease2048) #... finger up
+   for widget in master.winfo_children():
+      widget.destroy()
+   if screenWidth<screenHeight:
+      pixel2048=(screenWidth//5)
+   else:
+      pixel2048=(screenHeight//5)
+   Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//6), text="2048").grid(row = 0, column=1, columnspan = 2)
+   tk.Button(master, text = "Menu", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: unbind()).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "How To Play", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: howToPlay2048()).grid(row = 0, column = 3, sticky = "we")
+
+   label2048=[[]]
+   frame2048=[[]] #same as all lists above, but for flags
+   for r in range(4):
+      if len(frame2048)==r:
+         frame2048.append([])
+         label2048.append([])
+      for c in range(4):
+         frame2048[r].append(tk.Frame(master, bd = 2, width = pixel2048, height = pixel2048))
+         frame2048[r][c].grid(row=r+1, column=c, sticky="nsew") 
+         frame2048[r][c].propagate(False)
+         label2048[r].append("")
+
+   value2048=[[" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]] #creates empty grid
+
+   row = random.randint(0, 3) #row for the first 2
+   column = random.randint(0, 3) #column for first 2
+   value2048[row][column] = 2 #places 2
+   while True:
+      row = random.randint(0, 3) #same as above
+      column = random.randint(0, 3)
+      if value2048[row][column] == " ": #checks to make sure 2 isn't already there
+         value2048[row][column] = 4 #places the 4
+         break
+
+   for r in range(4):
+      for c in range(4):
+         if value2048[r][c] == " ":
+            label2048[r][c] = tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey") #only need " ", 2 and 4 for this first one
+         elif value2048[r][c] == 2:
+            label2048[r][c] = tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "white")
+         elif value2048[r][c] == 4:
+            label2048[r][c] = tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "lemonchiffon")
+         label2048[r][c].pack(expand=True, fill="both")
+   reloadFull2048()
+
+def howToPlay2048():
+   for widget in master.winfo_children():
+      widget.destroy()
+   if screenWidth<screenHeight:
+      pixelMine=(screenWidth)
+   else:
+      pixelMine=(screenHeight)
+   Label(master, bg = "#000000", fg = "#fff", text="2048").grid(row = 0, column = 1)
+   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 0, sticky = "we")
+
+   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameMine1.grid(row=1, columnspan=2, sticky="nsew")
+   frameMine1.propagate(False)
+   frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
+   frameMine2.grid(row=2, columnspan=2, sticky="nsew")
+   frameMine2.propagate(False)
+   
+   Label(frameMine1, bg = "grey", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
+
+
+Program specific instructions
+
+1.Use the arrow keys to go up, down, left or right.
+2.You can also use your finger (or mouse)
+to drag across the screen to shift the board.""").pack(expand=True, fill="both")
+
+   Label(frameMine2, bg = "grey", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
+
+When two tiles with the same number touch they merge into one,
+that means 2s become a 4, 4s a 8, 8s a 16 and so on.
+You are attempting to try to get a block of 2048 (2^11),
+which makes you win the game!""").pack(expand=True, fill="both")
+
+def reloadFull2048():
+   global win2048
+   global label2048
+   win2048="False" #game set as over
+   for r in range(4):
+      for c in range(4):
+         if value2048[r][c] == " ":
+            win2048="schrodinger" #if any of these things are met, game continues (see schrodingers cat thought experiment)
+         if r>0: #need layers here because an error code would happen for out of range
+            if value2048[r][c] == value2048[r-1][c]:
+               win2048="schrodinger"
+         if r<3:
+            if value2048[r][c] == value2048[r+1][c]:
+               win2048="schrodinger"
+         if c>0:
+            if value2048[r][c] == value2048[r][c-1]:
+               win2048="schrodinger"
+         if c<3:
+            if value2048[r][c] == value2048[r][c+1]:
+               win2048="schrodinger"
+               
+         if value2048[r][c] == 2048:
+            win2048="True"
+         if value2048[r][c] == " ":
+            label2048[r][c].config(text = value2048[r][c], bg = "grey", font=("Helvetica", pixel2048//2)) #changes colour, text and size
+         elif value2048[r][c] == 2:
+            label2048[r][c].config(text = value2048[r][c], bg = "white", font=("Helvetica", pixel2048//2))
+         elif value2048[r][c] == 4:
+            label2048[r][c].config(text = value2048[r][c], bg = "lemonchiffon", font=("Helvetica", pixel2048//2))
+         elif value2048[r][c] == 8:
+            label2048[r][c].config(text = value2048[r][c], bg = "sandybrown", font=("Helvetica", pixel2048//2))
+         elif value2048[r][c] == 16:
+            label2048[r][c].config(text = value2048[r][c], bg = "chocolate", font=("Helvetica", pixel2048//2))
+         elif value2048[r][c] == 32:
+            label2048[r][c].config(text = value2048[r][c], bg = "salmon", font=("Helvetica", pixel2048//2))
+         elif value2048[r][c] == 64:
+            label2048[r][c].config(text = value2048[r][c], bg = "tomato", font=("Helvetica", pixel2048//2))
+         elif value2048[r][c] == 128:
+            label2048[r][c].config(text = value2048[r][c], bg = "khaki", font=("Helvetica", pixel2048//3))
+         elif value2048[r][c] == 256:
+            label2048[r][c].config(text = value2048[r][c], bg = "yellow", font=("Helvetica", pixel2048//3))
+         elif value2048[r][c] == 512:
+            label2048[r][c].config(text = value2048[r][c], bg = "gold", font=("Helvetica", pixel2048//3))
+         elif value2048[r][c] == 1024:
+            label2048[r][c].config(text = value2048[r][c], bg = "orange", font=("Helvetica", pixel2048//4))
+         elif value2048[r][c] == 2048:
+            label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
+   if win2048 == "True":
+      Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="You Win!").grid(row = 5, columnspan = 4, sticky = "we")
+      tk.Button(master, text = "Play Again", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 3, sticky = "we")
+   elif win2048 == "False":
+      Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="You Lose").grid(row = 5, columnspan = 4, sticky = "we")
+      tk.Button(master, text = "Play Again", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 3, sticky = "we")
+
+   
+def reload2048(r, c): #reloads one at a time, this gives the game its cascading effect
+   if value2048[r][c] == " ":
+      label2048[r][c].config(text = value2048[r][c], bg = "grey", font=("Helvetica", pixel2048//2))
+   elif value2048[r][c] == 2:
+      label2048[r][c].config(text = value2048[r][c], bg = "white", font=("Helvetica", pixel2048//2))
+   elif value2048[r][c] == 4:
+      label2048[r][c].config(text = value2048[r][c], bg = "lemonchiffon", font=("Helvetica", pixel2048//2))
+   elif value2048[r][c] == 8:
+      label2048[r][c].config(text = value2048[r][c], bg = "sandybrown", font=("Helvetica", pixel2048//2))
+   elif value2048[r][c] == 16:
+      label2048[r][c].config(text = value2048[r][c], bg = "chocolate", font=("Helvetica", pixel2048//2))
+   elif value2048[r][c] == 32:
+      label2048[r][c].config(text = value2048[r][c], bg = "salmon", font=("Helvetica", pixel2048//2))
+   elif value2048[r][c] == 64:
+      label2048[r][c].config(text = value2048[r][c], bg = "tomato", font=("Helvetica", pixel2048//2))
+   elif value2048[r][c] == 128:
+      label2048[r][c].config(text = value2048[r][c], bg = "khaki", font=("Helvetica", pixel2048//3))
+   elif value2048[r][c] == 256:
+      label2048[r][c].config(text = value2048[r][c], bg = "yellow", font=("Helvetica", pixel2048//3))
+   elif value2048[r][c] == 512:
+      label2048[r][c].config(text = value2048[r][c], bg = "gold", font=("Helvetica", pixel2048//3))
+   elif value2048[r][c] == 1024:
+      label2048[r][c].config(text = value2048[r][c], bg = "orange", font=("Helvetica", pixel2048//4))
+   elif value2048[r][c] == 2048:
+      label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
+
+def buttonclick2048(event): #checks x and y value with first click
+   global x2048
+   global y2048
+   x2048=master.winfo_pointerx() #x value
+   y2048=master.winfo_pointery() #y value
+
+def buttonrelease2048(event): #when button is released (the mouse was slide in this time)
+   xslide2048=master.winfo_pointerx() - x2048 #checks difference in start and end
+   yslide2048=master.winfo_pointery() - y2048
+   if xslide2048 > pixel2048: #if x bigger than one block (to the right)
+      if yslide2048 < pixel2048 and yslide2048 > -1 * pixel2048: #checks if opposite (y in this case) was moved less than a block
+         right2048(" ") 
+   if xslide2048 < -1 * pixel2048: #if x smaller than negative one block (to the left)
+      if yslide2048 < pixel2048 and yslide2048 > -1 * pixel2048:
+         left2048(" ") 
+   if yslide2048 > pixel2048: #if y bigger than one block (down)
+      if xslide2048 < pixel2048 and xslide2048 > -1 * pixel2048:
+         down2048(" ")
+   if yslide2048 < -1 * pixel2048: #if y smaller than negative one block (up)
+      if xslide2048 < pixel2048 and xslide2048 > -1 * pixel2048:
+         up2048(" ")
+
+def up2048(event):
+   global delay2048
+   if (time.time()-delay2048) > .05:
+      if win2048 == "schrodinger": #neither true nor false
+         together=[[]]
+         for r in range(4): #makes it so only 1 thing happens on each line
+            if len(together)==r:
+               together.append([])
+            for c in range(4):
+               together[r].append(False)
+         moved=False #checks to see if any move happened
+         for r in range(3): #one less because dont need to check the highest row
+            for adjustment in range(3): #adjustment makes it go to end, and not just up once
+               for c in range(4):
+                  if value2048[r+1-adjustment][c] != " " and (r+1-adjustment)>=0: #if the tile is not empty, saves code time
+                     if value2048[r-adjustment][c] == " " and (r-adjustment)>=0: #if the one above is empty
+                        value2048[r-adjustment][c] = value2048[r+1-adjustment][c] #replace with one under
+                        value2048[r+1-adjustment][c] = " " #delete one under
+                        moved=True #it moved at least once
+                     else: #if a number above
+                        if value2048[r-adjustment][c] == value2048[r+1-adjustment][c] and (r-adjustment)>=0 and together[r-adjustment][c] == False: #if the number below and above are the same
+                           value2048[r-adjustment][c] = (value2048[r-adjustment][c])*2 #multiply above
+                           value2048[r+1-adjustment][c] = " " #and delete bottom
+                           together[r-adjustment][c] = True
+                           together[r-adjustment-1][c] = True
+                           moved=True #it moved at least once
+                     reload2048(r+1-adjustment, c)
+                     reload2048(r-adjustment, c)
+                     master.update_idletasks()
+                     time.sleep(.005)
+         if moved == True: #if something moved, create a new number
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
+            column = random.randint(0, 3) #random column
+            for c in range(4): #makes it so it will check all fast and not just random
+               if value2048[3][(column+c)%4] == " ": #if empty. % is modular so remainder
+                  value2048[3][(column+c)%4] = 2 #put in a 2
+                  break #then break, else do again with 1 higher
+         else: #else, display a message saying no
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
+         reloadFull2048()
+   delay2048 = time.time()
+
+def down2048(event):
+   global delay2048
+   if (time.time()-delay2048) > .05:
+      if win2048 == "schrodinger":
+         together=[[]]
+         for r in range(4):
+            if len(together)==r:
+               together.append([])
+            for c in range(4):
+               together[r].append(False)
+         moved=False
+         for r in range(3):
+            for adjustment in range(3):
+               for c in range(4):
+                  if value2048[(-r-1)-1+adjustment][c] != " " and (-r-1)-1+adjustment<0: #row is reversed
+                     if value2048[(-r-1)+adjustment][c] == " " and ((-r-1)+adjustment)<0: #plus adjustment not minus
+                        value2048[(-r-1)+adjustment][c] = value2048[(-r-1)-1+adjustment][c] #minus 1, not plus 1
+                        value2048[(-r-1)-1+adjustment][c] = " "
+                        moved=True
+                     else:
+                        if value2048[(-r-1)+adjustment][c] == value2048[(-r-1)-1+adjustment][c] and ((-r-1)+adjustment)<0 and together[(-r-1)+adjustment][c] == False:
+                           value2048[(-r-1)+adjustment][c] = (value2048[(-r-1)+adjustment][c])*2
+                           value2048[(-r-1)-1+adjustment][c] = " "
+                           moved=True
+                           together[(-r-1)+adjustment][c] = True
+                           together[(-r-1)+adjustment+1][c] = True
+                     reload2048((-r-1)-1+adjustment, c)
+                     reload2048((-r-1)+adjustment, c)
+                     master.update_idletasks()
+                     time.sleep(.005)
+         if moved == True:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
+            column = random.randint(0, 3)
+            for c in range(4):
+               if value2048[0][(column+c)%4] == " ": #0 not 3
+                  value2048[0][(column+c)%4] = 2
+                  break
+         else:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
+
+         reloadFull2048()
+   delay2048 = time.time()
+
+def left2048(event): #this is the same code as up2048, but r and c is switched throughout it
+   global delay2048
+   if (time.time()-delay2048) > .05:
+      if win2048 == "schrodinger":
+         together=[[]]
+         for r in range(4): #makes it so only 1 thing happens on each line
+            if len(together)==r:
+               together.append([])
+            for c in range(4):
+               together[r].append(False)
+         moved=False
+         for c in range(3):
+            for adjustment in range(3):
+               for r in range(4):
+                  if value2048[r][c+1-adjustment] != " " and (c+1-adjustment)>=0:
+                     if value2048[r][c-adjustment] == " " and (c-adjustment)>=0:
+                        value2048[r][c-adjustment] = value2048[r][c+1-adjustment]
+                        value2048[r][c+1-adjustment] = " "
+                        moved=True
+                     else:
+                        if value2048[r][c-adjustment] == value2048[r][c+1-adjustment] and (c-adjustment)>=0 and together[r][c-adjustment] == False:
+                           value2048[r][c-adjustment] = (value2048[r][c-adjustment])*2
+                           value2048[r][c+1-adjustment] = " "
+                           moved=True
+                           together[r][c-adjustment] = True
+                           together[r][c-adjustment-1] = True
+                     reload2048(r, c+1-adjustment)
+                     reload2048(r, c-adjustment)
+                     master.update_idletasks()
+                     time.sleep(.005)
+         if moved == True:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
+            row = random.randint(0, 3)
+            for r in range(4):
+               if value2048[(row+r)%4][3] == " ":
+                  value2048[(row+r)%4][3] = 2
+                  break 
+         else:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
+
+         reloadFull2048()
+   delay2048 = time.time()
+      
+def right2048(event): #this is the same code as down,2048 but r and c are switched throughout it
+   global delay2048
+   if (time.time()-delay2048) > .05:
+      if win2048 == "schrodinger":
+         together=[[]]
+         for r in range(4): #makes it so only 1 thing happens on each line
+            if len(together)==r:
+               together.append([])
+            for c in range(4):
+               together[r].append(False)
+         moved=False
+         for c in range(3):
+            for adjustment in range(3):
+               for r in range(4):
+                  if value2048[r][(-c-1)-1+adjustment] != " " and ((-c-1)-1+adjustment)<0:
+                     if value2048[r][(-c-1)+adjustment] == " " and ((-c-1)+adjustment)<0:
+                        value2048[r][(-c-1)+adjustment] = value2048[r][(-c-1)-1+adjustment]
+                        value2048[r][(-c-1)-1+adjustment] = " "
+                        moved=True
+                     else:
+                        if value2048[r][(-c-1)+adjustment] == value2048[r][(-c-1)-1+adjustment] and ((-c-1)+adjustment)<0 and together[r][(-c-1)+adjustment] == False:
+                           value2048[r][(-c-1)+adjustment] = (value2048[r][(-c-1)+adjustment])*2
+                           value2048[r][(-c-1)-1+adjustment] = " "
+                           moved=True
+                           together[r][(-c-1)+adjustment]= True
+                           together[r][(-c-1)+adjustment+1]= True 
+                     reload2048(r, (-c-1)-1+adjustment)
+                     reload2048(r, (-c-1)+adjustment)
+                     master.update_idletasks()
+                     time.sleep(.005)
+         if moved == True:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
+            row = random.randint(0, 3)
+            for r in range(4):
+               if value2048[(row+r)%4][0] == " ":
+                  value2048[(row+r)%4][0] = 2
+                  break
+         else:
+            Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
+         reloadFull2048()
+   delay2048 = time.time()
+      
+#################################################################################################### 2048 end
+
 #################################################################################################### Sudoku start
 
 #Sam Gunter
-#Sudoku was finished 1:03am on the 14th of april, 2018
-#This was created to allow the user to play sudoku on the computer
-#I have tried my best to add a random generator to make the games less static, but it came down to the tried and true method of "f--- it, it is good enough"
+#Sudoku was finished 1:03am on the 14th of April, 2018.
+#This was created to allow the user to play sudoku on the computer.
+#I have tried my best to add a random generator to make the games less static, but it came down to the tried and true method of "f--- it, it is good enough".
 
-#Next steps is to make a leaderboard document
+#Next steps is to make a leaderboard document.
 
 #Sudoku: Global variables and functions normally have a "Su" at the end incase another game uses similar variables later on (or earlier on).
 #First function is Sudoku(). Then chocie of easy, medium or hard. Then triggers a board to be generated from one of the preset fully complete and semi-random tiles chosen to show.
@@ -729,7 +1117,7 @@ def Sudoku():
 
 def solvedBoardSu(number):
 
-   hiddenSu = open(".\SudokuBoards.txt").readlines()
+   hiddenSu = open(".\gameFiles\SudokuBoards.txt").readlines()
    hiddenSu = hiddenSu[number] #takes that line specfied
    hiddenSu=hiddenSu.split('|') #splits at | each 9
 
@@ -746,7 +1134,7 @@ def generateSu(difficulty):
    global staticSu
    global hiddenSu
 
-   fileSu = open(".\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its wroking see "CreateBoardsSudoku.py"
+   fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its wroking see "CreateBoardsSudoku.py"
    
    hiddenSu = solvedBoardSu(random.randint(0, (len(fileSu)-2))) #choses board from random number within the amount of boards
 
@@ -774,6 +1162,24 @@ def generateSu(difficulty):
                c+=1
                if c == 9: #if column past, column = 0 and back at start
                   c = c - 9
+                  
+   for n in range(3): #checks for eahc box
+      for m in range(3):
+         amount=0 #the amount of numbers shown
+         for x in range(3): #checks each tile in box
+            for y in range(3):
+               if patternSu[n*3+x][m*3+y] == True: #if shown
+                  amount+=1
+         while amount < 3: #at least 3 must be shown
+            while True: #or another will be put in to assure solvability
+               r=random.randint(0, 2)
+               c=random.randint(0, 2)
+               if patternSu[n*3+r][m*3+c] == False:
+                  patternSu[n*3+r][m*3+c] = True
+                  amount+=1 #adjusts amount and checks again
+                  difficulty = difficulty - 1 #1 less random one later
+                  break
+
    for n in range(difficulty): #depending on difficulty adds a number of hints to help user
       while True:
          r=random.randint(0,8)
@@ -936,7 +1342,7 @@ def enterSu(event):
 
    for r in range(9):
       for c in range(9):
-         mistakeSu[r][c]=False #deletes all mistakes eahc time and rechecks for errors
+         mistakeSu[r][c]=False #deletes all mistakes each time and rechecks for errors
          
    for r in range(9):
       for c in range(9): #choses a specfic block
@@ -985,86 +1391,41 @@ def enterSu(event):
 
 #################################################################################################### Sudoku end
 
-#################################################################################################### 2048 start
+#################################################################################################### Connect4 start
 
 #Sam Gunter
-#2048 was finished 2:18pm on the 6th of april, 2018
-#This was created to play 2048. The hardest and longest part was making the program appear fluid, not a sudden movement where the entire screen refreshes,
-#but making it refresh one by one as the label moves. If the entire screen reloaded it would be too slow, so I had to completely change how I made frames on tkinter.
+#Connect4 was finished 3:31am on the 28th of April, 2018
+#This was created to play Connect 4 either against another player or against AI.
+#AI checks for winning plays, blocking plays, but the rest is random. This allows the user to set up plays, but no easy wins.
 
-#Next step is to add a leaderboard document.
+#Next step is to add leaderboard document.
 
-#2048: Global variables and functions normally have a 2048 at the end, main one is called the2048 because had to have letters.
-#Creates board with 2 numbers inside it. Then user can click arrow or swipe mouse/finger across screen.
-#All numbers move in that direction and combine if possible. Constantly checking for game end.
+#Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
+#Creates a 6 by 7 board which users can click to drop in connect 4 pieces. The game automatically checks for where the user clicks, no buttons, only labels.
+#Multiplayer is alternating while looking for any wins or for if the game is full, which ends the game and allows user to restart. Single player alternates between player and AI.
+#Singleplayer mode has good AI but not perfect.
 
-def the2048():
-   global pixel2048
-   global value2048
-   global frame2048
-   global label2048
-   global win2048
-   win2048="schrodinger"
-   master.bind("<Up>", up2048) #binds the up, down, left, right arrows on keyboard
-   master.bind("<Down>", down2048)
-   master.bind("<Left>", left2048)
-   master.bind("<Right>", right2048)
-   master.bind("<Button-1>", buttonclick2048) #so arrows arent needed, allows swiping (finger down...
-   master.bind("<ButtonRelease-1>", buttonrelease2048) #... finger up
+def Connect4():
+   global oneCon
+   oneCon = False #preset as multiplayer
+   master.unbind("<ButtonRelease-1>")
    for widget in master.winfo_children():
       widget.destroy()
-   if screenWidth<screenHeight:
-      pixel2048=(screenWidth//5)
-   else:
-      pixel2048=(screenHeight//5)
-   Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//6), text="2048").grid(row = 0, column=1, columnspan = 2)
-   tk.Button(master, text = "Menu", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: unbind()).grid(row = 0, column = 0, sticky = "we")
-   tk.Button(master, text = "How To Play", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: howToPlay2048()).grid(row = 0, column = 3, sticky = "we")
+   Label(master, bg = "#000000", fg="#fff", text="Connect4").grid(row = 0, column = 1)
+   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "Single Player", height = 5, width = 20, bg = "#fff", command = lambda: singleCon()).grid(row = 1, column = 0)
+   tk.Button(master, text = "Multiplayer", height = 5, width = 20, bg = "#fff", command = lambda: boardCon()).grid(row = 1, column = 1)
 
-   label2048=[[]]
-   frame2048=[[]] #same as all lists above, but for flags
-   for r in range(4):
-      if len(frame2048)==r:
-         frame2048.append([])
-         label2048.append([])
-      for c in range(4):
-         frame2048[r].append(tk.Frame(master, bd = 2, width = pixel2048, height = pixel2048))
-         frame2048[r][c].grid(row=r+1, column=c, sticky="nsew") 
-         frame2048[r][c].propagate(False)
-         label2048[r].append("")
-
-   value2048=[[" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]] #creates empty grid
-
-   row = random.randint(0, 3) #row for the first 2
-   column = random.randint(0, 3) #column for first 2
-   value2048[row][column] = 2 #places 2
-   while True:
-      row = random.randint(0, 3) #same as above
-      column = random.randint(0, 3)
-      if value2048[row][column] == " ": #checks to make sure 2 isn't already there
-         value2048[row][column] = 4 #places the 4
-         break
-
-   for r in range(4):
-      for c in range(4):
-         if value2048[r][c] == " ":
-            label2048[r][c] = tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "grey") #only need " ", 2 and 4 for this first one
-         elif value2048[r][c] == 2:
-            label2048[r][c] = tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "white")
-         elif value2048[r][c] == 4:
-            label2048[r][c] = tk.Label(frame2048[r][c], text = value2048[r][c], font=("Helvetica", pixel2048//2), fg = "#000000", bg = "lemonchiffon")
-         label2048[r][c].pack(expand=True, fill="both")
-   reloadFull2048()
-
-def howToPlay2048():
+def howToPlayCon(): #see other how-to-plays
+   master.unbind("<ButtonRelease-1>")
    for widget in master.winfo_children():
       widget.destroy()
    if screenWidth<screenHeight:
       pixelMine=(screenWidth)
    else:
       pixelMine=(screenHeight)
-   Label(master, bg = "#000000", fg = "#fff", text="2048").grid(row = 0, column = 1)
-   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 0, sticky = "we")
+   Label(master, bg = "#000000", fg = "#fff", text="Connect4").grid(row = 0, column = 1)
+   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: Connect4()).grid(row = 0, column = 0, sticky = "we")
 
    frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
    frameMine1.grid(row=1, columnspan=2, sticky="nsew")
@@ -1073,290 +1434,393 @@ def howToPlay2048():
    frameMine2.grid(row=2, columnspan=2, sticky="nsew")
    frameMine2.propagate(False)
    
-   Label(frameMine1, bg = "grey", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
+   Label(frameMine1, bg = "#000000", fg = "#fff", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
 
 
 Program specific instructions
 
-1.Use the arrow keys to go up, down, left or right.
-2.You can also use your finger (or mouse)
-to drag across the screen to shift the board.""").pack(expand=True, fill="both")
+1.Click in any column to add a connect 4 piece.""").pack(expand=True, fill="both")
 
-   Label(frameMine2, bg = "grey", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
+   Label(frameMine2, bg = "#000000", fg = "#fff", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
 
-When two tiles with the same number touch they merge into one,
-that means 2s become a 4, 4s a 8, 8s a 16 and so on.
-You are attempting to try to get a block of 2048 (2^11),
-which makes you win the game!""").pack(expand=True, fill="both")
+Players first choose a color and then take turns dropping colored discs,
+from the top into a seven-column, six-row vertically suspended grid.
+The pieces fall straight down, occupying the next available space within the column.
+The objective of the game is to be the first
+to form a horizontal, vertical, or diagonal line of four of one's own discs. """).pack(expand=True, fill="both")
 
-def reloadFull2048():
-   global win2048
-   global label2048
-   win2048="False" #game set as over
-   for r in range(4):
+def singleCon(): #if single player is chosen
+   global oneCon
+   oneCon = True #sets to single player
+   boardCon() #then continues along multiplayer route
+
+def boardCon():
+   global frameCon #SO MANY VARIABLES
+   global labelCon
+   global pixelCon
+   global blackImgCon
+   global redImgCon
+   global blankImgCon
+   global gridCon
+   global turnLabelCon
+   global turnCon
+   global gameOverCon
+   global delayCon
+   delayCon=time.time() #This is to make sure peoples plays dont overlap, and for single player it makes sure dont play while ai is going
+   gameOverCon=False #sets the game to not over
+   turnCon = "Black" #black plays first
+   master.bind("<ButtonRelease-1>", clickCon) #binds the click to the function causes pieces drop
+   for widget in master.winfo_children():
+      widget.destroy()
+   turnLabelCon = tk.Label(master, bg = "#000000", fg="#fff", text=turnCon + "'s turn") #displays whos turn it is
+   turnLabelCon.grid(row = 8, columnspan = 7)
+   Label(master, bg = "#000000", fg="#fff", text="Connect4").grid(row = 0, column = 2, columnspan = 3)
+   tk.Button(master, text = "Menu", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: Connect4()).grid(row = 0, column = 0, columnspan = 2, sticky = "we")
+   tk.Button(master, text = "How to Play", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: howToPlayCon()).grid(row = 0, column = 5, columnspan = 2, sticky = "we")
+   if screenWidth<screenHeight:
+      pixelCon=(screenWidth//7)#width is 7 blocks
+   else:
+      pixelCon=(screenHeight//7) #height is 6 plus the top and bottom bars (7)
+   blackImgCon = ImageTk.PhotoImage(Image.open("gameFiles/blackChec.png").resize((pixelCon, pixelCon), resample=0)) #imports images, black piece
+   redImgCon = ImageTk.PhotoImage(Image.open("gameFiles/redChec.png").resize((pixelCon, pixelCon), resample=0)) #red piece
+   blankImgCon = ImageTk.PhotoImage(Image.open("gameFiles/blankChec.png").resize((pixelCon, pixelCon), resample=0)) #blank piece
+   frameCon=[[]]
+   labelCon=[[]]
+   gridCon=[[]]
+   for r in range(6):
+      if len(frameCon)==r:
+         frameCon.append([]) #where labels go
+         gridCon.append([]) #keeps track of which are empty and full
+         labelCon.append([]) #labels
+      for c in range(7):
+         gridCon[r].append(" ") #all empty
+         frameCon[r].append(tk.Frame(master, width = pixelCon, height = pixelCon))
+         frameCon[r][c].grid(row=r+1, column=c, sticky="nsew")
+         frameCon[r][c].propagate(False)
+         labelCon[r].append(tk.Label(frameCon[r][c], image = blankImgCon, bg = "blue2")) #always get created with blank piece
+         labelCon[r][c].pack(expand=True, fill="both")
+
+def clickCon(event): #when user clicks, or ai choses a place
+   master.unbind("<ButtonRelease-1>") #unbinds so user cannot click while this is happening
+   global gridCon
+   global labelCon
+   global turnLabelCon
+   global turnCon
+   global delayCon
+   if (time.time()-delayCon) > .25 and gameOverCon == False: #if game is not over and time is above .25 since last click
+      for c in range(7): #for every column
+         moveOn=False
+         try:
+            check = event - 1
+            if c == event:
+               moveOn=True
+         except TypeError:
+            if (master.winfo_pointerx() > (pixelCon*c) and master.winfo_pointerx() < (pixelCon*(c+1)) and master.winfo_pointery() > 20): #if clicked in that row, or if ai chose this column
+               moveOn=True
+         if moveOn == True:
+            turnLabelCon.config(text="") #if single player this will get rid of bar for the rest of the game
+            turnLabelCon.update() #updates instantly
+            for f in range(6): #for the height of the column (starting at top)
+               if gridCon[f][c] == " ": #if nothing is there
+                  if f-1 >= 0: #if it is not the first in the list
+                     labelCon[f-1][c].config(image = blankImgCon) #turn one before to blank
+                  if turnCon == "Black": #if blacks turn
+                     labelCon[f][c].config(image = blackImgCon) #make black
+                  else: #else it is reds turn
+                     labelCon[f][c].config(image = redImgCon) #make red
+                  master.update_idletasks()
+                  time.sleep(.03) #makes falling effect
+                  if f == 5: #if bottom row
+                     gridCon[f][c] = turnCon
+                     if turnCon == "Black" and oneCon == False: #only in multiplayer
+                        turnLabelCon.config(text= ("Red's turn")) #switches bottom message
+                     elif turnCon == "Red" and oneCon == False:
+                        turnLabelCon.config(text= ("Black's turn")) #switches message
+                     checkCon(turnCon) #goes through checking for end game
+                     if turnCon == "Black": #switches whos turn it is
+                        turnCon = "Red"
+                     elif turnCon == "Red":
+                        turnCon = "Black"
+                     master.update()
+               else: #if something is there
+                  if f-1 >= 0: #if not first in list
+                     gridCon[f-1][c] = turnCon #sets the grid to know where everyone played
+                     if turnCon == "Black" and oneCon == False: #same code as above for next few lines
+                        turnLabelCon.config(text= ("Red's turn"))
+                     elif turnCon == "Red" and oneCon == False:
+                        turnLabelCon.config(text= ("Black's turn"))
+                     checkCon(turnCon)
+                     if turnCon == "Black":
+                        turnCon = "Red"
+                     elif turnCon == "Red":
+                        turnCon = "Black"
+                     master.update()
+                  else: #if nothing could be dropped
+                     turnLabelCon.config(text="You cannot play there.") #display error message
+                  break #so more than one column can not be clicked with one click
+            try: #if an integer number, therefore ai click ends here
+               delayCon = time.time() - event #creative way to check if event = integer number, and to guarantee that you can click right after ai is triggered that you can click right after ai is triggered
+            except TypeError: #if not an integer (user click)
+               delayCon=time.time() #resets time so user does not spam
+               if (oneCon == True) and (gameOverCon==False) and (f-1 >= 0): #if singleplayer, game is not over and the piece was able to be dropped
+                  aiCon() #ai gets triggered
+            break
+   master.bind("<ButtonRelease-1>", clickCon) #rebinds so user can click again
+
+def aiCon(): #decides where ai should place
+   time.sleep(.5)
+   whereDrop=11 #first checks for any possible winning situation
+   for c in range(7): #up and down
+      for x in range(3): #c and x change starting point
+         playHere=True
+         for r in range(3): #for 3 in a row
+            if gridCon[-(r+x+1)][c] != "Red": #if any are not red
+               playHere=False #then 3 are not in a row
+               break
+         if gridCon[-(x+4)][c] != " ": #checks to see if empty space
+            playHere=False
+         if playHere == True:
+            whereDrop=c #this is the column to drop in
+            break
+
+   for r in range(6): #side to side
+      for c in range(4): #r and c determine starting point
+         playHere=True
+         missing=10 #this is to check if more than 1 are missing
+         for x in range(4): #for the 4 in a row
+            if gridCon[-(r+1)][c+x] == " ": #goes across the columns
+               if missing == 10: #if first time missing
+                  missing=c+x #sets this spot as column
+               else: #if not the first time
+                  playHere=False #then its not 3 in a row
+                  break
+            elif gridCon[-(r+1)][c+x] == "Black": #if any are not red
+               playHere=False #not 3 in a row
+               break
+         if playHere == True: #if 3 in a row
+            if r == 0: #if on bottom row
+               whereDrop=missing #play here
+               break
+            else: #if a higher row
+               if gridCon[-(r)][missing] != " ": #then if piece underneath is filled
+                  whereDrop=missing #play here
+                  break
+
+   for r in range(3): #/
       for c in range(4):
-         if value2048[r][c] == " ":
-            win2048="schrodinger" #if any of these things are met, game continues (see schrodingers cat thought experiment)
-         if r>0: #need layers here because an error code would happen for out of range
-            if value2048[r][c] == value2048[r-1][c]:
-               win2048="schrodinger"
-         if r<3:
-            if value2048[r][c] == value2048[r+1][c]:
-               win2048="schrodinger"
-         if c>0:
-            if value2048[r][c] == value2048[r][c-1]:
-               win2048="schrodinger"
-         if c<3:
-            if value2048[r][c] == value2048[r][c+1]:
-               win2048="schrodinger"
-               
-         if value2048[r][c] == 2048:
-            win2048="True"
-         if value2048[r][c] == " ":
-            label2048[r][c].config(text = value2048[r][c], bg = "grey", font=("Helvetica", pixel2048//2)) #changes colour, text and size
-         elif value2048[r][c] == 2:
-            label2048[r][c].config(text = value2048[r][c], bg = "white", font=("Helvetica", pixel2048//2))
-         elif value2048[r][c] == 4:
-            label2048[r][c].config(text = value2048[r][c], bg = "lemonchiffon", font=("Helvetica", pixel2048//2))
-         elif value2048[r][c] == 8:
-            label2048[r][c].config(text = value2048[r][c], bg = "sandybrown", font=("Helvetica", pixel2048//2))
-         elif value2048[r][c] == 16:
-            label2048[r][c].config(text = value2048[r][c], bg = "chocolate", font=("Helvetica", pixel2048//2))
-         elif value2048[r][c] == 32:
-            label2048[r][c].config(text = value2048[r][c], bg = "salmon", font=("Helvetica", pixel2048//2))
-         elif value2048[r][c] == 64:
-            label2048[r][c].config(text = value2048[r][c], bg = "tomato", font=("Helvetica", pixel2048//2))
-         elif value2048[r][c] == 128:
-            label2048[r][c].config(text = value2048[r][c], bg = "khaki", font=("Helvetica", pixel2048//3))
-         elif value2048[r][c] == 256:
-            label2048[r][c].config(text = value2048[r][c], bg = "yellow", font=("Helvetica", pixel2048//3))
-         elif value2048[r][c] == 512:
-            label2048[r][c].config(text = value2048[r][c], bg = "gold", font=("Helvetica", pixel2048//3))
-         elif value2048[r][c] == 1024:
-            label2048[r][c].config(text = value2048[r][c], bg = "orange", font=("Helvetica", pixel2048//4))
-         elif value2048[r][c] == 2048:
-            label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
-   if win2048 == "True":
-      Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="You Win!").grid(row = 5, columnspan = 4, sticky = "we")
-      tk.Button(master, text = "Play Again", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 3, sticky = "we")
-   elif win2048 == "False":
-      Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="You Lose").grid(row = 5, columnspan = 4, sticky = "we")
-      tk.Button(master, text = "Play Again", font=("Helvetica", pixel2048//9), height = 1, bg = "#fff", command = lambda: the2048()).grid(row = 0, column = 3, sticky = "we")
+         playHere=True
+         missingC=10
+         for x in range(4): #this will change row and column
+            if gridCon[-(r+x+1)][c+x] == " ": #row starts at bottom, column left to right
+               if missingC == 10:
+                  missingC=c+x #sets c for where to drop
+                  missingR=-(r+x+1) #sets r for checking if block underneath is filled
+               else:
+                  playHere=False
+                  break
+            elif gridCon[-(r+x+1)][c+x] == "Black":
+               playHere=False
+               break
+         if playHere == True:
+            if missingR == -1: #if bottom row
+               whereDrop=missingC
+               break
+            else:
+               if gridCon[missingR+1][missingC] != " ":
+                  whereDrop=missingC
+                  break
 
+   for r in range(3): #\
+      for c in range(4):
+         playHere=True
+         missingC=10
+         for x in range(4):
+            if gridCon[-(r+x+1)][-(c+x+1)] == " ": #row starts bottom to top, column right to left
+               if missingC == 10:
+                  missingC=7-(c+x+1) #need to make a positive instead of a negative, 7-(the negative) does this
+                  missingR=-(r+x+1)
+               else:
+                  playHere=False
+                  break
+            elif gridCon[-(r+x+1)][-(c+x+1)] == "Black":
+               playHere=False
+               break
+         if playHere == True:
+            if missingR == -1:
+               whereDrop=missingC
+               break
+            else:
+               if gridCon[missingR+1][missingC] != " ":
+                  whereDrop=missingC
+                  break
    
-def reload2048(r, c): #reloads one at a  time, this gives the game its cascading effect
-   if value2048[r][c] == " ":
-      label2048[r][c].config(text = value2048[r][c], bg = "grey", font=("Helvetica", pixel2048//2))
-   elif value2048[r][c] == 2:
-      label2048[r][c].config(text = value2048[r][c], bg = "white", font=("Helvetica", pixel2048//2))
-   elif value2048[r][c] == 4:
-      label2048[r][c].config(text = value2048[r][c], bg = "lemonchiffon", font=("Helvetica", pixel2048//2))
-   elif value2048[r][c] == 8:
-      label2048[r][c].config(text = value2048[r][c], bg = "sandybrown", font=("Helvetica", pixel2048//2))
-   elif value2048[r][c] == 16:
-      label2048[r][c].config(text = value2048[r][c], bg = "chocolate", font=("Helvetica", pixel2048//2))
-   elif value2048[r][c] == 32:
-      label2048[r][c].config(text = value2048[r][c], bg = "salmon", font=("Helvetica", pixel2048//2))
-   elif value2048[r][c] == 64:
-      label2048[r][c].config(text = value2048[r][c], bg = "tomato", font=("Helvetica", pixel2048//2))
-   elif value2048[r][c] == 128:
-      label2048[r][c].config(text = value2048[r][c], bg = "khaki", font=("Helvetica", pixel2048//3))
-   elif value2048[r][c] == 256:
-      label2048[r][c].config(text = value2048[r][c], bg = "yellow", font=("Helvetica", pixel2048//3))
-   elif value2048[r][c] == 512:
-      label2048[r][c].config(text = value2048[r][c], bg = "gold", font=("Helvetica", pixel2048//3))
-   elif value2048[r][c] == 1024:
-      label2048[r][c].config(text = value2048[r][c], bg = "orange", font=("Helvetica", pixel2048//4))
-   elif value2048[r][c] == 2048:
-      label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
-
-def buttonclick2048(event): #checks x and y value with first click
-   global x2048
-   global y2048
-   x2048=master.winfo_pointerx() #x value
-   y2048=master.winfo_pointery() #y value
-
-def buttonrelease2048(event): #when button is released (the mouse was slide in this time)
-   xslide2048=master.winfo_pointerx() - x2048 #checks difference in start and end
-   yslide2048=master.winfo_pointery() - y2048
-   if xslide2048 > pixel2048: #if x bigger than one block (to the right)
-      if yslide2048 < pixel2048 and yslide2048 > -1 * pixel2048: #checks if opposite (y in this case) was moved less than a block
-         right2048(" ") 
-   if xslide2048 < -1 * pixel2048: #if x smaller than negative one block (to the left)
-      if yslide2048 < pixel2048 and yslide2048 > -1 * pixel2048:
-         left2048(" ") 
-   if yslide2048 > pixel2048: #if y bigger than one block (down)
-      if xslide2048 < pixel2048 and xslide2048 > -1 * pixel2048:
-         down2048(" ")
-   if yslide2048 < -1 * pixel2048: #if y smaller than negative one block (up)
-      if xslide2048 < pixel2048 and xslide2048 > -1 * pixel2048:
-         up2048(" ")
-
-def up2048(event):
-   if win2048 == "schrodinger": #neither true nor false
-      together=[[]]
-      for r in range(4): #makes it so only 1 thing happens on each line
-         if len(together)==r:
-            together.append([])
-         for c in range(4):
-            together[r].append(False)
-      moved=False #checks to see if any move happened
-      for r in range(3): #one less because dont need to check the highest row
-         for adjustment in range(3): #adjustment makes it go to end, and not just up once
-            for c in range(4):
-               if value2048[r+1-adjustment][c] != " " and (r+1-adjustment)>=0: #if the tile is not empty, saves code time
-                  if value2048[r-adjustment][c] == " " and (r-adjustment)>=0: #if the one above is empty
-                     value2048[r-adjustment][c] = value2048[r+1-adjustment][c] #replace with one under
-                     value2048[r+1-adjustment][c] = " " #delete one under
-                     moved=True #it moved at least once
-                  else: #if a number above
-                     if value2048[r-adjustment][c] == value2048[r+1-adjustment][c] and (r-adjustment)>=0 and together[r-adjustment][c] == False: #if the number below and above are the same
-                        value2048[r-adjustment][c] = (value2048[r-adjustment][c])*2 #multiply above
-                        value2048[r+1-adjustment][c] = " " #and delete bottom
-                        together[r-adjustment][c] = True
-                        together[r-adjustment-1][c] = True
-                        moved=True #it moved at least once
-                  reload2048(r+1-adjustment, c)
-                  reload2048(r-adjustment, c)
-                  master.update_idletasks()
-                  time.sleep(.005)
-      if moved == True: #if something moved, create a new number
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
-         column = random.randint(0, 3) #random column
-         for c in range(4): #makes it so it will check all fast and not just random
-            if value2048[3][(column+c)%4] == " ": #if empty. % is modular so remainder
-               value2048[3][(column+c)%4] = 2 #put in a 2
-               break #then break, else do again with 1 higher
-      else: #else, display a message saying no
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
-      reloadFull2048()
-
-
-def down2048(event):
-   if win2048 == "schrodinger":
-      together=[[]]
-      for r in range(4):
-         if len(together)==r:
-            together.append([])
-         for c in range(4):
-            together[r].append(False)
-      moved=False
-      for r in range(3):
-         for adjustment in range(3):
-            for c in range(4):
-               if value2048[(-r-1)-1+adjustment][c] != " " and (-r-1)-1+adjustment<0: #row is reversed
-                  if value2048[(-r-1)+adjustment][c] == " " and ((-r-1)+adjustment)<0: #plus adjustment not minus
-                     value2048[(-r-1)+adjustment][c] = value2048[(-r-1)-1+adjustment][c] #minus 1, not plus 1
-                     value2048[(-r-1)-1+adjustment][c] = " "
-                     moved=True
-                  else:
-                     if value2048[(-r-1)+adjustment][c] == value2048[(-r-1)-1+adjustment][c] and ((-r-1)+adjustment)<0 and together[(-r-1)+adjustment][c] == False:
-                        value2048[(-r-1)+adjustment][c] = (value2048[(-r-1)+adjustment][c])*2
-                        value2048[(-r-1)-1+adjustment][c] = " "
-                        moved=True
-                        together[(-r-1)+adjustment][c] = True
-                        together[(-r-1)+adjustment+1][c] = True
-                  reload2048((-r-1)-1+adjustment, c)
-                  reload2048((-r-1)+adjustment, c)
-                  master.update_idletasks()
-                  time.sleep(.005)
-      if moved == True:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
-         column = random.randint(0, 3)
-         for c in range(4):
-            if value2048[0][(column+c)%4] == " ": #0 not 3
-               value2048[0][(column+c)%4] = 2
-               break
-      else:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
-
-      reloadFull2048()
-
-def left2048(event): #this is the same code as up2048, but r and c is switched throughout it
-   if win2048 == "schrodinger":
-      together=[[]]
-      for r in range(4): #makes it so only 1 thing happens on each line
-         if len(together)==r:
-            together.append([])
-         for c in range(4):
-            together[r].append(False)
-      moved=False
-      for c in range(3):
-         for adjustment in range(3):
-            for r in range(4):
-               if value2048[r][c+1-adjustment] != " " and (c+1-adjustment)>=0:
-                  if value2048[r][c-adjustment] == " " and (c-adjustment)>=0:
-                     value2048[r][c-adjustment] = value2048[r][c+1-adjustment]
-                     value2048[r][c+1-adjustment] = " "
-                     moved=True
-                  else:
-                     if value2048[r][c-adjustment] == value2048[r][c+1-adjustment] and (c-adjustment)>=0 and together[r][c-adjustment] == False:
-                        value2048[r][c-adjustment] = (value2048[r][c-adjustment])*2
-                        value2048[r][c+1-adjustment] = " "
-                        moved=True
-                        together[r][c-adjustment] = True
-                        together[r][c-adjustment-1] = True
-                  reload2048(r, c+1-adjustment)
-                  reload2048(r, c-adjustment)
-                  master.update_idletasks()
-                  time.sleep(.005)
-      if moved == True:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
-         row = random.randint(0, 3)
-         for r in range(4):
-            if value2048[(row+r)%4][3] == " ":
-               value2048[(row+r)%4][3] = 2
-               break 
-      else:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
-
-      reloadFull2048()
+   if whereDrop < 10: #if a spot was chosen
+      clickCon(whereDrop) #play here
       
-def right2048(event): #this is the same code as down,2048 but r and c are switched throughout it
-   if win2048 == "schrodinger":
-      together=[[]]
-      for r in range(4): #makes it so only 1 thing happens on each line
-         if len(together)==r:
-            together.append([])
-         for c in range(4):
-            together[r].append(False)
-      moved=False
-      for c in range(3):
-         for adjustment in range(3):
-            for r in range(4):
-               if value2048[r][(-c-1)-1+adjustment] != " " and ((-c-1)-1+adjustment)<0:
-                  if value2048[r][(-c-1)+adjustment] == " " and ((-c-1)+adjustment)<0:
-                     value2048[r][(-c-1)+adjustment] = value2048[r][(-c-1)-1+adjustment]
-                     value2048[r][(-c-1)-1+adjustment] = " "
-                     moved=True
-                  else:
-                     if value2048[r][(-c-1)+adjustment] == value2048[r][(-c-1)-1+adjustment] and ((-c-1)+adjustment)<0 and together[r][(-c-1)+adjustment] == False:
-                        value2048[r][(-c-1)+adjustment] = (value2048[r][(-c-1)+adjustment])*2
-                        value2048[r][(-c-1)-1+adjustment] = " "
-                        moved=True
-                        together[r][(-c-1)+adjustment]= True
-                        together[r][(-c-1)+adjustment+1]= True 
-                  reload2048(r, (-c-1)-1+adjustment)
-                  reload2048(r, (-c-1)+adjustment)
-                  master.update_idletasks()
-                  time.sleep(.005)
-      if moved == True:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="").grid(row = 5, columnspan = 4, sticky = "we")
-         row = random.randint(0, 3)
-         for r in range(4):
-            if value2048[(row+r)%4][0] == " ":
-               value2048[(row+r)%4][0] = 2
+   else: #if no winning way, checks for blocks, all same code as above but black becomes red and visa versa
+      for c in range(7): #up and down
+         for x in range(3):
+            playHere=True
+            for r in range(3):
+               if gridCon[-(r+x+1)][c] != "Black":
+                  playHere=False
+                  break
+            if gridCon[-(x+4)][c] != " ":
+               playHere=False
+            if playHere == True:
+               whereDrop=c
                break
-      else:
-         Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixel2048//10), text="Can't go that way").grid(row = 5, columnspan = 4, sticky = "we")
-      reloadFull2048()
+
+      for r in range(6): #side to side
+         for c in range(4):
+            playHere=True
+            missing=10
+            for x in range(4):
+               if gridCon[-(r+1)][c+x] == " ":
+                  if missing == 10:
+                     missing=c+x
+                  else:
+                     playHere=False
+                     break
+               elif gridCon[-(r+1)][c+x] == "Red":
+                  playHere=False
+                  break
+            if playHere == True:
+               if r == 0:
+                  whereDrop=missing
+                  break
+               else:
+                  if gridCon[-(r)][missing] != " ":
+                     whereDrop=missing
+                     break
+
+      for r in range(3): #/
+         for c in range(4):
+            playHere=True
+            missingC=10
+            for x in range(4):
+               if gridCon[-(r+x+1)][c+x] == " ":
+                  if missingC == 10:
+                     missingC=c+x
+                     missingR=-(r+x+1)
+                  else:
+                     playHere=False
+                     break
+               elif gridCon[-(r+x+1)][c+x] == "Red":
+                  playHere=False
+                  break
+            if playHere == True:
+               if missingR == -1:
+                  whereDrop=missingC
+                  break
+               else:
+                  if gridCon[missingR+1][missingC] != " ":
+                     whereDrop=missingC
+                     break
+
+      for r in range(3): #\
+         for c in range(4):
+            playHere=True
+            missingC=10
+            for x in range(4):
+               if gridCon[-(r+x+1)][-(c+x+1)] == " ":
+                  if missingC == 10:
+                     missingC=7-(c+x+1)
+                     missingR=-(r+x+1)
+                  else:
+                     playHere=False
+                     break
+               elif gridCon[-(r+x+1)][-(c+x+1)] == "Red":
+                  playHere=False
+                  break
+            if playHere == True:
+               if missingR == -1:
+                  whereDrop=missingC
+                  break
+               else:
+                  if gridCon[missingR+1][missingC] != " ":
+                     whereDrop=missingC
+                     break
       
-#################################################################################################### 2048 end
+      if whereDrop < 10:
+         clickCon(whereDrop)
+      else: #if no 3 in a rows, random
+         while True:
+            c = random.randint(0, 6) #random column
+            if gridCon[0][c] == " ": #if able to be placed
+               clickCon(c) #places in that column
+               break
+
+def checkCon(turnCon): #checks for game over
+   for c in range(7): #up-down check, goes column by column
+      for x in range(3): #3 possible wins in each column
+         gameWin=True #sets win to true
+         for r in range(4): #for the length of the winning row
+            if gridCon[r+x][c] != turnCon: #if not a 4 in a row
+               gameWin=False #game not over
+               break
+         if gameWin == True: #if was winning
+            endCon(turnCon) #end game with winner
+
+   for r in range(6): #left-right check, goes row by row
+      for x in range(4): #4 possible wins in each row
+         gameWin=True
+         for c in range(4): #rest is same as above
+            if gridCon[r][c+x] != turnCon:
+               gameWin=False
+               break
+         if gameWin == True:
+            endCon(turnCon)
+
+   for r in range(3): #\ check, 3 possible row wins
+      for c in range(4): #4 possible column wins
+         gameWin=True
+         for x in range(4):
+            if gridCon[r+x][c+x] != turnCon:
+               gameWin=False
+               break
+         if gameWin == True:
+            endCon(turnCon)
+
+   for r in range(3): #/ check, 3 possible row wins
+      for c in range(4): #4 possible column wins
+         gameWin=True
+         for x in range(4):
+            if gridCon[-(r+1+x)][c+x] != turnCon:
+               gameWin=False
+               break
+         if gameWin == True:
+            endCon(turnCon)
+
+   gameEnd=True #board full check
+   for r in range(6): #for rows
+      for c in range(7): #for columns
+         if gridCon[r][c] == " ": #if empty
+            gameEnd=False #not over
+   if gameEnd == True:
+      endCon("No one") #triggers end message saying no one won
+
+def endCon(turnCon): #when game is over
+   global turnLabelCon
+   global gameOverCon
+   gameOverCon=True #sets game to over
+   if oneCon == True: #if single player
+      if turnCon == "Black": #user is black
+         turnLabelCon.config(text="You win!")
+      elif turnCon == "Red": #ai is red
+         turnLabelCon.config(text="You lose.")
+      else: #tie
+         turnLabelCon.config(text="It is a tie.")
+   else: #if multiplayer
+      turnLabelCon.config(text=turnCon + " wins!") #who evers turn it is wins, if a tie the turnCon is "no one"
+   tk.Button(master, text = "Play Again", height = 1, width = 10, fg = "#000000", bg="#fff", command = lambda: boardCon()).grid(row = 0, column = 5, columnspan = 2, sticky = "we") #allows user to play again
+
+#################################################################################################### Connect4 end
 
 #################################################################################################### Threes start
 
 #Sam Gunter
-#Threes was finished 2:05am on the 31st of march, 2018
+#Threes was finished 2:05am on the 31st of May, 2018
 #This was created to create the threes game, similar to 2048
 #
 
@@ -1372,7 +1836,7 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 #################################################################################################### Checkers start
 
 #Sam Gunter
-#Checkers was finished 2:05am on the 31st of march, 2018
+#Checkers was finished 2:05am on the 31st of May, 2018
 #This was created to play checkers either single player or against AI
 #
 
@@ -1388,7 +1852,7 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 #################################################################################################### HangMan start
 
 #Sam Gunter
-#HangMan was finished 2:05am on the 31st of march, 2018
+#HangMan was finished 2:05am on the 31st of May, 2018
 #This was created to play hang man either against another player or against the database
 #
 
@@ -1401,22 +1865,8 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 
 #################################################################################################### HangMan end
 
-#################################################################################################### Connect4 start
 
-#Sam Gunter
-#Connect4 was finished 2:05am on the 31st of march, 2018
-#This was created to play Connect 4 either against another player or against itself
-#
 
-#Next steps are to 
-
-#Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
-#
-#
-#
-
-#################################################################################################### Connect4 end
-      
 master = Tk() #creates the window
 master.title("2k's games")
 master.overrideredirect(1) #gets rid of toolbar
@@ -1444,12 +1894,12 @@ def menu():
    tk.Button(master, text = "Quit", height = 1, width = 10, bg = "#fff", command = master.destroy).grid(row = 4, columnspan = 3, sticky = "we")
    tk.Button(master, text = "TicTacToe2.0", height = 5, width = 20, bg = "#fff", command = lambda: TicTacToe()).grid(row = 1, column = 0, sticky = "we")
    tk.Button(master, text = "MineSweeper", height = 5, width = 20, bg = "#fff", command = lambda: MineSweeper(" ")).grid(row = 1, column = 1, sticky = "we")
-   tk.Button(master, text = "Sudoku", height = 5, width = 20, bg = "#fff", command = lambda: Sudoku()).grid(row = 1, column = 2, sticky = "we")
-   tk.Button(master, text = "2048", height = 5, width = 20, bg = "#fff", command = lambda: the2048()).grid(row = 2, column = 0, sticky = "we")
-   tk.Button(master, text = "ThreesNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).grid(row = 2, column = 1, sticky = "we")
+   tk.Button(master, text = "2048", height = 5, width = 20, bg = "#fff", command = lambda: the2048()).grid(row = 1, column = 2, sticky = "we")
+   tk.Button(master, text = "Sudoku", height = 5, width = 20, bg = "#fff", command = lambda: Sudoku()).grid(row = 2, column = 0, sticky = "we")
+   tk.Button(master, text = "Connect4", height = 5, width = 20, bg = "#fff", command = lambda: Connect4()).grid(row = 2, column = 1, sticky = "we")
    tk.Button(master, text = "CheckersNF", height = 5, width = 20, bg = "#fff", command = lambda: Checkers()).grid(row = 2, column = 2, sticky = "we")
    tk.Button(master, text = "HangManNF", height = 5, width = 20, bg = "#fff", command = lambda: HangMan()).grid(row = 3, column = 0, sticky = "we")
-   tk.Button(master, text = "Connect4NF", height = 5, width = 20, bg = "#fff", command = lambda: Connect4()).grid(row = 3, column = 1, sticky = "we")
+   tk.Button(master, text = "ThreesNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).grid(row = 3, column = 1, sticky = "we")
    tk.Button(master, text = "NF = Not Finished", height = 5, width = 20, bg = "#fff", command = lambda: printBlah()).grid(row = 3, column = 2, sticky = "we")
 
 menu()

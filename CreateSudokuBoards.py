@@ -193,13 +193,13 @@ def saveSu():
                   elif c != 8:
                      saveSu= saveSu + " " #splits columns
 
-            fileSu = open(".\SudokuBoards.txt").readlines() #opens in list form
+            fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #opens in list form
             duplicate=False
             for n in range(len(fileSu)): #for length of the file
                if (saveSu+"\n") == fileSu[n]: #checks to see if already in the file
                   duplicate=True
             if duplicate == False: #if it is not in code
-               helloFile = open(".\SudokuBoards.txt", 'a') #opens board in append mode
+               helloFile = open(".\gameFiles\SudokuBoards.txt", 'a') #opens board in append mode
                helloFile.write(saveSu) #adds the board
                helloFile.write("\n") #clicks enter for next board
                helloFile.close()
