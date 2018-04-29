@@ -4,23 +4,23 @@ import random, time, os
 from tkinter.font import Font
 from PIL import ImageTk, Image
 
-#################################################################################################### TicTacToe2.0 start
-
 print("LOADING...")
 print("Please wait...")
 
+#################################################################################################### TicTacToe2.0 start
+
 #Sam Gunter
-#TicTacToe2.14 was finished 5:50pm on the 18th of march, 2018
-#This was created to play TicTacToe either 2 player or against varying degrees of AI. The easy Ai should be easy (duh) to win against and the hard should be impossible to beat.
-#Unlike TicTacToe1.0 this has a GUI to make the experience better. The hard ai is much better and now not only gets lines and blocks lines, but sets up plays where it is a guaranteed win.
+#TicTacToe2.14 was finished 5:50pm on the 18th of March, 2018.
+#This was created to play TicTacToe either 2 player or against varying degrees of AI. The easy AI should be easy (duh) to win against and the hard should be impossible to beat.
+#Unlike TicTacToe1.0 this has a GUI to make the experience better. The hard AI is much better and now not only gets lines and blocks lines, but sets up plays where it is a guaranteed win.
 #I created this in functions and procedures instead of linear to allow both single player and multiplayer to use the same blocks of code. This is also so multiple games can be added together in one document.
 
 #Next step is to add a leaderboard document (will have to learn how to do file manipulation).
 
 #TicTacToe: Global variables and functions normally have a "Tic" at the end incase another game uses similar variables later on.
 #First function is gamemode, then if single player was chosen difficulty, then a function to set difficulty.
-#No matter if single or multiplayer the next function creates the tkinter window and then one of the turns happen either turnTic or one of the ai, ends with endTic. User can go back to menu or click again and the person starting alternates
-#It is always set up so the next function is last in the current function (using if and else statements)
+#No matter if single or multiplayer the next function creates the tkinter window and then one of the turns happen either turnTic or one of the AI, ends with endTic. User can go back to menu or click again and the person starting alternates.
+#It is always set up so the next function is last in the current function (using if and else statements).
 
 def TicTacToe():
    for widget in master.winfo_children():
@@ -391,15 +391,15 @@ def aiTic(difficulty):
 #################################################################################################### MineSweeper start
 
 #Sam Gunter
-#MineSweeper was finished 2:05am on the 31st of march, 2018
-#This was created to copy the microsoft minesweeper game that we know and love
-#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computer it does have severe lag
+#MineSweeper was finished 2:05am on the 31st of March, 2018.
+#This was created to copy the microsoft minesweeper game that we know and love.
+#I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computers it does have severe lag.
 
-#Next steps are to add images for bombs and flags and add a leaderboard document.
+#Next step is to add a leaderboard document.
 
 #MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
-#First function is MineSweeper(). Then choice of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper()
-#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first click will never be a bomb. Allows user to chose to play again
+#First function is MineSweeper(). Then choice of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper().
+#Then creates the board, depending on the click either ends game or shows number and allows player to go again, first click will never be a bomb. Allows user to chose to play again.
 
 
 def MineSweeper(errorCheck):
@@ -712,308 +712,10 @@ def checkMine(row, column): #when a button is clicked
 
 #################################################################################################### MineSweeper end
 
-#################################################################################################### Sudoku start
-
-#Sam Gunter
-#Sudoku was finished 1:03am on the 14th of april, 2018
-#This was created to allow the user to play sudoku on the computer
-#I have tried my best to add a random generator to make the games less static, but it came down to the tried and true method of "f--- it, it is good enough"
-
-#Next steps is to make a leaderboard document
-
-#Sudoku: Global variables and functions normally have a "Su" at the end incase another game uses similar variables later on (or earlier on).
-#First function is Sudoku(). Then chocie of easy, medium or hard. Then triggers a board to be generated from one of the preset fully complete and semi-random tiles chosen to show.
-#Next it loads the board, then when users click and type in numbers it saves, always checking for errors or to end the game. At the end you can play again.
-
-def Sudoku():
-   for widget in master.winfo_children():
-      widget.destroy()
-   Label(master, bg = "#000000", fg="#fff", text="Sudoku").grid(row = 0, column = 1)
-   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we")
-   tk.Button(master, text = "Easy", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(20)).grid(row = 1, column = 0) #different difficulties are solely how many clues at the beginning
-   tk.Button(master, text = "Medium", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(15)).grid(row = 1, column = 1) #I wanted to improve this, but alas I could not
-   tk.Button(master, text = "Hard", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(10)).grid(row = 1, column = 2)
-
-def solvedBoardSu(number):
-
-   hiddenSu = open(".\gameFiles\SudokuBoards.txt").readlines()
-   hiddenSu = hiddenSu[number] #takes that line specfied
-   hiddenSu=hiddenSu.split('|') #splits at | each 9
-
-   for n in range(9):
-      hiddenSu[n]=hiddenSu[n].split(" ") #then each one at " "
-
-   for r in range(9):
-      for c in range(9):
-         hiddenSu[r][c]=int(hiddenSu[r][c]) #turns str to in
-   return hiddenSu #returns the board
-
-def generateSu(difficulty):
-   global shownSu
-   global staticSu
-   global hiddenSu
-
-   fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its wroking see "CreateBoardsSudoku.py"
-   
-   hiddenSu = solvedBoardSu(random.randint(0, (len(fileSu)-2))) #choses board from random number within the amount of boards
-
-   patternSu=[[False, False, False, False, False, False, False, False, False], #sets pattern as non shown
-              [False, False, False, False, False, False, False, False, False],
-              [False, False, False, False, False, False, False, False, False],
-              [False, False, False, False, False, False, False, False, False],
-              [False, False, False, False, False, False, False, False, False],
-              [False, False, False, False, False, False, False, False, False],
-              [False, False, False, False, False, False, False, False, False],
-              [False, False, False, False, False, False, False, False, False],
-              [False, False, False, False, False, False, False, False, False]]
-
-   for n in range(9):
-      for m in range(3): #3 times for each of the 9 numbers to assure mostly solvable boards
-         r=random.randint(0,8) #random row
-         c=random.randint(0,8) #random column
-         while True: #loops next process until it works
-            if hiddenSu[r][c] == (n+1) and patternSu[r][c] == False: #if not yet chosen and it is the number
-               patternSu[r][c] = True # make it appear
-               break #move on to next one
-            r+=1 #no need for else because of break, adds one to row
-            if r == 9: #if past row, row = 0 and column + 1
-               r = r - 9
-               c+=1
-               if c == 9: #if column past, column = 0 and back at start
-                  c = c - 9
-                  
-   for n in range(3): #checks for eahc box
-      for m in range(3):
-         amount=0 #the amount of numbers shown
-         for x in range(3): #checks each tile in box
-            for y in range(3):
-               if patternSu[n*3+x][m*3+y] == True: #if shown
-                  amount+=1
-         while amount < 3: #at least 3 must be shown
-            while True: #or another will be put in to assure solvability
-               r=random.randint(0, 2)
-               c=random.randint(0, 2)
-               if patternSu[n*3+r][m*3+c] == False:
-                  patternSu[n*3+r][m*3+c] = True
-                  amount+=1 #adjusts amount and checks again
-                  difficulty = difficulty - 1 #1 less random one later
-                  break
-
-   for n in range(difficulty): #depending on difficulty adds a number of hints to help user
-      while True:
-         r=random.randint(0,8)
-         c=random.randint(0,8)
-         if patternSu[r][c] == False: #this time can be any number, so only checks for if shown yet
-            patternSu[r][c] = True
-            break
-   staticSu=[[]] #determines labels vs buttons
-   shownSu=[[]] #creates what to show
-   for r in range(9):
-      if len(shownSu)==r:
-         shownSu.append([])
-         staticSu.append([])
-      for c in range(9):
-         if patternSu[r][c] == True:
-            shownSu[r].append(hiddenSu[r][c]) #adds number
-            staticSu[r].append(hiddenSu[r][c]) #adds number
-         else:
-            shownSu[r].append(" ") #hidden one
-            staticSu[r].append(" ")
-
-   loadBoardSu() #triggers next fucntion
-
-def howToPlaySu():
-   for widget in master.winfo_children():
-      widget.destroy()
-   if screenWidth<screenHeight:
-      pixelMine=(screenWidth)
-   else:
-      pixelMine=(screenHeight)
-   Label(master, bg = "#000000", fg = "#fff", text="Sudoku").grid(row = 0, column = 1)
-   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: loadBoardSu()).grid(row = 0, column = 0, sticky = "we")
-
-   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
-   frameMine1.grid(row=1, columnspan=2, sticky="nsew")
-   frameMine1.propagate(False)
-   frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
-   frameMine2.grid(row=2, columnspan=2, sticky="nsew")
-   frameMine2.propagate(False)
-
-   
-   Label(frameMine1, bg = "white smoke", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
-
-
-Program specific instructions
-
-1. Click on a space you want to edit,
-then us your keyboard to type a number.
-2. To save the number either click enter or click on another tile.
-3. Leave a tile empty to delete.
-4. Red squares mean that there are numbers that conflict.""").pack(expand=True, fill="both")
-
-   Label(frameMine2, bg = "white smoke", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
-
-The objective is to fill a 9x9 grid so that each column,
-each row, and each of the nine 3x3 boxes (also called
-blocks or regions) contains the digits from 1 to 9. """).pack(expand=True, fill="both")
-
-def loadBoardSu():
-   global myFont #most variables are only called a few times
-   global pixelMine
-   global buttonsSu
-   global shownSu
-   global frameSu
-   global rowSu
-   global columnSu
-   global errorSu
-   global mistakeSu
-   master.bind("<Return>", enterSu)
-   
-   for widget in master.winfo_children():
-      widget.destroy()
-   rowSu=-1 #for clickSu() later on
-   columnSu=-1
-   if screenWidth<screenHeight: #screen size as normal
-      pixelMine=(screenWidth//10)
-   else:
-      pixelMine=(screenHeight//10)
-   myFont=Font(family="Helvetica", size=pixelMine//2)
-   boldFont=Font(family="Helvetica", size=pixelMine//2, weight='bold')
-   Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Sudoku").grid(row = 0, columnspan = 9)
-   tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 0, columnspan=3, sticky = "we")
-   tk.Button(master, text = "How To Play", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: howToPlaySu()).grid(row = 0, column = 6, columnspan=3, sticky = "we")
-   errorSu = tk.Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Use numbers only!")
-
-   mistakeSu=[[]] #if numbers conflict, first made with no conflictions
-   frameSu=[[]] #frames for size
-   buttonsSu=[[]] #buttons in frames
-   for r in range(9):
-      if len(buttonsSu)==r:
-         mistakeSu.append([])
-         buttonsSu.append([])
-         frameSu.append([])
-      for c in range(9):
-         mistakeSu[r].append(False) #all made with no conflictions
-         frameSu[r].append(tk.Frame(master, width = pixelMine, height = pixelMine, borderwidth = "1")) #borderwidth of 1 gives it that nice look of slight lines between
-         frameSu[r][c].grid(row=r+1, column=c, sticky="nsew") 
-         frameSu[r][c].propagate(False)
-         if staticSu[r][c]==" " and (r//3 + c//3) % 2 == 0: #floored divison where it causes the blocks of 9 to be different colors
-            buttonsSu[r].append(tk.Button(frameSu[r][c], relief = 'flat', font=myFont, bg = "white", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1]))) #relief flat makes it look flat (duh)
-         elif staticSu[r][c]==" " and (r//3 + c//3) % 2 == 1: #If you cant understand from looking at this, I will need to draw it out as cant explain in words
-            buttonsSu[r].append(tk.Button(frameSu[r][c], relief= 'flat', font=myFont, bg = "light grey", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1])))
-         elif (r//3 + c//3) % 2 == 0:
-            buttonsSu[r].append(tk.Label(frameSu[r][c], text = staticSu[r][c], font=boldFont, bg = "white", )) #if a number is already there, makes a label, not button
-         elif (r//3 + c//3) % 2 == 1:
-            buttonsSu[r].append(tk.Label(frameSu[r][c], text = staticSu[r][c], font=boldFont, bg = "light grey"))
-         buttonsSu[r][c].pack(expand=True, fill="both")
-
-def clickSu(row, column):
-   global buttonsSu
-   global frameSu
-   global shownSu
-   global rowSu
-   global columnSu
-   global entry
-
-   try: #tries to do this, will only work if not first one
-      enterSu("event") #runs the same as if user clicks enter, saves last number
-   except:
-      a=1 #this is soley ot allow the except statement
-   
-   if rowSu >= 0 and columnSu >=0: #if after first time, gets rid of entry box for last one
-      entry.pack_forget()
-      buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
-   rowSu=row
-   columnSu=column
-   buttonsSu[row][column].pack_forget()
-   
-   if (row//3 + column//3) % 2 == 0 and mistakeSu[row][column]==False: #if no mistake its white
-      entry = tk.Entry(frameSu[row][column], bg = "white", font = myFont, justify = "center") #for user to enter number, justfies to center
-   elif (row//3 + column//3) % 2 == 1 and mistakeSu[row][column]==False:
-      entry = tk.Entry(frameSu[row][column], bg = "light grey", font = myFont, justify = "center")
-   elif (row//3 + column//3) % 2 == 0 and mistakeSu[row][column]==True: #if mistake it is red
-      entry = tk.Entry(frameSu[row][column], bg = "firebrick1", font = myFont, justify = "center")
-   elif (row//3 + column//3) % 2 == 1 and mistakeSu[row][column]==True:
-      entry = tk.Entry(frameSu[row][column], bg = "firebrick3", font = myFont, justify = "center")
-   entry.pack(expand=True, fill="both")
-   entry.focus_set() #sets focus to the netry so user does not have to click
-
-def enterSu(event):
-   global shownSu
-   global mistakeSu
-   try: #tries to save the number and bring up button
-      errorSu.grid_forget()
-      if int(entry.get()[-1]) == 0: #if a 0
-         shownSu[rowSu][columnSu] = " " #delete that, we dont want no 0s
-      else:
-         shownSu[rowSu][columnSu]=int(entry.get()[-1]) #only the last digit
-      entry.pack_forget()
-      buttonsSu[rowSu][columnSu].config(text = shownSu[rowSu][columnSu])
-      buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
-   except: #if not a number
-      if str(entry.get()) == "" or str(entry.get()) == " ": #if space and empty
-         shownSu[rowSu][columnSu] = " " #clear tile
-         entry.pack_forget()
-         buttonsSu[rowSu][columnSu].config(text = shownSu[rowSu][columnSu])
-         buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
-      else: #if anything else
-         errorSu.grid(row = 10, columnspan = 9) #tell them they broke the game
-
-   for r in range(9):
-      for c in range(9):
-         mistakeSu[r][c]=False #deletes all mistakes each time and rechecks for errors
-         
-   for r in range(9):
-      for c in range(9): #choses a specfic block
-         for n in range(8):
-            if shownSu[r-(n+1)][c] == shownSu[r][c] and shownSu[r-(n+1)][c] != " ": #checks for mistake in same row
-               for x in range(9): #makes every tile in row an error
-                  mistakeSu[r-(x)][c]=True
-               break #speeds up by ending before full loop
-         for n in range(8):
-            if shownSu[r][c-(n+1)] == shownSu[r][c] and shownSu[r][c-(n+1)] != " ": #checks for mistake in same column
-               for x in range(9): #makes every tile in column an error
-                  mistakeSu[r][c-(x)]=True
-               break
-         for n in range(3): #3 by 3 block
-            for m in range(3):
-               if shownSu[(r//3)*3+n][(c//3)*3+m] == shownSu[r][c] and shownSu[r][c] != " " and (r != (r//3)*3+n or c != (c//3)*3+m): #checks for mistake in block
-                  for x in range(3):
-                     for y in range(3):
-                        mistakeSu[(r//3)*3+x][(c//3)*3+y]=True #makes all tiles in block an error
-                  break
-      
-   for r in range(9):
-      for c in range(9): #replaces colour of each tile
-         if (c//3 + r//3) % 2 == 0 and mistakeSu[r][c]==False:
-            buttonsSu[r][c].config(bg='white')
-         elif (c//3 + r//3) % 2 == 1 and mistakeSu[r][c]==False:
-            buttonsSu[r][c].config(bg='light grey')
-         elif (c//3 + r//3) % 2 == 0 and mistakeSu[r][c]==True:
-            buttonsSu[r][c].config(bg='firebrick1')
-         elif (c//3 + r//3) % 2 == 1 and mistakeSu[r][c]==True:
-            buttonsSu[r][c].config(bg='firebrick3')
-
-   gameEnd=True #sets game as over
-   for c in range(9):
-      for r in range(9):
-         if mistakeSu[r][c]==True: #if any mistakes
-            gameEnd=False #keeps playing
-            break
-         elif shownSu[r][c]==" ": #if any blank
-            gameEnd=False #keeps playing
-            break
-   if gameEnd==True: #if neither of those were met
-      tk.Button(master, text = "Play Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 6, columnspan=3, sticky = "we") #allows the user to play again
-      errorSu.config(text="You win!") #changes from preset error message (earlier) to winner message
-      errorSu.grid(row = 10, columnspan = 9)
-
-#################################################################################################### Sudoku end
-
 #################################################################################################### 2048 start
 
 #Sam Gunter
-#2048 was finished 2:18pm on the 6th of april, 2018
+#2048 was finished 2:18pm on the 6th of April, 2018.
 #This was created to play 2048. The hardest and longest part was making the program appear fluid, not a sudden movement where the entire screen refreshes,
 #but making it refresh one by one as the label moves. If the entire screen reloaded it would be too slow, so I had to completely change how I made frames on tkinter.
 
@@ -1391,19 +1093,317 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
       
 #################################################################################################### 2048 end
 
+#################################################################################################### Sudoku start
+
+#Sam Gunter
+#Sudoku was finished 1:03am on the 14th of April, 2018.
+#This was created to allow the user to play sudoku on the computer.
+#I have tried my best to add a random generator to make the games less static, but it came down to the tried and true method of "f--- it, it is good enough".
+
+#Next steps is to make a leaderboard document.
+
+#Sudoku: Global variables and functions normally have a "Su" at the end incase another game uses similar variables later on (or earlier on).
+#First function is Sudoku(). Then chocie of easy, medium or hard. Then triggers a board to be generated from one of the preset fully complete and semi-random tiles chosen to show.
+#Next it loads the board, then when users click and type in numbers it saves, always checking for errors or to end the game. At the end you can play again.
+
+def Sudoku():
+   for widget in master.winfo_children():
+      widget.destroy()
+   Label(master, bg = "#000000", fg="#fff", text="Sudoku").grid(row = 0, column = 1)
+   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we")
+   tk.Button(master, text = "Easy", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(20)).grid(row = 1, column = 0) #different difficulties are solely how many clues at the beginning
+   tk.Button(master, text = "Medium", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(15)).grid(row = 1, column = 1) #I wanted to improve this, but alas I could not
+   tk.Button(master, text = "Hard", height = 5, width = 20, bg = "#fff", command = lambda: generateSu(10)).grid(row = 1, column = 2)
+
+def solvedBoardSu(number):
+
+   hiddenSu = open(".\gameFiles\SudokuBoards.txt").readlines()
+   hiddenSu = hiddenSu[number] #takes that line specfied
+   hiddenSu=hiddenSu.split('|') #splits at | each 9
+
+   for n in range(9):
+      hiddenSu[n]=hiddenSu[n].split(" ") #then each one at " "
+
+   for r in range(9):
+      for c in range(9):
+         hiddenSu[r][c]=int(hiddenSu[r][c]) #turns str to in
+   return hiddenSu #returns the board
+
+def generateSu(difficulty):
+   global shownSu
+   global staticSu
+   global hiddenSu
+
+   fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its wroking see "CreateBoardsSudoku.py"
+   
+   hiddenSu = solvedBoardSu(random.randint(0, (len(fileSu)-2))) #choses board from random number within the amount of boards
+
+   patternSu=[[False, False, False, False, False, False, False, False, False], #sets pattern as non shown
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False],
+              [False, False, False, False, False, False, False, False, False]]
+
+   for n in range(9):
+      for m in range(3): #3 times for each of the 9 numbers to assure mostly solvable boards
+         r=random.randint(0,8) #random row
+         c=random.randint(0,8) #random column
+         while True: #loops next process until it works
+            if hiddenSu[r][c] == (n+1) and patternSu[r][c] == False: #if not yet chosen and it is the number
+               patternSu[r][c] = True # make it appear
+               break #move on to next one
+            r+=1 #no need for else because of break, adds one to row
+            if r == 9: #if past row, row = 0 and column + 1
+               r = r - 9
+               c+=1
+               if c == 9: #if column past, column = 0 and back at start
+                  c = c - 9
+                  
+   for n in range(3): #checks for eahc box
+      for m in range(3):
+         amount=0 #the amount of numbers shown
+         for x in range(3): #checks each tile in box
+            for y in range(3):
+               if patternSu[n*3+x][m*3+y] == True: #if shown
+                  amount+=1
+         while amount < 3: #at least 3 must be shown
+            while True: #or another will be put in to assure solvability
+               r=random.randint(0, 2)
+               c=random.randint(0, 2)
+               if patternSu[n*3+r][m*3+c] == False:
+                  patternSu[n*3+r][m*3+c] = True
+                  amount+=1 #adjusts amount and checks again
+                  difficulty = difficulty - 1 #1 less random one later
+                  break
+
+   for n in range(difficulty): #depending on difficulty adds a number of hints to help user
+      while True:
+         r=random.randint(0,8)
+         c=random.randint(0,8)
+         if patternSu[r][c] == False: #this time can be any number, so only checks for if shown yet
+            patternSu[r][c] = True
+            break
+   staticSu=[[]] #determines labels vs buttons
+   shownSu=[[]] #creates what to show
+   for r in range(9):
+      if len(shownSu)==r:
+         shownSu.append([])
+         staticSu.append([])
+      for c in range(9):
+         if patternSu[r][c] == True:
+            shownSu[r].append(hiddenSu[r][c]) #adds number
+            staticSu[r].append(hiddenSu[r][c]) #adds number
+         else:
+            shownSu[r].append(" ") #hidden one
+            staticSu[r].append(" ")
+
+   loadBoardSu() #triggers next fucntion
+
+def howToPlaySu():
+   for widget in master.winfo_children():
+      widget.destroy()
+   if screenWidth<screenHeight:
+      pixelMine=(screenWidth)
+   else:
+      pixelMine=(screenHeight)
+   Label(master, bg = "#000000", fg = "#fff", text="Sudoku").grid(row = 0, column = 1)
+   tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: loadBoardSu()).grid(row = 0, column = 0, sticky = "we")
+
+   frameMine1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameMine1.grid(row=1, columnspan=2, sticky="nsew")
+   frameMine1.propagate(False)
+   frameMine2=(tk.Frame(master, width = screenWidth, height = screenHeight/2))
+   frameMine2.grid(row=2, columnspan=2, sticky="nsew")
+   frameMine2.propagate(False)
+
+   
+   Label(frameMine1, bg = "white smoke", font = "Helvetica " + str(pixelMine//35) + " bold", text="""
+
+
+Program specific instructions
+
+1. Click on a space you want to edit,
+then us your keyboard to type a number.
+2. To save the number either click enter or click on another tile.
+3. Leave a tile empty to delete.
+4. Red squares mean that there are numbers that conflict.""").pack(expand=True, fill="both")
+
+   Label(frameMine2, bg = "white smoke", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
+
+The objective is to fill a 9x9 grid so that each column,
+each row, and each of the nine 3x3 boxes (also called
+blocks or regions) contains the digits from 1 to 9. """).pack(expand=True, fill="both")
+
+def loadBoardSu():
+   global myFont #most variables are only called a few times
+   global pixelMine
+   global buttonsSu
+   global shownSu
+   global frameSu
+   global rowSu
+   global columnSu
+   global errorSu
+   global mistakeSu
+   master.bind("<Return>", enterSu)
+   
+   for widget in master.winfo_children():
+      widget.destroy()
+   rowSu=-1 #for clickSu() later on
+   columnSu=-1
+   if screenWidth<screenHeight: #screen size as normal
+      pixelMine=(screenWidth//10)
+   else:
+      pixelMine=(screenHeight//10)
+   myFont=Font(family="Helvetica", size=pixelMine//2)
+   boldFont=Font(family="Helvetica", size=pixelMine//2, weight='bold')
+   Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Sudoku").grid(row = 0, columnspan = 9)
+   tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 0, columnspan=3, sticky = "we")
+   tk.Button(master, text = "How To Play", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: howToPlaySu()).grid(row = 0, column = 6, columnspan=3, sticky = "we")
+   errorSu = tk.Label(master, bg = "#000000", fg = "#fff", font=("Helvetica", pixelMine//5), text="Use numbers only!")
+
+   mistakeSu=[[]] #if numbers conflict, first made with no conflictions
+   frameSu=[[]] #frames for size
+   buttonsSu=[[]] #buttons in frames
+   for r in range(9):
+      if len(buttonsSu)==r:
+         mistakeSu.append([])
+         buttonsSu.append([])
+         frameSu.append([])
+      for c in range(9):
+         mistakeSu[r].append(False) #all made with no conflictions
+         frameSu[r].append(tk.Frame(master, width = pixelMine, height = pixelMine, borderwidth = "1")) #borderwidth of 1 gives it that nice look of slight lines between
+         frameSu[r][c].grid(row=r+1, column=c, sticky="nsew") 
+         frameSu[r][c].propagate(False)
+         if staticSu[r][c]==" " and (r//3 + c//3) % 2 == 0: #floored divison where it causes the blocks of 9 to be different colors
+            buttonsSu[r].append(tk.Button(frameSu[r][c], relief = 'flat', font=myFont, bg = "white", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1]))) #relief flat makes it look flat (duh)
+         elif staticSu[r][c]==" " and (r//3 + c//3) % 2 == 1: #If you cant understand from looking at this, I will need to draw it out as cant explain in words
+            buttonsSu[r].append(tk.Button(frameSu[r][c], relief= 'flat', font=myFont, bg = "light grey", borderwidth = "0", text = shownSu[r][c], command = lambda forCommand=[r, c]: clickSu(forCommand[0], forCommand[1])))
+         elif (r//3 + c//3) % 2 == 0:
+            buttonsSu[r].append(tk.Label(frameSu[r][c], text = staticSu[r][c], font=boldFont, bg = "white", )) #if a number is already there, makes a label, not button
+         elif (r//3 + c//3) % 2 == 1:
+            buttonsSu[r].append(tk.Label(frameSu[r][c], text = staticSu[r][c], font=boldFont, bg = "light grey"))
+         buttonsSu[r][c].pack(expand=True, fill="both")
+
+def clickSu(row, column):
+   global buttonsSu
+   global frameSu
+   global shownSu
+   global rowSu
+   global columnSu
+   global entry
+
+   try: #tries to do this, will only work if not first one
+      enterSu("event") #runs the same as if user clicks enter, saves last number
+   except:
+      a=1 #this is soley ot allow the except statement
+   
+   if rowSu >= 0 and columnSu >=0: #if after first time, gets rid of entry box for last one
+      entry.pack_forget()
+      buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
+   rowSu=row
+   columnSu=column
+   buttonsSu[row][column].pack_forget()
+   
+   if (row//3 + column//3) % 2 == 0 and mistakeSu[row][column]==False: #if no mistake its white
+      entry = tk.Entry(frameSu[row][column], bg = "white", font = myFont, justify = "center") #for user to enter number, justfies to center
+   elif (row//3 + column//3) % 2 == 1 and mistakeSu[row][column]==False:
+      entry = tk.Entry(frameSu[row][column], bg = "light grey", font = myFont, justify = "center")
+   elif (row//3 + column//3) % 2 == 0 and mistakeSu[row][column]==True: #if mistake it is red
+      entry = tk.Entry(frameSu[row][column], bg = "firebrick1", font = myFont, justify = "center")
+   elif (row//3 + column//3) % 2 == 1 and mistakeSu[row][column]==True:
+      entry = tk.Entry(frameSu[row][column], bg = "firebrick3", font = myFont, justify = "center")
+   entry.pack(expand=True, fill="both")
+   entry.focus_set() #sets focus to the netry so user does not have to click
+
+def enterSu(event):
+   global shownSu
+   global mistakeSu
+   try: #tries to save the number and bring up button
+      errorSu.grid_forget()
+      if int(entry.get()[-1]) == 0: #if a 0
+         shownSu[rowSu][columnSu] = " " #delete that, we dont want no 0s
+      else:
+         shownSu[rowSu][columnSu]=int(entry.get()[-1]) #only the last digit
+      entry.pack_forget()
+      buttonsSu[rowSu][columnSu].config(text = shownSu[rowSu][columnSu])
+      buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
+   except: #if not a number
+      if str(entry.get()) == "" or str(entry.get()) == " ": #if space and empty
+         shownSu[rowSu][columnSu] = " " #clear tile
+         entry.pack_forget()
+         buttonsSu[rowSu][columnSu].config(text = shownSu[rowSu][columnSu])
+         buttonsSu[rowSu][columnSu].pack(expand=True, fill="both")
+      else: #if anything else
+         errorSu.grid(row = 10, columnspan = 9) #tell them they broke the game
+
+   for r in range(9):
+      for c in range(9):
+         mistakeSu[r][c]=False #deletes all mistakes each time and rechecks for errors
+         
+   for r in range(9):
+      for c in range(9): #choses a specfic block
+         for n in range(8):
+            if shownSu[r-(n+1)][c] == shownSu[r][c] and shownSu[r-(n+1)][c] != " ": #checks for mistake in same row
+               for x in range(9): #makes every tile in row an error
+                  mistakeSu[r-(x)][c]=True
+               break #speeds up by ending before full loop
+         for n in range(8):
+            if shownSu[r][c-(n+1)] == shownSu[r][c] and shownSu[r][c-(n+1)] != " ": #checks for mistake in same column
+               for x in range(9): #makes every tile in column an error
+                  mistakeSu[r][c-(x)]=True
+               break
+         for n in range(3): #3 by 3 block
+            for m in range(3):
+               if shownSu[(r//3)*3+n][(c//3)*3+m] == shownSu[r][c] and shownSu[r][c] != " " and (r != (r//3)*3+n or c != (c//3)*3+m): #checks for mistake in block
+                  for x in range(3):
+                     for y in range(3):
+                        mistakeSu[(r//3)*3+x][(c//3)*3+y]=True #makes all tiles in block an error
+                  break
+      
+   for r in range(9):
+      for c in range(9): #replaces colour of each tile
+         if (c//3 + r//3) % 2 == 0 and mistakeSu[r][c]==False:
+            buttonsSu[r][c].config(bg='white')
+         elif (c//3 + r//3) % 2 == 1 and mistakeSu[r][c]==False:
+            buttonsSu[r][c].config(bg='light grey')
+         elif (c//3 + r//3) % 2 == 0 and mistakeSu[r][c]==True:
+            buttonsSu[r][c].config(bg='firebrick1')
+         elif (c//3 + r//3) % 2 == 1 and mistakeSu[r][c]==True:
+            buttonsSu[r][c].config(bg='firebrick3')
+
+   gameEnd=True #sets game as over
+   for c in range(9):
+      for r in range(9):
+         if mistakeSu[r][c]==True: #if any mistakes
+            gameEnd=False #keeps playing
+            break
+         elif shownSu[r][c]==" ": #if any blank
+            gameEnd=False #keeps playing
+            break
+   if gameEnd==True: #if neither of those were met
+      tk.Button(master, text = "Play Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: Sudoku()).grid(row = 0, column = 6, columnspan=3, sticky = "we") #allows the user to play again
+      errorSu.config(text="You win!") #changes from preset error message (earlier) to winner message
+      errorSu.grid(row = 10, columnspan = 9)
+
+#################################################################################################### Sudoku end
+
 #################################################################################################### Connect4 start
 
 #Sam Gunter
 #Connect4 was finished 3:31am on the 28th of April, 2018
-#This was created to play Connect 4 either against another player or against itself
-#Ai will be hard, currently just have random number generator
+#This was created to play Connect 4 either against another player or against AI.
+#AI checks for winning plays, blocking plays, but the rest is random. This allows the user to set up plays, but no easy wins.
 
-#Next steps are AI for \ and / does not work and randomly said "you won" and to add leaderboard document
+#Next step is to add leaderboard document.
 
 #Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
 #Creates a 6 by 7 board which users can click to drop in connect 4 pieces. The game automatically checks for where the user clicks, no buttons, only labels.
-#Multiplayer is alternating while looking for any wins or for if the game is full, which ends the gaem and allows user to restart
-#Singleplayer mode will have an AI that checks on what to do, might make it good but not perfect.
+#Multiplayer is alternating while looking for any wins or for if the game is full, which ends the game and allows user to restart. Single player alternates between player and AI.
+#Singleplayer mode has good AI but not perfect.
 
 def Connect4():
    global oneCon
@@ -1559,61 +1559,62 @@ def clickCon(event): #when user clicks, or ai choses a place
                      turnLabelCon.config(text="You cannot play there.") #display error message
                   break #so more than one column can not be clicked with one click
             try: #if an integer number, therefore ai click ends here
-               delayCon = time.time() - event #creative way to check if event = integer number, and to guarentee that you can click right after ai is triggered
+               delayCon = time.time() - event #creative way to check if event = integer number, and to guarantee that you can click right after ai is triggered that you can click right after ai is triggered
             except TypeError: #if not an integer (user click)
-               delayCon=time.time() #resets time so user doesnt spam
-               if (oneCon == True) and (gameOverCon==False) and (f-1 >= 0): #if singleplayer, game is not over and the piece was able to eb dropped
+               delayCon=time.time() #resets time so user does not spam
+               if (oneCon == True) and (gameOverCon==False) and (f-1 >= 0): #if singleplayer, game is not over and the piece was able to be dropped
                   aiCon() #ai gets triggered
             break
    master.bind("<ButtonRelease-1>", clickCon) #rebinds so user can click again
 
 def aiCon(): #decides where ai should place
    time.sleep(.5)
-   whereDrop=11
+   whereDrop=11 #first checks for any possible winning situation
    for c in range(7): #up and down
-      for x in range(3):
+      for x in range(3): #c and x change starting point
          playHere=True
-         for r in range(3):
-            if gridCon[-(r+x+1)][c] != "Red":
-               playHere=False
+         for r in range(3): #for 3 in a row
+            if gridCon[-(r+x+1)][c] != "Red": #if any are not red
+               playHere=False #then 3 are not in a row
                break
-         if gridCon[-(x+4)][c] != " ":
+         if gridCon[-(x+4)][c] != " ": #checks to see if empty space
             playHere=False
          if playHere == True:
-            whereDrop=c
+            whereDrop=c #this is the column to drop in
             break
 
    for r in range(6): #side to side
-      for c in range(4):
+      for c in range(4): #r and c determine starting point
          playHere=True
-         missing=10
-         for x in range(4):
-            if gridCon[-(r+1)][c+x] == " ":
-               if missing == 10:
-                  missing=c+x
-               else:
-                  playHere=False
+         missing=10 #this is to check if more than 1 are missing
+         for x in range(4): #for the 4 in a row
+            if gridCon[-(r+1)][c+x] == " ": #goes across the columns
+               if missing == 10: #if first time missing
+                  missing=c+x #sets this spot as column
+               else: #if not the first time
+                  playHere=False #then its not 3 in a row
                   break
-            elif gridCon[-(r+1)][c+x] == "Black":
-               playHere=False
+            elif gridCon[-(r+1)][c+x] == "Black": #if any are not red
+               playHere=False #not 3 in a row
                break
-         if playHere == True:
-            if r == 0:
-               whereDrop=missing
+         if playHere == True: #if 3 in a row
+            if r == 0: #if on bottom row
+               whereDrop=missing #play here
                break
-            else:
-               if gridCon[-(r)][missing] != " ":
-                  whereDrop=missing
+            else: #if a higher row
+               if gridCon[-(r)][missing] != " ": #then if piece underneath is filled
+                  whereDrop=missing #play here
                   break
 
    for r in range(3): #/
       for c in range(4):
          playHere=True
-         for x in range(4):
-            if gridCon[-(r+x+1)][c+x] == " ":
-               if missing == 10:
-                  missingC=c+x
-                  missingR=-(r+x+1)
+         missingC=10
+         for x in range(4): #this will change row and column
+            if gridCon[-(r+x+1)][c+x] == " ": #row starts at bottom, column left to right
+               if missingC == 10:
+                  missingC=c+x #sets c for where to drop
+                  missingR=-(r+x+1) #sets r for checking if block underneath is filled
                else:
                   playHere=False
                   break
@@ -1621,26 +1622,27 @@ def aiCon(): #decides where ai should place
                playHere=False
                break
          if playHere == True:
-            if missingR == -1:
+            if missingR == -1: #if bottom row
                whereDrop=missingC
                break
             else:
-               if gridCon[missingR-1][missingC] != " ":
+               if gridCon[missingR+1][missingC] != " ":
                   whereDrop=missingC
                   break
 
    for r in range(3): #\
       for c in range(4):
          playHere=True
+         missingC=10
          for x in range(4):
-            if gridCon[-(r+x+1)][-(c+x+1)] == " ":
-               if missing == 10:
-                  missingC=-(c+x+1)
+            if gridCon[-(r+x+1)][-(c+x+1)] == " ": #row starts bottom to top, column right to left
+               if missingC == 10:
+                  missingC=7-(c+x+1) #need to make a positive instead of a negative, 7-(the negative) does this
                   missingR=-(r+x+1)
                else:
                   playHere=False
                   break
-            elif gridCon[-(r+x+1)][c+x] == "Black":
+            elif gridCon[-(r+x+1)][-(c+x+1)] == "Black":
                playHere=False
                break
          if playHere == True:
@@ -1648,19 +1650,106 @@ def aiCon(): #decides where ai should place
                whereDrop=missingC
                break
             else:
-               if gridCon[missingR-1][missingC] != " ":
+               if gridCon[missingR+1][missingC] != " ":
                   whereDrop=missingC
                   break
    
-   if whereDrop < 10:
-      clickCon(whereDrop)
+   if whereDrop < 10: #if a spot was chosen
+      clickCon(whereDrop) #play here
       
-   else:
-      while True:
-         c = random.randint(0, 6) #random column
-         if gridCon[0][c] == " ": #if able to be placed
-            clickCon(c) #places in that column
-            break
+   else: #if no winning way, checks for blocks, all same code as above but black becomes red and visa versa
+      for c in range(7): #up and down
+         for x in range(3):
+            playHere=True
+            for r in range(3):
+               if gridCon[-(r+x+1)][c] != "Black":
+                  playHere=False
+                  break
+            if gridCon[-(x+4)][c] != " ":
+               playHere=False
+            if playHere == True:
+               whereDrop=c
+               break
+
+      for r in range(6): #side to side
+         for c in range(4):
+            playHere=True
+            missing=10
+            for x in range(4):
+               if gridCon[-(r+1)][c+x] == " ":
+                  if missing == 10:
+                     missing=c+x
+                  else:
+                     playHere=False
+                     break
+               elif gridCon[-(r+1)][c+x] == "Red":
+                  playHere=False
+                  break
+            if playHere == True:
+               if r == 0:
+                  whereDrop=missing
+                  break
+               else:
+                  if gridCon[-(r)][missing] != " ":
+                     whereDrop=missing
+                     break
+
+      for r in range(3): #/
+         for c in range(4):
+            playHere=True
+            missingC=10
+            for x in range(4):
+               if gridCon[-(r+x+1)][c+x] == " ":
+                  if missingC == 10:
+                     missingC=c+x
+                     missingR=-(r+x+1)
+                  else:
+                     playHere=False
+                     break
+               elif gridCon[-(r+x+1)][c+x] == "Red":
+                  playHere=False
+                  break
+            if playHere == True:
+               if missingR == -1:
+                  whereDrop=missingC
+                  break
+               else:
+                  if gridCon[missingR+1][missingC] != " ":
+                     whereDrop=missingC
+                     break
+
+      for r in range(3): #\
+         for c in range(4):
+            playHere=True
+            missingC=10
+            for x in range(4):
+               if gridCon[-(r+x+1)][-(c+x+1)] == " ":
+                  if missingC == 10:
+                     missingC=7-(c+x+1)
+                     missingR=-(r+x+1)
+                  else:
+                     playHere=False
+                     break
+               elif gridCon[-(r+x+1)][-(c+x+1)] == "Red":
+                  playHere=False
+                  break
+            if playHere == True:
+               if missingR == -1:
+                  whereDrop=missingC
+                  break
+               else:
+                  if gridCon[missingR+1][missingC] != " ":
+                     whereDrop=missingC
+                     break
+      
+      if whereDrop < 10:
+         clickCon(whereDrop)
+      else: #if no 3 in a rows, random
+         while True:
+            c = random.randint(0, 6) #random column
+            if gridCon[0][c] == " ": #if able to be placed
+               clickCon(c) #places in that column
+               break
 
 def checkCon(turnCon): #checks for game over
    for c in range(7): #up-down check, goes column by column
@@ -1731,7 +1820,7 @@ def endCon(turnCon): #when game is over
 #################################################################################################### Threes start
 
 #Sam Gunter
-#Threes was finished 2:05am on the 31st of march, 2018
+#Threes was finished 2:05am on the 31st of May, 2018
 #This was created to create the threes game, similar to 2048
 #
 
@@ -1747,7 +1836,7 @@ def endCon(turnCon): #when game is over
 #################################################################################################### Checkers start
 
 #Sam Gunter
-#Checkers was finished 2:05am on the 31st of march, 2018
+#Checkers was finished 2:05am on the 31st of May, 2018
 #This was created to play checkers either single player or against AI
 #
 
@@ -1763,7 +1852,7 @@ def endCon(turnCon): #when game is over
 #################################################################################################### HangMan start
 
 #Sam Gunter
-#HangMan was finished 2:05am on the 31st of march, 2018
+#HangMan was finished 2:05am on the 31st of May, 2018
 #This was created to play hang man either against another player or against the database
 #
 
@@ -1805,12 +1894,12 @@ def menu():
    tk.Button(master, text = "Quit", height = 1, width = 10, bg = "#fff", command = master.destroy).grid(row = 4, columnspan = 3, sticky = "we")
    tk.Button(master, text = "TicTacToe2.0", height = 5, width = 20, bg = "#fff", command = lambda: TicTacToe()).grid(row = 1, column = 0, sticky = "we")
    tk.Button(master, text = "MineSweeper", height = 5, width = 20, bg = "#fff", command = lambda: MineSweeper(" ")).grid(row = 1, column = 1, sticky = "we")
-   tk.Button(master, text = "Sudoku", height = 5, width = 20, bg = "#fff", command = lambda: Sudoku()).grid(row = 1, column = 2, sticky = "we")
-   tk.Button(master, text = "2048", height = 5, width = 20, bg = "#fff", command = lambda: the2048()).grid(row = 2, column = 0, sticky = "we")
-   tk.Button(master, text = "ThreesNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).grid(row = 2, column = 1, sticky = "we")
+   tk.Button(master, text = "2048", height = 5, width = 20, bg = "#fff", command = lambda: the2048()).grid(row = 1, column = 2, sticky = "we")
+   tk.Button(master, text = "Sudoku", height = 5, width = 20, bg = "#fff", command = lambda: Sudoku()).grid(row = 2, column = 0, sticky = "we")
+   tk.Button(master, text = "Connect4", height = 5, width = 20, bg = "#fff", command = lambda: Connect4()).grid(row = 2, column = 1, sticky = "we")
    tk.Button(master, text = "CheckersNF", height = 5, width = 20, bg = "#fff", command = lambda: Checkers()).grid(row = 2, column = 2, sticky = "we")
    tk.Button(master, text = "HangManNF", height = 5, width = 20, bg = "#fff", command = lambda: HangMan()).grid(row = 3, column = 0, sticky = "we")
-   tk.Button(master, text = "Connect4", height = 5, width = 20, bg = "#fff", command = lambda: Connect4()).grid(row = 3, column = 1, sticky = "we")
+   tk.Button(master, text = "ThreesNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).grid(row = 3, column = 1, sticky = "we")
    tk.Button(master, text = "NF = Not Finished", height = 5, width = 20, bg = "#fff", command = lambda: printBlah()).grid(row = 3, column = 2, sticky = "we")
 
 menu()

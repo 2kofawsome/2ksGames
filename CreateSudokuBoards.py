@@ -193,7 +193,7 @@ def saveSu():
                   elif c != 8:
                      saveSu= saveSu + " " #splits columns
 
-            fileSu = open(".]gameFiles\SudokuBoards.txt").readlines() #opens in list form
+            fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #opens in list form
             duplicate=False
             for n in range(len(fileSu)): #for length of the file
                if (saveSu+"\n") == fileSu[n]: #checks to see if already in the file
