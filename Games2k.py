@@ -1786,7 +1786,7 @@ def checkCon(turnCon): #checks for game over
       for c in range(4): #4 possible column wins
          gameWin=True
          for x in range(4):
-            if gridCon[-r-x][c+x] != turnCon:
+            if gridCon[-(r+1+x)][c+x] != turnCon:
                gameWin=False
                break
          if gameWin == True:
