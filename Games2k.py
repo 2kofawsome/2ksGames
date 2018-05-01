@@ -46,19 +46,36 @@ def TicTacToe():
         0, 0, 0,
         0, 0, 0]
    playerTic="X" #default start is X, this will not matter if singleplayer is chosen
-   master.configure(bg = "#000000") #Sets initial background colour to black
-   Label(master, bg = "#000000", fg="#fff", text="TicTacToe2.0").grid(row = 0, column = 1) #just says the game name, bg means background (black) and fg means foreground (white)
-   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we") #right now ends the program, later will redirect
-   tk.Button(master, text = "Singleplayer", height = 5, width = 20, bg = "#fff", command = lambda: singleplayerTic()).grid(row = 1, column = 0) #command=lambda stops the programs from running when the window is first created
-   tk.Button(master, text = "Multiplayer", height = 5, width = 20, bg = "#fff", command = lambda: reloadTic()).grid(row = 1, column = 1) #when clicked redirects to whichever function is command
+
+   frameSin=tk.Frame(master, width = screenWidth//2, height = screenHeight//4)
+   frameSin.grid(row = 1, column = 0, columnspan = 3, sticky = "we")
+   frameSin.propagate(False)
+   frameMul=tk.Frame(master, width = screenWidth//2, height = screenHeight//4)
+   frameMul.grid(row = 1, column = 3, columnspan = 3, sticky = "we")
+   frameMul.propagate(False)
+   frameMenu=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameMenu.grid(row = 0, column = 5, columnspan = 1, sticky = "we")
+   frameMenu.propagate(False)
+   frameTitle=tk.Frame(master, width = (screenWidth//3)*2, height = screenHeight//10)
+   frameTitle.grid(row = 0, column = 1, columnspan = 4, sticky = "we")
+   frameTitle.propagate(False)
+   frameHow=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameHow.grid(row = 0, column = 0, columnspan = 1, sticky = "we")
+   frameHow.propagate(False)
+   
+   tk.Button(frameHow, text = "How To Play", bg = "#fff", font = "Helvetica " + str(screenHeight//70), command = lambda: howToPlayTic()).pack(expand=True, fill="both") #right now ends the program, later will redirect
+   tk.Button(frameMenu, text = "Menu", bg = "#fff", font = "Helvetica " + str(screenHeight//70), command = lambda: menu()).pack(expand=True, fill="both") #right now ends the program, later will redirect
+   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both") #just says the game name, bg means background (black) and fg means foreground (white)
+   tk.Button(frameSin, text = "Singleplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//30), command = lambda: singleplayerTic()).pack(expand=True, fill="both") #command=lambda stops the programs from running when the window is first created
+   tk.Button(frameMul, text = "Multiplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//30), command = lambda: reloadTic()).pack(expand=True, fill="both") #when clicked redirects to whichever function is command
 
 def howToPlayTic(): #just tutorial on how to play
    for widget in master.winfo_children():
       widget.destroy()
    if screenWidth<screenHeight:
-      pixelMine=(screenWidth)
+      pixelTic=(screenWidth)
    else:
-      pixelMine=(screenHeight)
+      pixelTic=(screenHeight)
    Label(master, bg = "#000000", fg = "#fff", text="TicTacToe2.0").grid(row = 0, column = 1)
    tk.Button(master, text = "Play", height = 1, width = 10, bg = "#fff", command = lambda: TicTacToe()).grid(row = 0, column = 0, sticky = "we") #play instead of menu
 
@@ -70,14 +87,14 @@ def howToPlayTic(): #just tutorial on how to play
    frameMine2.propagate(False)
 
    
-   Label(frameMine1, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//35) + " bold", text=""" 
+   Label(frameMine1, bg = "whitesmoke", font = "Helvetica " + str(pixelTic//37) + " bold", text=""" 
 Program specific instructions
 
 1. Click on an empty tile to place an X or an O.
 2. If playing multiplayer, alternate with the other player.
 3. If playing single player, the AI will automatically play instantly.""").pack(expand=True, fill="both") #game specfic instructions (buttons)
 
-   Label(frameMine2, bg = "whitesmoke", font = "Helvetica " + str(pixelMine//35), text="""Rules to Game:
+   Label(frameMine2, bg = "whitesmoke", font = "Helvetica " + str(pixelTic//40), text="""Rules to Game:
 
 The game is played on a grid that's 3 squares by 3 squares.
 Players take turns putting their marks in empty squares.
@@ -120,11 +137,32 @@ def againTic(): #if the user wants to play again
 def singleplayerTic():
    for widget in master.winfo_children():
       widget.destroy()
-   Label(master, bg = "#000000", fg="#fff", text="TicTacToe2.0").grid(row = 0, column = 1)
-   tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: TicTacToe()).grid(row = 0, column = 0, sticky = "we") #sends back to first TicTacToe screen 
-   tk.Button(master, text = "Easy", height = 5, width = 20, bg = "#fff", command = lambda: setTic("easy")).grid(row = 1, column = 0) #random ai
-   tk.Button(master, text = "Medium", height = 5, width = 20, bg = "#fff", command = lambda: setTic("medium")).grid(row = 1, column = 1) #ai that knows how to win, user goes first
-   tk.Button(master, text = "Hard", height = 5, width = 20, bg = "#fff", command = lambda: setTic("hard")).grid(row = 1, column = 2) #same ai as above, user goes second
+
+   frameEasy=tk.Frame(master, width = screenWidth//3, height = screenHeight//4)
+   frameEasy.grid(row = 1, column = 0, columnspan = 2, sticky = "we")
+   frameEasy.propagate(False)
+   frameMedium=tk.Frame(master, width = screenWidth//3, height = screenHeight//4)
+   frameMedium.grid(row = 1, column = 2, columnspan = 2, sticky = "we")
+   frameMedium.propagate(False)
+   frameHard=tk.Frame(master, width = screenWidth//3, height = screenHeight//4)
+   frameHard.grid(row = 1, column = 4, columnspan = 2, sticky = "we")
+   frameHard.propagate(False)
+   frameMenu=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameMenu.grid(row = 0, column = 5, columnspan = 1, sticky = "we")
+   frameMenu.propagate(False)
+   frameTitle=tk.Frame(master, width = (screenWidth//3)*2, height = screenHeight//10)
+   frameTitle.grid(row = 0, column = 1, columnspan = 4, sticky = "we")
+   frameTitle.propagate(False)
+   frameHow=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameHow.grid(row = 0, column = 0, columnspan = 1, sticky = "we")
+   frameHow.propagate(False)
+   
+   tk.Button(frameHow, text = "How To Play", bg = "#fff", font = "Helvetica " + str(screenHeight//70), command = lambda: howToPlayTic()).pack(expand=True, fill="both") 
+   tk.Button(frameMenu, text = "Menu", bg = "#fff", font = "Helvetica " + str(screenHeight//70), command = lambda: menu()).pack(expand=True, fill="both") #sends back to first TicTacToe screen
+   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
+   tk.Button(frameEasy, text = "Easy", bg = "#fff", font = "Helvetica " + str(screenHeight//30), command = lambda: setTic("easy")).pack(expand=True, fill="both") #random ai
+   tk.Button(frameMedium, text = "Medium", bg = "#fff", font = "Helvetica " + str(screenHeight//30), command = lambda: setTic("medium")).pack(expand=True, fill="both") #ai that knows how to win, user goes first
+   tk.Button(frameHard, text = "Hard", bg = "#fff", font = "Helvetica " + str(screenHeight//30), command = lambda: setTic("hard")).pack(expand=True, fill="both") #same ai as above, user goes second
 
 def setTic(difficulty): #difficulty changes depending on whether medium or hard was clicked
    global levelTic
@@ -1831,7 +1869,6 @@ def endCon(turnCon): #when game is over
 #
 #
 
-print("hang")
 
 #################################################################################################### HangMan end
 
@@ -1911,8 +1948,8 @@ def menu():
    global the2048Img
    global quitImg
    global sudokuImg
-   pixelHeight=((screenHeight-20)//3)
-   pixelWidth=((screenWidth-20)//3)
+   pixelHeight=((screenHeight)//3)
+   pixelWidth=((screenWidth)//3)
    sudokuImg = ImageTk.PhotoImage(Image.open("gameFiles/SudokuMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    quitImg = ImageTk.PhotoImage(Image.open("gameFiles/QuitMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    the2048Img = ImageTk.PhotoImage(Image.open("gameFiles/2048Menu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
@@ -1925,24 +1962,39 @@ def menu():
 
    frameTic=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameTic.grid(row = 1, column = 0, sticky = "we")
+   frameTic.propagate(False)
    tk.Button(frameTic, image = TicTacToeImg, bg = "#fff", command = lambda: TicTacToe()).pack(expand=True, fill="both")
    frameMine=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameMine.grid(row = 1, column = 1, sticky = "we")
+   frameMine.propagate(False)
    tk.Button(frameMine, image = MineSweeperImg, command = lambda: MineSweeper(" ")).pack(expand=True, fill="both")
    frame2048=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frame2048.grid(row = 1, column = 2, sticky = "we")
+   frame2048.propagate(False)
    tk.Button(frame2048, image = the2048Img, command = lambda: the2048()).pack(expand=True, fill="both")
-   frameSudoku=tk.Frame(master, width = pixelWidth, height = pixelHeight)
-   frameSudoku.grid(row = 2, column = 0, sticky = "we")
-   tk.Button(frameSudoku, image = sudokuImg, command = lambda: Sudoku()).pack(expand=True, fill="both")
+   frameSu=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameSu.grid(row = 2, column = 0, sticky = "we")
+   frameSu.propagate(False)
+   tk.Button(frameSu, image = sudokuImg, command = lambda: Sudoku()).pack(expand=True, fill="both")
    frameCon=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameCon.grid(row = 2, column = 1, sticky = "we")
+   frameCon.propagate(False)
    tk.Button(frameCon, image = Connect4Img, command = lambda: Connect4()).pack(expand=True, fill="both")
-   tk.Button(master, text = "CheckersNF", height = 5, width = 20, bg = "#fff", command = lambda: Checkers()).grid(row = 2, column = 2, sticky = "we")
-   tk.Button(master, text = "HangManNF", height = 5, width = 20, bg = "#fff", command = lambda: HangMan()).grid(row = 3, column = 0, sticky = "we")
-   tk.Button(master, text = "ThreesNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).grid(row = 3, column = 1, sticky = "we")
+   frameChec=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameChec.grid(row = 2, column = 2, sticky = "we")
+   frameChec.propagate(False)
+   tk.Button(frameChec, text = "CheckersNF", height = 5, width = 20, bg = "#fff", command = lambda: Checkers()).pack(expand=True, fill="both")
+   frameHang=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameHang.grid(row = 3, column = 0, sticky = "we")
+   frameHang.propagate(False)
+   tk.Button(frameHang, text = "HangManNF", height = 5, width = 20, bg = "#fff", command = lambda: HangMan()).pack(expand=True, fill="both")
+   frameJack=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameJack.grid(row = 3, column = 1, sticky = "we")
+   frameJack.propagate(False)
+   tk.Button(frameJack, text = "BlackJackNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).pack(expand=True, fill="both")
    frameQuit=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameQuit.grid(row = 3, column = 2, sticky = "we")
+   frameQuit.propagate(False)
    tk.Button(frameQuit, image = quitImg, command = master.destroy).pack(expand=True, fill="both")
 
 menu()
