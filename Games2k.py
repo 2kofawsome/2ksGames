@@ -1817,6 +1817,40 @@ def endCon(turnCon): #when game is over
 
 #################################################################################################### Connect4 end
 
+#################################################################################################### HangMan start
+
+#Sam Gunter
+#HangMan was finished 2:05am on the 31st of May, 2018
+#This was created to play hang man either against another player or against the database
+#
+
+#Next steps are to 
+
+#HangMan: Global variables and functions normally have a "Hang" at the end incase another game uses similar variables later on or earlier on.
+#
+#
+#
+
+print("hang")
+
+#################################################################################################### HangMan end
+
+#################################################################################################### BlackJack start
+
+#Sam Gunter
+#BlackJack was finished 2:05am on the 31st of May, 2018
+#This was created to play black jack (21) against a computer dealer
+#
+
+#Next steps are to 
+
+#HangMan: Global variables and functions normally have a "21" at the end incase another game uses similar variables later on or earlier on.
+#
+#
+#
+
+#################################################################################################### BlackJack end
+
 #################################################################################################### Threes start
 
 #Sam Gunter
@@ -1848,22 +1882,6 @@ def endCon(turnCon): #when game is over
 #
 
 #################################################################################################### Checkers end
-
-#################################################################################################### HangMan start
-
-#Sam Gunter
-#HangMan was finished 2:05am on the 31st of May, 2018
-#This was created to play hang man either against another player or against the database
-#
-
-#Next steps are to 
-
-#HangMan: Global variables and functions normally have a "Hang" at the end incase another game uses similar variables later on or earlier on.
-#
-#
-#
-
-#################################################################################################### HangMan end
 
 
 
