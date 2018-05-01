@@ -49,8 +49,8 @@ def TicTacToe():
    master.configure(bg = "#000000") #Sets initial background colour to black
    Label(master, bg = "#000000", fg="#fff", text="TicTacToe2.0").grid(row = 0, column = 1) #just says the game name, bg means background (black) and fg means foreground (white)
    tk.Button(master, text = "Menu", height = 1, width = 10, bg = "#fff", command = lambda: menu()).grid(row = 0, column = 0, sticky = "we") #right now ends the program, later will redirect
-   tk.Button(master, text = "Multiplayer", height = 5, width = 20, bg = "#fff", command = lambda: reloadTic()).grid(row = 1, column = 0) #command=lambda stops the programs from running when the window is first created
-   tk.Button(master, text = "Singleplayer", height = 5, width = 20, bg = "#fff", command = lambda: singleplayerTic()).grid(row = 1, column = 1) #when clicked redirects to whichever function is command
+   tk.Button(master, text = "Singleplayer", height = 5, width = 20, bg = "#fff", command = lambda: singleplayerTic()).grid(row = 1, column = 0) #command=lambda stops the programs from running when the window is first created
+   tk.Button(master, text = "Multiplayer", height = 5, width = 20, bg = "#fff", command = lambda: reloadTic()).grid(row = 1, column = 1) #when clicked redirects to whichever function is command
 
 def howToPlayTic(): #just tutorial on how to play
    for widget in master.winfo_children():
@@ -1887,20 +1887,45 @@ def unbind(): #unbinds anything I have binded (from multiple games) and goes bac
    menu()
 
 def menu():
+   global TicTacToeImg
+   global Connect4Img
+   global MineSweeperImg
+   global the2048Img
+   global quitImg
+   global sudokuImg
+   pixelHeight=((screenHeight-20)//3)
+   pixelWidth=((screenWidth-20)//3)
+   sudokuImg = ImageTk.PhotoImage(Image.open("gameFiles/SudokuMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+   quitImg = ImageTk.PhotoImage(Image.open("gameFiles/QuitMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+   the2048Img = ImageTk.PhotoImage(Image.open("gameFiles/2048Menu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+   MineSweeperImg = ImageTk.PhotoImage(Image.open("gameFiles/MineSweeperMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+   Connect4Img = ImageTk.PhotoImage(Image.open("gameFiles/Connect4Menu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+   TicTacToeImg = ImageTk.PhotoImage(Image.open("gameFiles/TicTacToeMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    for widget in master.winfo_children(): #clears contents, but not frame meaning it can update without making a new window each time
       widget.destroy()
    master.configure(bg = "#000000") #Sets initial background colour to black
-   Label(master, bg = "#000000", fg="#fff", text="2k's Games").grid(row = 0, columnspan = 3) #just says the game name, bg means background (black) and fg means foreground (white)
-   tk.Button(master, text = "Quit", height = 1, width = 10, bg = "#fff", command = master.destroy).grid(row = 4, columnspan = 3, sticky = "we")
-   tk.Button(master, text = "TicTacToe2.0", height = 5, width = 20, bg = "#fff", command = lambda: TicTacToe()).grid(row = 1, column = 0, sticky = "we")
-   tk.Button(master, text = "MineSweeper", height = 5, width = 20, bg = "#fff", command = lambda: MineSweeper(" ")).grid(row = 1, column = 1, sticky = "we")
-   tk.Button(master, text = "2048", height = 5, width = 20, bg = "#fff", command = lambda: the2048()).grid(row = 1, column = 2, sticky = "we")
-   tk.Button(master, text = "Sudoku", height = 5, width = 20, bg = "#fff", command = lambda: Sudoku()).grid(row = 2, column = 0, sticky = "we")
-   tk.Button(master, text = "Connect4", height = 5, width = 20, bg = "#fff", command = lambda: Connect4()).grid(row = 2, column = 1, sticky = "we")
+
+   frameTic=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameTic.grid(row = 1, column = 0, sticky = "we")
+   tk.Button(frameTic, image = TicTacToeImg, bg = "#fff", command = lambda: TicTacToe()).pack(expand=True, fill="both")
+   frameMine=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameMine.grid(row = 1, column = 1, sticky = "we")
+   tk.Button(frameMine, image = MineSweeperImg, command = lambda: MineSweeper(" ")).pack(expand=True, fill="both")
+   frame2048=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frame2048.grid(row = 1, column = 2, sticky = "we")
+   tk.Button(frame2048, image = the2048Img, command = lambda: the2048()).pack(expand=True, fill="both")
+   frameSudoku=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameSudoku.grid(row = 2, column = 0, sticky = "we")
+   tk.Button(frameSudoku, image = sudokuImg, command = lambda: Sudoku()).pack(expand=True, fill="both")
+   frameCon=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameCon.grid(row = 2, column = 1, sticky = "we")
+   tk.Button(frameCon, image = Connect4Img, command = lambda: Connect4()).pack(expand=True, fill="both")
    tk.Button(master, text = "CheckersNF", height = 5, width = 20, bg = "#fff", command = lambda: Checkers()).grid(row = 2, column = 2, sticky = "we")
    tk.Button(master, text = "HangManNF", height = 5, width = 20, bg = "#fff", command = lambda: HangMan()).grid(row = 3, column = 0, sticky = "we")
    tk.Button(master, text = "ThreesNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).grid(row = 3, column = 1, sticky = "we")
-   tk.Button(master, text = "NF = Not Finished", height = 5, width = 20, bg = "#fff", command = lambda: printBlah()).grid(row = 3, column = 2, sticky = "we")
+   frameQuit=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameQuit.grid(row = 3, column = 2, sticky = "we")
+   tk.Button(frameQuit, image = quitImg, command = master.destroy).pack(expand=True, fill="both")
 
 menu()
 master.mainloop()
