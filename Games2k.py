@@ -186,7 +186,7 @@ def loadTic():
    global labelWho
    for widget in master.winfo_children():
       widget.destroy()
-   frameTitle=tk.Frame(master, width = screenWidth, height = screenWidth//35)
+   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//20)
    frameTitle.grid(row = 0, column = 0, columnspan = 10, sticky = "we")
    frameTitle.propagate(False)
    Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
@@ -200,10 +200,9 @@ def loadTic():
    frameWho=tk.Frame(master, width = (screenWidth-(sizeTic*3)), height = sizeTic*2)
    frameWho.grid(row = 3, column = 3, rowspan = 4, sticky = "we")
    frameWho.propagate(False)
-   
-   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str(screenHeight//60), bg = "#fff", command = lambda: TicTacToe()).pack(expand=True, fill="both")
-   tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str(screenHeight//60), bg = "#fff", command = lambda: howToPlayTic()).pack(expand=True, fill="both") #menu goes right back to start
-   labelWho = Label(frameWho, bg = "#000000", font = "Helvetica " + str(screenHeight//15), fg="#fff", text=playerTic + "'s turn")
+   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(sizeTic*3))//15), bg = "#fff", command = lambda: TicTacToe()).pack(expand=True, fill="both")
+   tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(sizeTic*3))//15), bg = "#fff", command = lambda: howToPlayTic()).pack(expand=True, fill="both") #menu goes right back to start
+   labelWho = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), fg="#fff", text=playerTic + "'s\nturn")
    labelWho.pack(expand=True, fill="both") #to keep it constant has a blank label at the bottom with no words, this is where winner is displayed or where it tells you you can't play there
    frameTic=[]
    myFont=Font(family="Helvetica", size=((sizeTic//7)*4))
@@ -249,7 +248,10 @@ def reloadTic():
    global frameTic
    global buttonTic
    myFont=Font(family="Helvetica", size=((sizeTic//7)*4))
-   labelWho.config(text=playerTic + "'s turn")
+   if levelTic == 0:
+      labelWho.config(font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), text=playerTic + "'s\nturn")
+   else:
+      labelWho.config(font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), text="")
    for r in range(0, 3):
       for c in range(0,3): #r is the number of rows, c is the column number
          if r*3+c == 0:
@@ -284,7 +286,7 @@ def endTic(result):
    for widget in master.winfo_children():
       widget.destroy()
 
-   frameTitle=tk.Frame(master, width = screenWidth, height = screenWidth//35)
+   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//20)
    frameTitle.grid(row = 0, column = 0, columnspan = 10, sticky = "we")
    frameTitle.propagate(False)
    Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
@@ -303,13 +305,13 @@ def endTic(result):
    tk.Button(frameHow, text = "Play Again", font = "Helvetica " + str(screenHeight//60), bg = "#fff", command = lambda: againTic()).pack(expand=True, fill="both")
 
    if result=="tie": #if it is a tie display this
-      Label(frameWho, bg = "#000000", font = "Helvetica " + str(screenHeight//15), fg="#fff", text="It is a Tie.").pack(expand=True, fill="both")
+      Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), fg="#fff", text="It is\na Tie.").pack(expand=True, fill="both")
    elif result=="multi": #if multiplayer, the playerTic was the last one who played therefore the winner
-      Label(frameWho, bg = "#000000", font = "Helvetica " + str(screenHeight//15), fg="#fff", text=playerTic+" wins!").pack(expand=True, fill="both")
+      Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), fg="#fff", text=playerTic+"\nwins!").pack(expand=True, fill="both")
    elif result=="player": #in player vs ai, player wins
-      Label(frameWho, bg = "#000000", font = "Helvetica " + str(screenHeight//15), fg="#fff", text="You win!").pack(expand=True, fill="both")
+      Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), fg="#fff", text="You\nwin!").pack(expand=True, fill="both")
    elif result=="ai": #in player vs ai, ai wins
-      Label(frameWho, bg = "#000000", font = "Helvetica " + str(screenHeight//15), fg="#fff", text="You lose.").pack(expand=True, fill="both")
+      Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), fg="#fff", text="You\nlose.").pack(expand=True, fill="both")
    frameTic=[]
    for r in range(0, 3): #THIS WHOLE THING IS ONLY TO MAKE THE CODE SHORTER, WAS AROUND 50 LINES FOR THIS BEFORE WITH IF, ELIF, ELSE STATEMENTS
       for c in range(0,3): #r is the number of rows, c is the column number
@@ -370,7 +372,7 @@ def turnTic(number): #number is whichever button was clicked
             else: #against ai, player won
                endTic("player")
       else: #if it wasn't valid, the bottom label gets used and the user goes again
-         labelWho.config(text="You cannot\nplay there.")
+         labelWho.config(font = "Helvetica " + str((screenWidth-(sizeTic*3))//10), text="You cannot\nplay there.")
 
 def aiTic(difficulty):
    global gridTic
@@ -906,7 +908,7 @@ def the2048():
       widget.destroy()
    pixel2048=((screenHeight-screenHeight//20)//4)
 
-   frameTitle=tk.Frame(master, width = screenWidth, height = screenWidth//35)
+   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//20)
    frameTitle.grid(row = 0, column = 0, columnspan = 10, sticky = "we")
    frameTitle.propagate(False)
    Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="2048").pack(expand=True, fill="both")
@@ -921,10 +923,10 @@ def the2048():
    frameWho.grid(row = 3, column = 4, rowspan = 4, sticky = "we")
    frameWho.propagate(False)
    
-   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str(screenHeight//60), bg = "#fff", command = lambda: unbind()).pack(expand=True, fill="both")
-   buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str(screenHeight//60), bg = "#fff", command = lambda: howToPlay2048())
+   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(pixel2048*3))//20), bg = "#fff", command = lambda: unbind()).pack(expand=True, fill="both")
+   buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(pixel2048*3))//20), bg = "#fff", command = lambda: howToPlay2048())
    buttonHow.pack(expand=True, fill="both") #menu goes right back to start
-   labelWho = Label(frameWho, bg = "#000000", font = "Helvetica " + str(screenHeight//15), fg="#fff", text="")
+   labelWho = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixel2048*3))//12), fg="#fff", text="")
    labelWho.pack(expand=True, fill="both") 
 
    label2048=[[]]
@@ -1043,11 +1045,11 @@ def reloadFull2048():
          elif value2048[r][c] == 2048:
             label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
    if win2048 == "True":
-      labelWho.config(text="You Win!")
-      buttonHow.config(text = "Play Again", command = lambda: the2048())
+      labelWho.config(text="You\nWin!")
+      buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//20), command = lambda: the2048())
    elif win2048 == "False":
-      labelWho.config(text="You Lose")
-      buttonHow.config(text = "Play Again", command = lambda: the2048())
+      labelWho.config(text="You\nLose.")
+      buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//20), command = lambda: the2048())
    
 def reload2048(r, c): #reloads one at a time, this gives the game its cascading effect
    if value2048[r][c] == " ":
@@ -1135,7 +1137,7 @@ def up2048(event):
                   value2048[3][(column+c)%4] = 2 #put in a 2
                   break #then break, else do again with 1 higher
          else: #else, display a message saying no
-            labelWho.config(text="Can't go that way")
+            labelWho.config(text="Can't go\nthat way")
          reloadFull2048()
    delay2048 = time.time()
 
@@ -1177,7 +1179,7 @@ def down2048(event):
                   value2048[0][(column+c)%4] = 2
                   break
          else:
-            labelWho.config(text="Can't go that way")
+            labelWho.config(text="Can't go\nthat way")
 
          reloadFull2048()
    delay2048 = time.time()
@@ -1220,7 +1222,7 @@ def left2048(event): #this is the same code as up2048, but r and c is switched t
                   value2048[(row+r)%4][3] = 2
                   break 
          else:
-            labelWho.config(text="Can't go that way")
+            labelWho.config(text="Can't go\nthat way")
 
          reloadFull2048()
    delay2048 = time.time()
@@ -1263,7 +1265,7 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
                   value2048[(row+r)%4][0] = 2
                   break
          else:
-            labelWho.config(text="Can't go that way")
+            labelWho.config(text="Can't go\nthat way")
          reloadFull2048()
    delay2048 = time.time()
       
@@ -2168,7 +2170,7 @@ def menu():
    frameJack=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameJack.grid(row = 3, column = 1, sticky = "we")
    frameJack.propagate(False)
-   tk.Button(frameJack, text = "BlackJackNF", height = 5, width = 20, bg = "#fff", command = lambda: Threes()).pack(expand=True, fill="both")
+   tk.Button(frameJack, text = "BlackJackNF", height = 5, width = 20, bg = "#fff", command = lambda: BlackJack()).pack(expand=True, fill="both")
    frameQuit=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameQuit.grid(row = 3, column = 2, sticky = "we")
    frameQuit.propagate(False)
