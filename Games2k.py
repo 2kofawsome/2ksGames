@@ -35,7 +35,7 @@ def TicTacToe():
    global screenHeight
    global delayTic
    delayTic=time.time()
-   sizeTic=((screenHeight-screenHeight//20)//3)
+   sizeTic=((screenHeight-screenHeight//16)//3)
    gamesTic=0 #if playing against ai this sets who plays first (alternates)
    levelTic=0 #default, if it stays as 0 multiplayer will run, if singleplayer is chosen this will change to 1 (random ai) or 2 (ai that knows how to win)
    gridTic=[' ', ' ', ' ', #this is the TicTacToe grid, only has 3 lines to make it easier to look at
@@ -186,10 +186,10 @@ def loadTic():
    global labelWho
    for widget in master.winfo_children():
       widget.destroy()
-   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//20)
+   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//16)
    frameTitle.grid(row = 0, column = 0, columnspan = 10, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
+   Label(frameTitle, font = "fixedsys " + str(screenHeight//35), bg = "#000000", fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(sizeTic*3)), height = sizeTic//2)
    frameMenu.grid(row = 1, column = 3, sticky = "we")
@@ -286,10 +286,10 @@ def endTic(result):
    for widget in master.winfo_children():
       widget.destroy()
 
-   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//20)
+   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//16)
    frameTitle.grid(row = 0, column = 0, columnspan = 10, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
+   Label(frameTitle, font = "fixedsys " + str(screenHeight//35), bg = "#000000", fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(sizeTic*3)), height = sizeTic//2)
    frameMenu.grid(row = 1, column = 3, sticky = "we")
@@ -658,14 +658,13 @@ def createBoardMine():
    global buttonMine
    global flagImgMine
    global bombImgMine
+   global labelMine
+   global buttonHow
    bombsLeftMine=bombMine #keep track of flag counter in top corner
    statusMine="start"
    for widget in master.winfo_children(): #same as TicTacToe2.0 this delete all widgets onscreen
       widget.destroy()
-   if screenWidth<screenHeight:
-      pixelMine=(screenWidth//(sizeMine+1))
-   else:
-      pixelMine=(screenHeight//(sizeMine+1))
+   pixelMine=((screenHeight-screenHeight//18)//sizeMine)
    flagImgMine = ImageTk.PhotoImage(Image.open("gameFiles/flagMine.png").resize((pixelMine, pixelMine), resample=0))
    bombImgMine = ImageTk.PhotoImage(Image.open("gameFiles/bombMine.png").resize((pixelMine, pixelMine), resample=0))
    
@@ -685,9 +684,29 @@ def createBoardMine():
          reliefMine[r].append("raised")
 
    myFont=Font(family="Helvetica", size=pixelMine//2) #font seems to work if it is half the size of the block, needs more testing on different monitors
-   Label(master, bg = "darkgrey", font=("Helvetica", pixelMine//5), text="MineSweeper").grid(row = 0, columnspan = sizeMine) #column span makes it take up more lines
-   tk.Button(master, text = "Menu", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: MineSweeper(" ")).grid(row = 0, column = 0, columnspan=3, sticky = "we")
-   button1=tk.Button(master, text = str(bombsLeftMine)+" bombs left", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff").grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we") #this button is named because it has to be edited later on
+
+
+   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//18)
+   frameTitle.grid(row = 0, column = 0, columnspan = 20, sticky = "we")
+   frameTitle.propagate(False)
+   Label(frameTitle, font = "fixedsys " + str(screenHeight//35), bg = "darkgrey", fg="#000000", text="MineSweeper").pack(expand=True, fill="both")
+
+   frameMenu=tk.Frame(master, width = (screenWidth-(pixelMine*sizeMine)), height = ((screenHeight-(screenHeight//18))//sizeMine)*(sizeMine//3))
+   frameMenu.grid(row = 1, column = sizeMine, rowspan = sizeMine//3, sticky = "we")
+   frameMenu.propagate(False)
+   frameHow=tk.Frame(master, width = (screenWidth-(pixelMine*sizeMine)), height = ((screenHeight-(screenHeight//18))//sizeMine)*(sizeMine//3))
+   frameHow.grid(row = (sizeMine//3)+1, column = sizeMine, rowspan = sizeMine//3, sticky = "we")
+   frameHow.propagate(False)
+   frameWho=tk.Frame(master, width = (screenWidth-(pixelMine*sizeMine)), height = ((screenHeight-(screenHeight//18))//sizeMine)*(sizeMine-(sizeMine//3 + sizeMine//3)))
+   frameWho.grid(row = (sizeMine//3 + sizeMine//3)+1, column = sizeMine, rowspan = sizeMine-(sizeMine//3 + sizeMine//3), sticky = "we")
+   frameWho.propagate(False)
+   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(pixelMine*sizeMine))//12), bg = "darkgrey", command = lambda: MineSweeper(" ")).pack(expand=True, fill="both")
+   buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(pixelMine*sizeMine))//12), bg = "darkgrey", command = lambda: howToPlayMine())
+   buttonHow.pack(expand=True, fill="both")
+   labelMine = tk.Label(frameWho, font = "Helvetica " + str((screenWidth-(pixelMine*sizeMine))//10), bg = "darkgrey", text = str(bombsLeftMine)+" bombs left")#this label is named because it has to be edited later on
+   labelMine.pack(expand=True, fill="both")
+
+
    frameMine=[] #sets the frames, this is needed to specify the amount of pixels each box should be
    for r in range(sizeMine):
       for c in range(sizeMine):
@@ -714,9 +733,9 @@ def flagMine(event): #This might be one of the most complicated codes I have cre
                   shownMine[r][c]="?" #makes a flag
                   buttonMine[r][c].config(image=flagImgMine, command = 0, disabledforeground = "#000000") #button that has no command, just to display question mark until clicked again
       if bombsLeftMine>=0: #if not negative it will display bombs left
-         button1=tk.Button(master, text = str(bombsLeftMine)+" bombs left", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff").grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we")
+         labelMine.config(text = str(bombsLeftMine)+" bombs left")
       else: #if negative it says too many flags
-         button1=tk.Button(master, text = "Too many flags", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff").grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we")
+         labelMine.config(text = "Too many flags")
 
 def chordMine(event):
    if statusMine!="end":
@@ -788,10 +807,14 @@ def updateMine(row, column): #this updates only 1 square, before it was updating
       endMine("win") #triggers end game won
 
 def endMine(result): #end game
-   button1=tk.Button(master, text = "Again", font=("Helvetica", pixelMine//5), height = 1, bg = "#fff", command = lambda: createBoardMine()).grid(row = 0, column = sizeMine-3, columnspan=3, sticky = "we") #allows user to play again with the same specifications (board size and amount of bombs)
+   buttonHow.config(text = "Again", command = lambda: createBoardMine()) #allows user to play again with the same specifications (board size and amount of bombs)
    global statusMine
    global buttonMine
    statusMine="end"
+   if result == "lose":
+      labelMine.config(text = "You lose.")
+   elif result == "win":
+      labelMine.config(text = "You win!")
    for r in range(sizeMine):
       for c in range(sizeMine):
          if hiddenMine[r][c] == "!" and result == "lose": #if lose
@@ -906,9 +929,9 @@ def the2048():
    master.bind("<ButtonRelease-1>", buttonrelease2048) #... finger up
    for widget in master.winfo_children():
       widget.destroy()
-   pixel2048=((screenHeight-screenHeight//20)//4)
+   pixel2048=((screenHeight-screenHeight//17)//4)
 
-   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//20)
+   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
    frameTitle.grid(row = 0, column = 0, columnspan = 10, sticky = "we")
    frameTitle.propagate(False)
    Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="2048").pack(expand=True, fill="both")
@@ -923,8 +946,8 @@ def the2048():
    frameWho.grid(row = 3, column = 4, rowspan = 4, sticky = "we")
    frameWho.propagate(False)
    
-   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(pixel2048*3))//20), bg = "#fff", command = lambda: unbind()).pack(expand=True, fill="both")
-   buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(pixel2048*3))//20), bg = "#fff", command = lambda: howToPlay2048())
+   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), bg = "#fff", command = lambda: unbind()).pack(expand=True, fill="both")
+   buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), bg = "#fff", command = lambda: howToPlay2048())
    buttonHow.pack(expand=True, fill="both") #menu goes right back to start
    labelWho = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixel2048*3))//12), fg="#fff", text="")
    labelWho.pack(expand=True, fill="both") 
@@ -1046,10 +1069,10 @@ def reloadFull2048():
             label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
    if win2048 == "True":
       labelWho.config(text="You\nWin!")
-      buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//20), command = lambda: the2048())
+      buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), command = lambda: the2048())
    elif win2048 == "False":
       labelWho.config(text="You\nLose.")
-      buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//20), command = lambda: the2048())
+      buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), command = lambda: the2048())
    
 def reload2048(r, c): #reloads one at a time, this gives the game its cascading effect
    if value2048[r][c] == " ":
