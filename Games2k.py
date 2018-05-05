@@ -2405,23 +2405,77 @@ def letterHang(letter): #when a letter is clicked
 #
 #
 
+def BlackJack():
+   global hangImg
+   for widget in master.winfo_children():
+      widget.destroy()
+
+   pixel21=((screenHeight-screenHeight//17)//14)
+
+   frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
+   frameTitle.grid(row = 0, column = 0, columnspan = 40, sticky = "we")
+   frameTitle.propagate(False)
+   Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="BlackJack (21)").pack(expand=True, fill="both")
+
+   frameMenu=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*3)
+   frameMenu.grid(row = 1, column = 1, columnspan = 40, rowspan = 3, sticky = "we")
+   frameMenu.propagate(False)
+   frameHow=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*3)
+   frameHow.grid(row = 4, column = 1, columnspan = 40, rowspan = 3, sticky = "we")
+   frameHow.propagate(False)
+   
+   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: menu()).pack(expand=True, fill="both")
+   buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: howToPlay21())
+   buttonHow.pack(expand=True, fill="both")
+
+   hangImg = ImageTk.PhotoImage(Image.open("gameFiles/Card.png").resize(((screenHeight-screenHeight//4), (screenHeight-screenHeight//17)), resample=0))
+
+   frameImg=tk.Frame(master, width = (screenHeight-screenHeight//17), height = (screenHeight-screenHeight//17))
+   frameImg.grid(row = 1, column = 0, rowspan = 40, sticky = "we")
+   frameImg.propagate(False)
+   hangLabel = Label(frameImg, image = hangImg, bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//25))
+   hangLabel.pack(expand=True, fill="both")
+
+def howToPlay21(): 
+   for widget in master.winfo_children():
+      widget.destroy()
+
+   frameTitle=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
+   frameTitle.grid(row = 0, column = 0, sticky = "we")
+   frameTitle.propagate(False)
+   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="BlackJack (21)").pack(expand=True, fill="both")
+
+   frameMenu=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
+   frameMenu.grid(row = 0, column = 1, sticky = "we")
+   frameMenu.propagate(False)
+   tk.Button(frameMenu, text = "Back", font = "Helvetica " + str(screenHeight//40), bg = "#fff", command = lambda: BlackJack()).pack(expand=True, fill="both")
+
+   frameHang1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameHang1.grid(row=1, columnspan=2, sticky="nsew")
+   frameHang1.propagate(False)
+   frameHang2=(tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight/3 + screenHeight//10)))
+   frameHang2.grid(row=2, columnspan=2, sticky="nsew")
+   frameHang2.propagate(False)
+  
+   Label(frameHang1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+
+Program specific instructions
+
+1. Click the letters to the right to guess them.
+2. If playing multiplayer, one player choses the word/phrase.
+3. If playing single player, a word will be pulled from the database""").pack(expand=True, fill="both") 
+
+   Label(frameHang2, bg = "white smoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
+
+The goal is to guess the word/phrase before your man gets hung! one letter at a time.
+If the letter you guess is in the word, they will get filled in.
+If the letter is not in the word, another part of the hangman is filled in.
+As the game progresses, the man gets closer and closer to complete.
+If you complete the word before the man is done, you win!
+""").pack(expand=True, fill="both")
+
+
 #################################################################################################### BlackJack end
-
-#################################################################################################### Threes start
-
-#Sam Gunter
-#Threes was finished 2:05am on the 31st of May, 2018
-#This was created to create the threes game, similar to 2048
-#
-
-#Next steps are to 
-
-#Threes: Global variables and functions normally have a "The" at the end incase another game uses similar variables later on (or earlier on).
-#
-#
-#
-
-#################################################################################################### Threes end
 
 #################################################################################################### Checkers start
 
