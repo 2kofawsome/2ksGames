@@ -90,7 +90,7 @@ def howToPlayTic(): #just tutorial on how to play
    frameTic2.propagate(False)
 
    
-   Label(frameTic1, bg = "whitesmoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+   Label(frameTic1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
 
 Program specific instructions
 
@@ -98,7 +98,7 @@ Program specific instructions
 2. If playing multiplayer, alternate with the other player.
 3. If playing single player, the AI will automatically play instantly.""").pack(expand=True, fill="both") #game specfic instructions (buttons)
 
-   Label(frameTic2, bg = "whitesmoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
+   Label(frameTic2, bg = "white smoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
 
 The game is played on a grid that's 3 squares by 3 squares.
 Players take turns putting their marks in empty squares.
@@ -1353,7 +1353,7 @@ def Sudoku():
 
 def solvedBoardSu(number):
 
-   hiddenSu = open(".\gameFiles\SudokuBoards.txt").readlines()
+   hiddenSu = open(".\gameFiles\SudokuBoards.txt").readlines() 
    hiddenSu = hiddenSu[number] #takes that line specfied
    hiddenSu=hiddenSu.split('|') #splits at | each 9
 
@@ -1370,7 +1370,7 @@ def generateSu(difficulty):
    global staticSu
    global hiddenSu
 
-   fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its wroking see "CreateBoardsSudoku.py"
+   fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its working see "CreateBoardsSudoku.py"
    
    hiddenSu = solvedBoardSu(random.randint(0, (len(fileSu)-2))) #choses board from random number within the amount of boards
 
@@ -2112,18 +2112,19 @@ def endCon(turnCon): #when game is over
 #################################################################################################### HangMan start
 
 #Sam Gunter
-#HangMan was finished 2:05am on the 31st of May, 2018
-#This was created to play hang man either against another player or against the database
-#
+#HangMan was finished 10:42pm on the 4th of May, 2018
+#This was created to play hangman either against another player or against the database.
+#Multiplayer is user chosen word, single player is from the database I made (see code in gameFiles for how).
 
-#Next steps are to 
+#Next step is to add a leaderboard.
 
 #HangMan: Global variables and functions normally have a "Hang" at the end incase another game uses similar variables later on or earlier on.
-#
-#
-#
+#Starts with asking whether single or multi, this triggers a function to choose which word.
+#Then creates the game, with _ for letters, with 26 buttons for each letter. When a button is clicked it fills in blanks.
 
 def HangMan():
+   global alphabet
+   alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'] #this is created now, and used later for creating buttons and checking for letters in the words
    for widget in master.winfo_children():
       widget.destroy()
 
@@ -2149,13 +2150,78 @@ def HangMan():
    tk.Button(frameSin, text = "Singleplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: singleHang()).pack(expand=True, fill="both")
    tk.Button(frameMul, text = "Multiplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: multiHang()).pack(expand=True, fill="both")
 
-def singleHang():
-   #go to file
-   loadHang()
+def singleHang(): #if singleplayer is chosen
+   global wordHang
+   global soloHang
+   soloHang = True
+   wordHang = open(".\gameFiles\HangmanWords.txt").readlines() #creates list of all words in the file
+   wordHang = wordHang[random.randint(0, (len(wordHang)-1))] #decides on 1 word out of list
+   wordHang = wordHang.upper() #makes capital
+   wordHang = wordHang[:-1] #removes blank space at the end
+   
+   loadHang() #loads the board
 
-def multiHang():
-   #get input
-   loadHang()
+def multiHang(): #if multiplayer is chosen
+   global soloHang
+   global frameComment
+   global entry
+   global comment
+   soloHang=False
+   master.bind("<Return>", enterHang) #binds this so user can click enter to submit
+   for widget in master.winfo_children():
+      widget.destroy()
+
+   frameEntry=tk.Frame(master, width = screenWidth, height = screenHeight//4)
+   frameEntry.grid(row = 1, column = 0, columnspan = 6, sticky = "we")
+   frameEntry.propagate(False)
+   frameEnter=tk.Frame(master, width = screenWidth, height = screenHeight//4)
+   frameEnter.grid(row = 2, column = 0, columnspan = 6, sticky = "we")
+   frameEnter.propagate(False)
+   frameComment=tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight//2+screenHeight//10))
+   frameComment.grid(row = 3, column = 0, columnspan = 6, sticky = "we")
+   frameComment.propagate(False)
+   frameMenu=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameMenu.grid(row = 0, column = 5, columnspan = 1, sticky = "we")
+   frameMenu.propagate(False)
+   frameTitle=tk.Frame(master, width = (screenWidth//3)*2, height = screenHeight//10)
+   frameTitle.grid(row = 0, column = 1, columnspan = 4, sticky = "we")
+   frameTitle.propagate(False)
+   frameHow=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameHow.grid(row = 0, column = 0, columnspan = 1, sticky = "we")
+   frameHow.propagate(False)
+   
+
+   tk.Button(frameHow, text = "How To Play", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: howToPlayHang()).pack(expand=True, fill="both")
+   tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: menu()).pack(expand=True, fill="both")
+   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Hangman").pack(expand=True, fill="both")
+   comment = Label(frameComment, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="You can only use\nletters and spaces.\nMaximum of 15 characters.") #this changes to be more specific if the user doesnt follow the rules
+   comment.pack(expand=True, fill="both")
+   
+   entry = tk.Entry(frameEntry, bg = "white smoke", font = "Helvetica " + str(screenHeight//15), justify = "center") #Where the user puts in the word
+   entry.pack(expand=True, fill="both")
+   entry.focus_set() #puts user cursor here instantly
+   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterHang("blah")).pack(expand=True, fill="both") #User can click here or click enter to save/check word
+
+def enterHang(event): #event is used when enter is clicked, not the button
+   global wordHang 
+   wordHang = entry.get() #gets word from entry
+   wordHang=wordHang.upper() #makes it capital
+   allowed=True
+   for n in range(len(wordHang)):
+      if wordHang[n].isnumeric(): #if there is a number
+         allowed=False
+         comment.config(text="No numbers allowed! Only letters and spaces.") #prints no numbers allowed
+         break
+      if False==(wordHang[n]==" " or wordHang[n].isalpha()): #if something not normal
+         allowed=False
+         comment.config(text="No weird characters! Only letters and spaces.") #prints no funny buissness
+         break
+   if allowed == True: #if neither of the above were triggered
+      if len(wordHang)>15: #checks length
+         comment.config(text="Too long! Maximum of 15 characters") #prints that it is too long
+      else:
+         master.unbind("<Return>") #unbinds enter
+         loadHang() #loads the board
 
 def howToPlayHang(): 
    for widget in master.winfo_children():
@@ -2178,27 +2244,43 @@ def howToPlayHang():
    frameHang2.grid(row=2, columnspan=2, sticky="nsew")
    frameHang2.propagate(False)
   
-   Label(frameHang1, bg = "whitesmoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+   Label(frameHang1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
 
 Program specific instructions
 
-1. Click on an empty tile to place an X or an O.
-2. If playing multiplayer, alternate with the other player.
-3. If playing single player, the AI will automatically play instantly.""").pack(expand=True, fill="both") 
+1. Click the letters to the right to guess them.
+2. If playing multiplayer, one player choses the word/phrase.
+3. If playing single player, a word will be pulled from the database""").pack(expand=True, fill="both") 
 
-   Label(frameHang2, bg = "whitesmoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
+   Label(frameHang2, bg = "white smoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
 
-The game is played on a grid that's 3 squares by 3 squares.
-Players take turns putting their marks in empty squares.
-The first player to get 3 marks in a row (up, down, across, or diagonally) is the winner.
-If all 9 squares are full, the game is over.
-If no player has 3 marks in a row, the game ends in a tie.""").pack(expand=True, fill="both")
+The goal is to guess the word/phrase before your man gets hung! one letter at a time.
+If the letter you guess is in the word, they will get filled in.
+If the letter is not in the word, another part of the hangman is filled in.
+As the game progresses, the man gets closer and closer to complete.
+If you complete the word before the man is done, you win!
+""").pack(expand=True, fill="both")
 
 def loadHang():
    global buttonHow
    global hangImg
    global hangLabel
    global hangWord
+   global shownWordHang
+   global guessesHang
+   global frameButtons
+   global pixelHang
+   global buttonsHang
+   guessesHang=0 #sets guesses to 0
+
+   for n in range(len(wordHang)): #creates the string that gets shown
+      if n != 0: #any after the first
+         if wordHang[n] == " ": #if it is a space
+            shownWordHang = shownWordHang + "  " #puts in 2 spaces
+         else:
+            shownWordHang = shownWordHang + " _" #puts in a space and _
+      else: #first one, no space before
+         shownWordHang = "_"
    
    for widget in master.winfo_children():
       widget.destroy()
@@ -2206,29 +2288,107 @@ def loadHang():
    pixelHang=((screenHeight-screenHeight//17)//14)
 
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
-   frameTitle.grid(row = 0, column = 0, columnspan = 20, sticky = "we")
+   frameTitle.grid(row = 0, column = 0, columnspan = 40, sticky = "we")
    frameTitle.propagate(False)
    Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="Hangman").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixelHang*3)
-   frameMenu.grid(row = 1, column = 1, columnspan = 20, rowspan = 3, sticky = "we")
+   frameMenu.grid(row = 1, column = 1, columnspan = 40, rowspan = 3, sticky = "we")
    frameMenu.propagate(False)
    frameHow=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixelHang*3)
-   frameHow.grid(row = 4, column = 1, columnspan = 20, rowspan = 3, sticky = "we")
+   frameHow.grid(row = 4, column = 1, columnspan = 40, rowspan = 3, sticky = "we")
    frameHow.propagate(False)
    
    tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: HangMan()).pack(expand=True, fill="both")
    buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: howToPlayHang())
    buttonHow.pack(expand=True, fill="both")
 
-   hangImg = ImageTk.PhotoImage(Image.open("gameFiles/hangman.png").resize(((screenHeight-screenHeight//17), (screenHeight-screenHeight//7)), resample=0))
+   hangImg = [ImageTk.PhotoImage(Image.open("gameFiles/hangman0.png").resize(((screenHeight-screenHeight//17), (screenHeight-screenHeight//4)), resample=0))] #loads all of the hangman images in a list
+   hangImg.append(ImageTk.PhotoImage(Image.open("gameFiles/hangman1.png").resize(((screenHeight-screenHeight//17), (screenHeight-screenHeight//4)), resample=0)))
+   hangImg.append(ImageTk.PhotoImage(Image.open("gameFiles/hangman2.png").resize(((screenHeight-screenHeight//17), (screenHeight-screenHeight//4)), resample=0)))
+   hangImg.append(ImageTk.PhotoImage(Image.open("gameFiles/hangman3.png").resize(((screenHeight-screenHeight//17), (screenHeight-screenHeight//4)), resample=0)))
+   hangImg.append(ImageTk.PhotoImage(Image.open("gameFiles/hangman4.png").resize(((screenHeight-screenHeight//17), (screenHeight-screenHeight//4)), resample=0)))
+   hangImg.append(ImageTk.PhotoImage(Image.open("gameFiles/hangman5.png").resize(((screenHeight-screenHeight//17), (screenHeight-screenHeight//4)), resample=0)))
+   hangImg.append(ImageTk.PhotoImage(Image.open("gameFiles/hangman6.png").resize(((screenHeight-screenHeight//17), (screenHeight-screenHeight//4)), resample=0)))
 
    frameImg=tk.Frame(master, width = (screenHeight-screenHeight//17), height = (screenHeight-screenHeight//17))
-   frameImg.grid(row = 1, column = 0, rowspan = 11, sticky = "we")
+   frameImg.grid(row = 1, column = 0, rowspan = 40, sticky = "we")
    frameImg.propagate(False)
-   hangLabel = Label(frameImg, image = hangImg, font = "Helvetica " + str((screenHeight-screenHeight//17)//12), text="___e_ ___e_ _w__", compound = "top")
+   hangLabel = Label(frameImg, image = hangImg[0], bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//25), text = shownWordHang, compound = "top") #image with the word uderneath
    hangLabel.pack(expand=True, fill="both")
 
+   frameButtons=[]
+   buttonsHang=[]
+
+   for c in range(7): #this creates the grid of frames for letters
+      frameButtons.append(tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17))//7, height = (screenWidth-(screenHeight-screenHeight//17))//7))
+      frameButtons[c].grid(row = 7, column = 1+c, sticky = "we")
+      frameButtons[c].propagate(False)
+   for c in range(7): #it is many lines
+      frameButtons.append(tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17))//7, height = (screenWidth-(screenHeight-screenHeight//17))//7))
+      frameButtons[c+7].grid(row = 8, column = 1+(c%7), sticky = "we")
+      frameButtons[c+7].propagate(False)
+   for c in range(7): #it goes for 4 lines
+      frameButtons.append(tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17))//7, height = (screenWidth-(screenHeight-screenHeight//17))//7))
+      frameButtons[c+14].grid(row = 9, column = 1+(c%7), sticky = "we")
+      frameButtons[c+14].propagate(False)
+   for c in range(5): #with the 4th line the shortest
+      frameButtons.append(tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17))//7, height = (screenWidth-(screenHeight-screenHeight//17))//7))
+      frameButtons[c+21].grid(row = 10, column = 2+(c%7), sticky = "we")
+      frameButtons[c+21].propagate(False)
+
+   for t in range(26): #creates each button, each can be clicked to trigger that letter
+      buttonsHang.append(tk.Button(frameButtons[t], bg = "#fff", bd = "3", font = "Helvetica " + str(((screenWidth-(screenHeight-screenHeight//17))//7)//5) , text = alphabet[t], command = lambda forCommand=[t]: letterHang(forCommand[0])))
+      buttonsHang[t].pack(expand=True, fill="both")
+
+def letterHang(letter): #when a letter is clicked
+   buttonsHang[letter].config(state = "disabled", bg = "grey85") #disables button so it can not be clicked again
+   global guessesHang
+   global shownWordHang
+   if alphabet[letter] in wordHang: #if the ltter is in the button
+      spot=wordHang.index(alphabet[letter]) #finds that letter
+      shownWordHang=shownWordHang[0:(spot*2)]+alphabet[letter]+shownWordHang[(spot*2+1):] #recreates shown word with letter filled in
+      while alphabet[letter] in wordHang[spot+1:]: #while there is that letter repeating
+         firstblank=shownWordHang[:(spot+1)] #first blank is before the 1st instance (used for counting)
+         secondblank=shownWordHang[(spot+1):] #second blank is after the first letter (used to find next letter)
+         firstblank=(firstblank+secondblank[:wordHang[(spot+1):].index(alphabet[letter])]) #first blank is recreated to g oright until next time that letter exists
+         spot=len(firstblank) #marks where the letter is (simply all spots leading up to it)
+         shownWordHang=shownWordHang[0:(spot*2)]+alphabet[letter]+shownWordHang[(spot*2+1):] #recrates shown word, it is *2 because of empty spaces between
+         continue
+      hangLabel.config(text = shownWordHang) #recreates label with new shown word
+      gameWin = True
+      for n in range(len(shownWordHang)): #for the length of the word
+         if shownWordHang[n] == "_": #if a blank letter
+            gameWin = False #the game is not over
+      if gameWin == True: #if the game is over
+         if soloHang == True:
+            buttonHow.config(text = "Play Again", command = lambda: singleHang()) #creates another single player game
+         elif soloHang == False:
+            buttonHow.config(text = "Play Again", command = lambda: multiHang()) #creates another multiplayer game
+         for widget in frameButtons: #deletes all letters so they can not be clicked and mess thing sup (also to make more visually appealing)
+            widget.destroy()
+         frameWho=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = (screenHeight-screenHeight//17-pixelHang*6))
+         frameWho.grid(row = 7, column = 1, columnspan = 20, sticky = "we")
+         frameWho.propagate(False)
+         turnLabelCon = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//10), fg="#fff", text="You Win!") #creates a winner message
+         turnLabelCon.pack(expand=True, fill="both")
+   else: #if the letter is not in the button
+      guessesHang+=1 #adds 1 guess
+      hangLabel.config(image = hangImg[guessesHang]) #changes image by 1
+      if guessesHang == 6: #if the game is over
+         if soloHang == True:
+            buttonHow.config(text = "Play Again", command = lambda: singleHang()) #creates play again
+         elif soloHang == False:
+            buttonHow.config(text = "Play Again", command = lambda: multiHang())
+         for widget in frameButtons: #deletes the letters
+            widget.destroy()
+         frameWho=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = (screenHeight-screenHeight//17-pixelHang*6))
+         frameWho.grid(row = 7, column = 1, rowspan = 20, columnspan = 20, sticky = "we")
+         frameWho.propagate(False)
+         turnLabelCon = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//15), fg="#fff", text="You lose.\n\nThe word was\n"+wordHang) #creates a loser message with the word
+         turnLabelCon.pack(expand=True, fill="both")
+
+       
 #################################################################################################### HangMan end
 
 #################################################################################################### BlackJack start
@@ -2304,17 +2464,19 @@ def menu():
    global TicTacToeImg
    global Connect4Img
    global MineSweeperImg
-   global the2048Img
-   global quitImg
-   global sudokuImg
+   global The2048Img
+   global QuitImg
+   global SudokuImg
+   global HangManImg
    pixelHeight=((screenHeight)//3)
    pixelWidth=((screenWidth)//3)
-   sudokuImg = ImageTk.PhotoImage(Image.open("gameFiles/SudokuMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
-   quitImg = ImageTk.PhotoImage(Image.open("gameFiles/QuitMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
-   the2048Img = ImageTk.PhotoImage(Image.open("gameFiles/2048Menu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+   SudokuImg = ImageTk.PhotoImage(Image.open("gameFiles/SudokuMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+   QuitImg = ImageTk.PhotoImage(Image.open("gameFiles/QuitMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+   The2048Img = ImageTk.PhotoImage(Image.open("gameFiles/2048Menu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    MineSweeperImg = ImageTk.PhotoImage(Image.open("gameFiles/MineSweeperMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    Connect4Img = ImageTk.PhotoImage(Image.open("gameFiles/Connect4Menu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    TicTacToeImg = ImageTk.PhotoImage(Image.open("gameFiles/TicTacToeMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+   HangManImg = ImageTk.PhotoImage(Image.open("gameFiles/HangManMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    for widget in master.winfo_children(): #clears contents, but not frame meaning it can update without making a new window each time
       widget.destroy()
    master.configure(bg = "#000000") #Sets initial background colour to black
@@ -2330,11 +2492,11 @@ def menu():
    frame2048=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frame2048.grid(row = 1, column = 2, sticky = "we")
    frame2048.propagate(False)
-   tk.Button(frame2048, image = the2048Img, command = lambda: the2048()).pack(expand=True, fill="both")
+   tk.Button(frame2048, image = The2048Img, command = lambda: the2048()).pack(expand=True, fill="both")
    frameSu=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameSu.grid(row = 2, column = 0, sticky = "we")
    frameSu.propagate(False)
-   tk.Button(frameSu, image = sudokuImg, command = lambda: Sudoku()).pack(expand=True, fill="both")
+   tk.Button(frameSu, image = SudokuImg, command = lambda: Sudoku()).pack(expand=True, fill="both")
    frameCon=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameCon.grid(row = 2, column = 1, sticky = "we")
    frameCon.propagate(False)
@@ -2346,7 +2508,7 @@ def menu():
    frameHang=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameHang.grid(row = 3, column = 0, sticky = "we")
    frameHang.propagate(False)
-   tk.Button(frameHang, text = "HangManNF", height = 5, width = 20, bg = "#fff", command = lambda: HangMan()).pack(expand=True, fill="both")
+   tk.Button(frameHang, image = HangManImg, command = lambda: HangMan()).pack(expand=True, fill="both")
    frameJack=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameJack.grid(row = 3, column = 1, sticky = "we")
    frameJack.propagate(False)
@@ -2354,7 +2516,7 @@ def menu():
    frameQuit=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameQuit.grid(row = 3, column = 2, sticky = "we")
    frameQuit.propagate(False)
-   tk.Button(frameQuit, image = quitImg, command = master.destroy).pack(expand=True, fill="both")
+   tk.Button(frameQuit, image = QuitImg, command = master.destroy).pack(expand=True, fill="both")
 
 menu()
 master.mainloop()
