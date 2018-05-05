@@ -5,7 +5,7 @@ I used Python 3 for this code with the GUI from tkinter.
 
 Games created so far are TicTacToe, Connect 4, Sudoku, MineSweeper and Hangman. More to come...
 
-Open "Games2k.exe" to play, or take a look at the code with" Games2k.py" or any of the "gameFiles".
+Open "Games2k.exe" to play, or take a look at the code with "Games2k.py" or any of the "gameFiles".
 No need to enter gameFiles, but do it if you want.
 
 Please feel free to comment anything or whatever you do on GitHub, 
