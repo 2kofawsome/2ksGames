@@ -2116,7 +2116,7 @@ def endCon(turnCon): #when game is over
 #This was created to play hangman either against another player or against the database.
 #Multiplayer is user chosen word, single player is from the database I made (see code in gameFiles for how).
 
-#Next step is to add a leaderboard.
+#Next steps are to fix letters on weird screens and to add a leaderboard.
 
 #HangMan: Global variables and functions normally have a "Hang" at the end incase another game uses similar variables later on or earlier on.
 #Starts with asking whether single or multi, this triggers a function to choose which word.
@@ -2400,7 +2400,7 @@ def letterHang(letter): #when a letter is clicked
 
 #Next steps are to 
 
-#HangMan: Global variables and functions normally have a "21" at the end incase another game uses similar variables later on or earlier on.
+#BlackJack: Global variables and functions normally have a "21" at the end incase another game uses similar variables later on or earlier on.
 #
 #
 #
@@ -2410,31 +2410,69 @@ def BlackJack():
    for widget in master.winfo_children():
       widget.destroy()
 
-   pixel21=((screenHeight-screenHeight//17)//14)
+   pixel21=((screenHeight-screenHeight//17)//12)
 
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
    frameTitle.grid(row = 0, column = 0, columnspan = 40, sticky = "we")
    frameTitle.propagate(False)
    Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="BlackJack (21)").pack(expand=True, fill="both")
 
-   frameMenu=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*3)
-   frameMenu.grid(row = 1, column = 1, columnspan = 40, rowspan = 3, sticky = "we")
+   frameMenu=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21)
+   frameMenu.grid(row = 1, column = 8, rowspan = 1, sticky = "we")
    frameMenu.propagate(False)
-   frameHow=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*3)
-   frameHow.grid(row = 4, column = 1, columnspan = 40, rowspan = 3, sticky = "we")
+   frameHow=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21)
+   frameHow.grid(row = 2, column = 8, rowspan = 1, sticky = "we")
    frameHow.propagate(False)
    
    tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: menu()).pack(expand=True, fill="both")
    buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: howToPlay21())
    buttonHow.pack(expand=True, fill="both")
 
-   hangImg = ImageTk.PhotoImage(Image.open("gameFiles/Card.png").resize(((screenHeight-screenHeight//4), (screenHeight-screenHeight//17)), resample=0))
+   frameStand=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
+   frameStand.grid(row = 3, column = 8, rowspan = 2, sticky = "we")
+   frameStand.propagate(False)
+   frameHit=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
+   frameHit.grid(row = 5, column = 8, rowspan = 2, sticky = "we")
+   frameHit.propagate(False)
+   frameDown=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
+   frameDown.grid(row = 7, column = 8, rowspan = 2, sticky = "we")
+   frameDown.propagate(False)
+   frameSplit=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
+   frameSplit.grid(row = 9, column = 8, rowspan = 2, sticky = "we")
+   frameSplit.propagate(False)
+   frameSurrender=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
+   frameSurrender.grid(row = 11, column = 8, rowspan = 2, sticky = "we")
+   frameSurrender.propagate(False)
 
-   frameImg=tk.Frame(master, width = (screenHeight-screenHeight//17), height = (screenHeight-screenHeight//17))
-   frameImg.grid(row = 1, column = 0, rowspan = 40, sticky = "we")
-   frameImg.propagate(False)
-   hangLabel = Label(frameImg, image = hangImg, bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//25))
-   hangLabel.pack(expand=True, fill="both")
+   buttonStand = tk.Button(frameStand, text = "Stand", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: stand21())
+   buttonStand.pack(expand=True, fill="both")
+   buttonHit = tk.Button(frameHit, text = "Hit", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: hit21())
+   buttonHit.pack(expand=True, fill="both")
+   buttonDown = tk.Button(frameDown, text = "Double Down", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: down21())
+   buttonDown.pack(expand=True, fill="both")
+   buttonSplit = tk.Button(frameSplit, text = "Split", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: split21())
+   buttonSplit.pack(expand=True, fill="both")
+   buttonSurrender = tk.Button(frameSurrender, text = "Surrender", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: surrender21())
+   buttonSurrender.pack(expand=True, fill="both")
+
+   hangImg = ImageTk.PhotoImage(Image.open("gameFiles/Card.png").resize((pixel21, pixel21*4), resample=0))
+
+   framePlayer=[]
+   frameDealer=[]
+   playerCard=[]
+   dealerCard=[]
+   
+   for c in range(8):
+      frameDealer.append(tk.Frame(master, width = pixel21, height = pixel21*4))
+      frameDealer[c].grid(row = 1, column = c, rowspan = 4, sticky = "we")
+      frameDealer[c].propagate(False)
+      framePlayer.append(tk.Frame(master, width = pixel21, height = pixel21*4))
+      framePlayer[c].grid(row = 9, column = c, rowspan = 4, sticky = "we")
+      framePlayer[c].propagate(False)
+      dealerCard.append(Label(frameDealer[c], image = hangImg, bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//25)))
+      dealerCard[c].pack(expand=True, fill="both")
+      playerCard.append(Label(framePlayer[c], image = hangImg, bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//25)))
+      playerCard[c].pack(expand=True, fill="both")
 
 def howToPlay21(): 
    for widget in master.winfo_children():
@@ -2473,6 +2511,21 @@ If the letter is not in the word, another part of the hangman is filled in.
 As the game progresses, the man gets closer and closer to complete.
 If you complete the word before the man is done, you win!
 """).pack(expand=True, fill="both")
+
+def stand21():
+   print("Stand")
+
+def hit21():
+   print("Hit")
+
+def down21():
+   print("Double Down")
+
+def split21():
+   print("Split")
+
+def surrender21():
+   print("Surrender")
 
 
 #################################################################################################### BlackJack end
