@@ -2455,19 +2455,26 @@ def BlackJack():
    buttonSurrender = tk.Button(frameSurrender, text = "Surrender", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: surrender21())
    buttonSurrender.pack(expand=True, fill="both")
 
-   hangImg = ImageTk.PhotoImage(Image.open("gameFiles/Card.png").resize((pixel21, pixel21*4), resample=0))
+   blahPixel = (screenWidth-(screenHeight-screenHeight//17))//7
+
+   hangImg = ImageTk.PhotoImage(Image.open("gameFiles\\CardDeck\\1-clubs.png").resize((blahPixel, blahPixel*2), resample=0))
+
+   bigFrame=tk.Frame(master, width = screenWidth-(screenHeight-screenHeight//17), height = screenWidth-(screenHeight-screenHeight//17))
+   bigFrame.grid(row = 1, column = 0, rowspan = 12, sticky = "we")
+   bigFrame.propagate(False)
 
    framePlayer=[]
    frameDealer=[]
    playerCard=[]
    dealerCard=[]
+
    
    for c in range(8):
-      frameDealer.append(tk.Frame(master, width = pixel21, height = pixel21*4))
-      frameDealer[c].grid(row = 1, column = c, rowspan = 4, sticky = "we")
+      frameDealer.append(tk.Frame(bigFrame, width = blahPixel, height = blahPixel*2))
+      frameDealer[c].grid(row = 0, column = c, sticky = "we")
       frameDealer[c].propagate(False)
-      framePlayer.append(tk.Frame(master, width = pixel21, height = pixel21*4))
-      framePlayer[c].grid(row = 9, column = c, rowspan = 4, sticky = "we")
+      framePlayer.append(tk.Frame(bigFrame, width = blahPixel, height = blahPixel*2))
+      framePlayer[c].grid(row = 2, column = c, sticky = "we")
       framePlayer[c].propagate(False)
       dealerCard.append(Label(frameDealer[c], image = hangImg, bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//25)))
       dealerCard[c].pack(expand=True, fill="both")
