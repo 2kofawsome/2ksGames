@@ -1,4 +1,4 @@
-from tkinter import *
+
 import tkinter as tk
 import random, time, os
 from tkinter.font import Font
@@ -25,15 +25,7 @@ print("Please wait...")
 def TicTacToe():
    for widget in master.winfo_children():
       widget.destroy()
-   global gamesTic
-   global levelTic #most of these variables only have to be called up in 1 or 2 functions
-   global gridWinTic
-   global gridTic
-   global playerTic
-   global sizeTic
-   global screenWidth
-   global screenHeight
-   global delayTic
+   global gamesTic, levelTic, gridWinTic, gridTic, playerTic, sizeTic, screenWidth, screenHeight, delayTic #most of these variables only have to be called up in 1 or 2 functions
    delayTic=time.time()
    sizeTic=((screenHeight-screenHeight//16)//3)
    gamesTic=0 #if playing against ai this sets who plays first (alternates)
@@ -64,7 +56,7 @@ def TicTacToe():
 
    tk.Button(frameHow, text = "How To Play", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: howToPlayTic()).pack(expand=True, fill="both") #right now ends the program, later will redirect
    tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: menu()).pack(expand=True, fill="both") #right now ends the program, later will redirect
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both") #just says the game name, bg means background (black) and fg means foreground (white)
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both") #just says the game name, bg means background (black) and fg means foreground (white)
    tk.Button(frameSin, text = "Singleplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: singleplayerTic()).pack(expand=True, fill="both") #command=lambda stops the programs from running when the window is first created
    tk.Button(frameMul, text = "Multiplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: loadTic()).pack(expand=True, fill="both") #when clicked redirects to whichever function is command
 
@@ -75,22 +67,22 @@ def howToPlayTic(): #just tutorial on how to play
    frameTitle=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameTitle.grid(row = 0, column = 0, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameMenu.grid(row = 0, column = 1, sticky = "we")
    frameMenu.propagate(False)
    tk.Button(frameMenu, text = "Back", font = "Helvetica " + str(screenHeight//40), bg = "#fff", command = lambda: TicTacToe()).pack(expand=True, fill="both")
 
-   frameTic1=(tk.Frame(master, width = screenWidth, height = screenHeight/3)) #a third of the screen, leaves room for top bar
+   frameTic1=tk.Frame(master, width = screenWidth, height = screenHeight/3) #a third of the screen, leaves room for top bar
    frameTic1.grid(row=1, columnspan=2, sticky="nsew")
    frameTic1.propagate(False)
-   frameTic2=(tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight/3 + screenHeight//10))) #half the screen
+   frameTic2=tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight/3 + screenHeight//10)) #half the screen
    frameTic2.grid(row=2, columnspan=2, sticky="nsew")
    frameTic2.propagate(False)
 
 
-   Label(frameTic1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+   tk.Label(frameTic1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
 
 Program specific instructions
 
@@ -98,7 +90,7 @@ Program specific instructions
 2. If playing multiplayer, alternate with the other player.
 3. If playing single player, the AI will automatically play instantly.""").pack(expand=True, fill="both") #game specfic instructions (buttons)
 
-   Label(frameTic2, bg = "white smoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
+   tk.Label(frameTic2, bg = "white smoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
 
 The game is played on a grid that's 3 squares by 3 squares.
 Players take turns putting their marks in empty squares.
@@ -108,11 +100,7 @@ If no player has 3 marks in a row, the game ends in a tie.""").pack(expand=True,
 
 
 def againTic(): #if the user wants to play again
-   global gridWinTic
-   global levelTic
-   global gridTic
-   global playerTic
-   global gamesTic
+   global gridWinTic, levelTic, gridTic, playerTic, gamesTic
    gamesTic+=1
    gridTic=[' ', ' ', ' ', #resets board
         ' ', ' ', ' ',
@@ -166,7 +154,7 @@ def singleplayerTic():
 
    tk.Button(frameHow, text = "How To Play", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: howToPlayTic()).pack(expand=True, fill="both")
    tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//60), command = lambda: menu()).pack(expand=True, fill="both") #sends back to first TicTacToe screen
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
    tk.Button(frameEasy, text = "Easy", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: setTic("easy")).pack(expand=True, fill="both") #random ai
    tk.Button(frameMedium, text = "Medium", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: setTic("medium")).pack(expand=True, fill="both") #ai that knows how to win, user goes first
    tk.Button(frameHard, text = "Hard", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: setTic("hard")).pack(expand=True, fill="both") #same ai as above, user goes second
@@ -184,17 +172,13 @@ def setTic(difficulty): #difficulty changes depending on whether medium or hard 
       loadTic()
 
 def loadTic():
-   global playerTic
-   global sizeTic
-   global frameTic
-   global buttonTic
-   global labelWho
+   global playerTic, sizeTic, frameTic, buttonTic, labelWho
    for widget in master.winfo_children():
       widget.destroy()
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//16)
    frameTitle.grid(row = 0, column = 0, columnspan = 10, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, font = "fixedsys " + str(screenHeight//35), bg = "#000000", fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
+   tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//35), bg = "#000000", fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(sizeTic*3)), height = sizeTic//2)
    frameMenu.grid(row = 1, column = 3, sticky = "we")
@@ -205,9 +189,9 @@ def loadTic():
    frameWho=tk.Frame(master, width = (screenWidth-(sizeTic*3)), height = sizeTic*2)
    frameWho.grid(row = 3, column = 3, rowspan = 4, sticky = "we")
    frameWho.propagate(False)
-   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(sizeTic*3))//15), bg = "#fff", command = lambda: TicTacToe()).pack(expand=True, fill="both")
-   tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(sizeTic*3))//15), bg = "#fff", command = lambda: howToPlayTic()).pack(expand=True, fill="both") #menu goes right back to start
-   labelWho = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//6), fg="#fff", text=playerTic + "'s\nturn")
+   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(sizeTic*3))//25), bg = "#fff", command = lambda: TicTacToe()).pack(expand=True, fill="both")
+   tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(sizeTic*3))//25), bg = "#fff", command = lambda: howToPlayTic()).pack(expand=True, fill="both") #menu goes right back to start
+   labelWho = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text=playerTic + "'s\nturn")
    labelWho.pack(expand=True, fill="both") #to keep it constant has a blank label at the bottom with no words, this is where winner is displayed or where it tells you you can't play there
    frameTic=[]
    myFont=Font(family="Helvetica", size=((sizeTic//7)*4))
@@ -248,10 +232,7 @@ def loadTic():
       endTic("tie") #putting "tie" tells the function it was a tie for the bottom label
 
 def reloadTic():
-   global playerTic
-   global sizeTic
-   global frameTic
-   global buttonTic
+   global playerTic, sizeTic, frameTic, buttonTic
    myFont=Font(family="Helvetica", size=((sizeTic//7)*4))
    if levelTic == 0:
       labelWho.config(font = "Helvetica " + str((screenWidth-(sizeTic*3))//6), text=playerTic + "'s\nturn")
@@ -280,12 +261,8 @@ def reloadTic():
    if gridTic[0]!=" " and gridTic[1]!=" " and gridTic[2]!=" " and gridTic[3]!=" " and gridTic[4]!=" " and gridTic[5]!=" " and gridTic[6]!=" " and gridTic[7]!=" " and gridTic[8]!=" ": #This means everything is filled up
       endTic("tie") #putting "tie" tells the function it was a tie for the bottom label
 
-
 def endTic(result):
-   global gridWinTic
-   global playerTic
-   global sizeTic
-   global frameTic
+   global gridWinTic, playerTic, sizeTic, frameTic
    myFont=Font(family="Helvetica", size=((sizeTic//7)*4))
    winFont=Font(family="Helvetica", size=((sizeTic//5)*3), weight='bold') #different fonts for win or game in progress
    for widget in master.winfo_children():
@@ -294,7 +271,7 @@ def endTic(result):
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//16)
    frameTitle.grid(row = 0, column = 0, columnspan = 10, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, font = "fixedsys " + str(screenHeight//35), bg = "#000000", fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
+   tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//35), bg = "#000000", fg="#fff", text="TicTacToe2.0").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(sizeTic*3)), height = sizeTic//2)
    frameMenu.grid(row = 1, column = 3, sticky = "we")
@@ -306,17 +283,17 @@ def endTic(result):
    frameWho.grid(row = 3, column = 3, rowspan = 4, sticky = "we")
    frameWho.propagate(False)
 
-   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str(screenHeight//60), bg = "#fff", command = lambda: TicTacToe()).pack(expand=True, fill="both")
-   tk.Button(frameHow, text = "Play Again", font = "Helvetica " + str(screenHeight//60), bg = "#fff", command = lambda: againTic()).pack(expand=True, fill="both")
+   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str(screenHeight//25), bg = "#fff", command = lambda: TicTacToe()).pack(expand=True, fill="both")
+   tk.Button(frameHow, text = "Play Again", font = "Helvetica " + str(screenHeight//25), bg = "#fff", command = lambda: againTic()).pack(expand=True, fill="both")
 
    if result=="tie": #if it is a tie display this
-      Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), fg="#fff", text="It is\na Tie.").pack(expand=True, fill="both")
+      tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text="It is\na Tie.").pack(expand=True, fill="both")
    elif result=="multi": #if multiplayer, the playerTic was the last one who played therefore the winner
-      Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), fg="#fff", text=playerTic+"\nwins!").pack(expand=True, fill="both")
+      tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text=playerTic+"\nwins!").pack(expand=True, fill="both")
    elif result=="player": #in player vs ai, player wins
-      Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), fg="#fff", text="You\nwin!").pack(expand=True, fill="both")
+      tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text="You\nwin!").pack(expand=True, fill="both")
    elif result=="ai": #in player vs ai, ai wins
-      Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//5), fg="#fff", text="You\nlose.").pack(expand=True, fill="both")
+      tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text="You\nlose.").pack(expand=True, fill="both")
    frameTic=[]
    for r in range(0, 3): #THIS WHOLE THING IS ONLY TO MAKE THE CODE SHORTER, WAS AROUND 50 LINES FOR THIS BEFORE WITH IF, ELIF, ELSE STATEMENTS
       for c in range(0,3): #r is the number of rows, c is the column number
@@ -330,10 +307,7 @@ def endTic(result):
       #once this is done it will sit and wait for user to click menu and restart
 
 def turnTic(number): #number is whichever button was clicked
-   global playerTic
-   global gridWinTic
-   global levelTic
-   global delayTic
+   global playerTic, gridWinTic, levelTic, delayTic
    if (time.time()-delayTic)>.55:
       if gridTic[number] == " ": #if it is valid (if no one has played there yet)
          gridTic[number] = playerTic #grid gets replaced with the player, if going against ai it will always be X, if multiplayer it starts as X but switched later in this function
@@ -380,8 +354,7 @@ def turnTic(number): #number is whichever button was clicked
          labelWho.config(font = "Helvetica " + str((screenWidth-(sizeTic*3))//10), text="You cannot\nplay there.")
 
 def aiTic(difficulty):
-   global gridTic
-   global GridWinTic
+   global gridTic, GridWinTic
    number=-1 #number will be 0-8 by the end, so must start as something else
    if gridTic[0]!=" " and gridTic[1]!=" " and gridTic[2]!=" " and gridTic[3]!=" " and gridTic[4]!=" " and gridTic[5]!=" " and gridTic[6]!=" " and gridTic[7]!=" " and gridTic[8]!=" ":
       endTic("tie") #checks to see if a tie, sends to endTic function if so
@@ -540,8 +513,7 @@ def aiTic(difficulty):
 def MineSweeper(errorCheck):
    master.bind("<Button-3>", flagMine)
    master.bind("<Button-2>", chordMine)
-   global varSizeMine #this becomes a non var variable later (var is from tkinter)
-   global varBombMine
+   global varSizeMine, varBombMine #this becomes a non var variable later (var is from tkinter)
    for widget in master.winfo_children():
       widget.destroy()
    master.configure(bg = "darkgrey") #Sets initial background colour to dark grey
@@ -577,19 +549,19 @@ def MineSweeper(errorCheck):
 
    tk.Button(frameHow, text = "How To Play", bg = "darkgrey", font = "Helvetica " + str(screenHeight//50), command = lambda: howToPlayMine()).pack(expand=True, fill="both")
    tk.Button(frameMenu, text = "Back", bg = "darkgrey", font = "Helvetica " + str(screenHeight//50), command = lambda: menu()).pack(expand=True, fill="both")
-   Label(frameTitle, bg = "darkgrey", font = "fixedsys " + str(screenHeight//35), fg="#000000", text="MineSweeper").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "darkgrey", font = "fixedsys " + str(screenHeight//35), fg="#000000", text="MineSweeper").pack(expand=True, fill="both")
    tk.Button(frameEasy, text = "Easy", bg = "darkgrey", font = "Helvetica " + str(screenHeight//20), command = lambda: gameSetMine(1)).pack(expand=True, fill="both")
    tk.Button(frameMedium, text = "Medium", bg = "darkgrey", font = "Helvetica " + str(screenHeight//20), command = lambda: gameSetMine(2)).pack(expand=True, fill="both")
    tk.Button(frameHard, text = "Hard", bg = "darkgrey", font = "Helvetica " + str(screenHeight//20), command = lambda: gameSetMine(3)).pack(expand=True, fill="both")
 
-   varSizeMine=IntVar() #declaired the var variables
-   varBombMine=IntVar()
+   varSizeMine=tk.IntVar() #declaired the var variables
+   varBombMine=tk.IntVar()
 
-   tk.Scale(frameSize, bg="#fff", from_=8, to=24, font = "Helvetica " + str(screenHeight//35), orient=HORIZONTAL, variable=varSizeMine, label="The size of your grid (X by X)").pack(expand=True, fill="both") #this is a scale (slider) for custom games
-   tk.Scale(frameBomb, bg="#fff", from_=8, to=99, font = "Helvetica " + str(screenHeight//35), orient=HORIZONTAL, variable=varBombMine, label="The number of bombs").pack(expand=True, fill="both") #horizontal is side to side, from/to is range
+   tk.Scale(frameSize, bg="#fff", from_=8, to=24, font = "Helvetica " + str(screenHeight//35), orient = "horizontal", variable=varSizeMine, label="The size of your grid (X by X)").pack(expand=True, fill="both") #this is a scale (slider) for custom games
+   tk.Scale(frameBomb, bg="#fff", from_=8, to=99, font = "Helvetica " + str(screenHeight//35), orient = "horizontal", variable=varBombMine, label="The number of bombs").pack(expand=True, fill="both") #horizontal is side to side, from/to is range
    tk.Button(frameCus, text = "Custom Game: (The sliders)", font = "Helvetica " + str(screenHeight//30), bg = "darkgrey", command = lambda: gameSetMine(0)).pack(expand=True, fill="both") #command=lambda stops the programs from running when the window is first created
    if errorCheck=="True":
-      Label(master, bg = "darkgrey", fg = "darkred", text="You have too many bombs").grid(row = 9, columnspan = 3, sticky="we")
+      tk.Label(master, bg = "darkgrey", fg = "darkred", text="You have too many bombs").grid(row = 9, columnspan = 3, sticky="we")
 
 def howToPlayMine(): #see TicTacToe how to play, all others will have no comments
    for widget in master.winfo_children():
@@ -598,7 +570,7 @@ def howToPlayMine(): #see TicTacToe how to play, all others will have no comment
    frameTitle=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameTitle.grid(row = 0, column = 0, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="MineSweeper").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="MineSweeper").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameMenu.grid(row = 0, column = 1, sticky = "we")
@@ -612,7 +584,7 @@ def howToPlayMine(): #see TicTacToe how to play, all others will have no comment
    frameMine2.grid(row=2, columnspan=2, sticky="nsew")
    frameMine2.propagate(False)
 
-   Label(frameMine1, bg = "white smoke", font = "Helvetica " + str(screenHeight//35) + " bold", text="""
+   tk.Label(frameMine1, bg = "white smoke", font = "Helvetica " + str(screenHeight//35) + " bold", text="""
 
 Program specific instructions
 
@@ -620,7 +592,7 @@ Program specific instructions
 2. Right Click: Place flag
 3. Middle Click: Chord""").pack(expand=True, fill="both")
 
-   Label(frameMine2, bg = "white smoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
+   tk.Label(frameMine2, bg = "white smoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
 
 In order to win the game, you must reveal all the squares that DO NOT contain a mine,
 whether you flag them or not is a matter of personal preference.
@@ -635,8 +607,7 @@ you know the 2 other tiles are safe to click.""").pack(expand=True, fill="both")
 
 
 def gameSetMine(level):
-   global sizeMine
-   global bombMine
+   global sizeMine, bombMine
    if level==0: #custom board
          sizeMine=varSizeMine.get() #as I said above, sets var variable to int
          bombMine=varBombMine.get()
@@ -657,19 +628,7 @@ def gameSetMine(level):
       createBoardMine() #triggers next function
 
 def createBoardMine():
-   global shownMine #Similar to TicTacToe(), most of these are barely called again, but have to all be declared here as global
-   global frameMine
-   global reliefMine
-   global hiddenMine
-   global myFont
-   global pixelMine
-   global statusMine
-   global bombsLeftMine
-   global buttonMine
-   global flagImgMine
-   global bombImgMine
-   global labelMine
-   global buttonHow
+   global shownMine, frameMine, reliefMine, hiddenMine, myFont, pixelMine, statusMine, bombsLeftMine, buttonMine, flagImgMine, bombImgMine, labelMine, buttonHow #Similar to TicTacToe(), most of these are barely called again, but have to all be declared here as global
    bombsLeftMine=bombMine #keep track of flag counter in top corner
    statusMine="start"
    for widget in master.winfo_children(): #same as TicTacToe2.0 this delete all widgets onscreen
@@ -699,7 +658,7 @@ def createBoardMine():
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//18)
    frameTitle.grid(row = 0, column = 0, columnspan = 25, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, font = "fixedsys " + str(screenHeight//35), bg = "darkgrey", fg="#000000", text="MineSweeper").pack(expand=True, fill="both")
+   tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//35), bg = "darkgrey", fg="#000000", text="MineSweeper").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(pixelMine*sizeMine)), height = ((screenHeight-(screenHeight//18))//sizeMine)*(sizeMine//3))
    frameMenu.grid(row = 1, column = sizeMine, rowspan = sizeMine//3, sticky = "we")
@@ -728,9 +687,7 @@ def createBoardMine():
 
 def flagMine(event): #This might be one of the most complicated codes I have created, so many numbers together all of which are variables and most of which are pixels related to screen
    if statusMine!="end": #makes it so this code doesn't run if bomb has been triggered
-      global bombsLeftMine
-      global shownMine #flagImgMine
-      global buttonMine
+      global bombsLeftMine, shownMine, buttonMine #flagImgMine
       for r in range(sizeMine):
          for c in range(sizeMine):
             if frameMine[r*sizeMine+c].winfo_y() < master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_y()+pixelMine > master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_x() < master.winfo_pointerx() and frameMine[r*sizeMine+c].winfo_x()+pixelMine > master.winfo_pointerx() and reliefMine[r][c]=="raised": #long thing to see if the cursor is within frame window and if it is still raised (not checked yet)
@@ -749,8 +706,7 @@ def flagMine(event): #This might be one of the most complicated codes I have cre
 
 def chordMine(event):
    if statusMine!="end":
-      global sizeMine
-      global pixelMine
+      global sizeMine, pixelMine
       for r in range(sizeMine):
          for c in range(sizeMine):
             if frameMine[r*sizeMine+c].winfo_y() < master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_y()+pixelMine > master.winfo_pointery() and frameMine[r*sizeMine+c].winfo_x() < master.winfo_pointerx() and frameMine[r*sizeMine+c].winfo_x()+pixelMine > master.winfo_pointerx() and reliefMine[r][c]=="sunken":
@@ -818,8 +774,7 @@ def updateMine(row, column): #this updates only 1 square, before it was updating
 
 def endMine(result): #end game
    buttonHow.config(text = "Again", command = lambda: createBoardMine()) #allows user to play again with the same specifications (board size and amount of bombs)
-   global statusMine
-   global buttonMine
+   global statusMine, buttonMine
    statusMine="end"
    if result == "lose":
       labelMine.config(text = "You lose.")
@@ -833,9 +788,7 @@ def endMine(result): #end game
             buttonMine[r][c].config(image=flagImgMine, text = "?") #make bombs show as defused
 
 def clickMine(row, column): #This is used 1 time to make sure the user doesn't get out 1st time
-   global statusMine
-   global sizeMine
-   global hiddenMine
+   global statusMine, sizeMine, hiddenMine
    if statusMine == "start": #if this function has not been triggered yet
       for b in range(bombMine): #to adds bombs to hidden list
          while True:
@@ -921,14 +874,7 @@ def checkMine(row, column): #when a button is clicked
 #All numbers move in that direction and combine if possible. Constantly checking for game end.
 
 def the2048():
-   global pixel2048
-   global value2048
-   global frame2048
-   global label2048
-   global win2048
-   global delay2048
-   global labelWho
-   global buttonHow
+   global pixel2048, value2048, frame2048, label2048, win2048, delay2048, labelWho, buttonHow
    delay2048=time.time()
    win2048="schrodinger"
    master.bind("<Up>", up2048) #binds the up, down, left, right arrows on keyboard
@@ -944,7 +890,7 @@ def the2048():
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
    frameTitle.grid(row = 0, column = 0, columnspan = 10, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="2048").pack(expand=True, fill="both")
+   tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="2048").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(pixel2048*4)), height = pixel2048)
    frameMenu.grid(row = 1, column = 4, sticky = "we")
@@ -959,7 +905,7 @@ def the2048():
    tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), bg = "#fff", command = lambda: unbind()).pack(expand=True, fill="both")
    buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), bg = "#fff", command = lambda: howToPlay2048())
    buttonHow.pack(expand=True, fill="both") #menu goes right back to start
-   labelWho = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixel2048*3))//12), fg="#fff", text="")
+   labelWho = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixel2048*3))//12), fg="#fff", text="")
    labelWho.pack(expand=True, fill="both")
 
    label2048=[[]]
@@ -1004,7 +950,7 @@ def howToPlay2048():
    frameTitle=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameTitle.grid(row = 0, column = 0, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="2048").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="2048").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameMenu.grid(row = 0, column = 1, sticky = "we")
@@ -1019,7 +965,7 @@ def howToPlay2048():
    frame20482.propagate(False)
 
 
-   Label(frame20481, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+   tk.Label(frame20481, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
 
 Program specific instructions
 
@@ -1027,7 +973,7 @@ Program specific instructions
 2.You can also use your finger (or mouse)
 to drag across the screen to shift the board.""").pack(expand=True, fill="both")
 
-   Label(frame20482, bg = "white smoke", font = "Helvetica " + str(screenHeight//35), text="""Rules to Game:
+   tk.Label(frame20482, bg = "white smoke", font = "Helvetica " + str(screenHeight//35), text="""Rules to Game:
 
 When two tiles with the same number touch they merge into one,
 that means 2s become a 4, 4s a 8, 8s a 16 and so on.
@@ -1035,8 +981,7 @@ You are attempting to try to get a block of 2048 (2^11),
 which makes you win the game!""").pack(expand=True, fill="both")
 
 def reloadFull2048():
-   global win2048
-   global label2048
+   global win2048, label2048
    win2048="False" #game set as over
    for r in range(4):
       for c in range(4):
@@ -1115,8 +1060,7 @@ def reload2048(r, c): #reloads one at a time, this gives the game its cascading 
       label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
 
 def buttonclick2048(event): #checks x and y value with first click
-   global x2048
-   global y2048
+   global x2048, y2048
    x2048=master.winfo_pointerx() #x value
    y2048=master.winfo_pointery() #y value
 
@@ -1346,7 +1290,7 @@ def Sudoku():
 
    tk.Button(frameHow, text = "How To Play", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: howToPlaySu()).pack(expand=True, fill="both")
    tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: menu()).pack(expand=True, fill="both")
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Sudoku").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Sudoku").pack(expand=True, fill="both")
    tk.Button(frameEasy, text = "Easy", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: generateSu(20)).pack(expand=True, fill="both") #different difficulties are solely how many clues at the beginning
    tk.Button(frameMedium, text = "Medium", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: generateSu(15)).pack(expand=True, fill="both") #I wanted to improve this, but alas I could not
    tk.Button(frameHard, text = "Hard", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: generateSu(10)).pack(expand=True, fill="both")
@@ -1366,9 +1310,7 @@ def solvedBoardSu(number):
    return hiddenSu #returns the board
 
 def generateSu(difficulty):
-   global shownSu
-   global staticSu
-   global hiddenSu
+   global shownSu, staticSu, hiddenSu
 
    fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its working see "CreateBoardsSudoku.py"
 
@@ -1446,21 +1388,21 @@ def howToPlaySu():
    frameTitle=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameTitle.grid(row = 0, column = 0, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Sudoku").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Sudoku").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameMenu.grid(row = 0, column = 1, sticky = "we")
    frameMenu.propagate(False)
    tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//40), command = lambda: loadBoardSu()).pack(expand=True, fill="both")
 
-   frameSu1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameSu1=tk.Frame(master, width = screenWidth, height = screenHeight/3)
    frameSu1.grid(row=1, columnspan=2, sticky="nsew")
    frameSu1.propagate(False)
-   frameSu2=(tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight/3 + screenHeight//10)))
+   frameSu2=tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight/3 + screenHeight//10))
    frameSu2.grid(row=2, columnspan=2, sticky="nsew")
    frameSu2.propagate(False)
 
-   Label(frameSu1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+   tk.Label(frameSu1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
 
 Program specific instructions
 
@@ -1469,7 +1411,7 @@ Program specific instructions
 3. Leave a tile empty to delete.
 4. Red squares mean that there are numbers that conflict.""").pack(expand=True, fill="both")
 
-   Label(frameSu2, bg = "white smoke", font = "Helvetica " + str(screenHeight//35), text="""Rules to Game:
+   tk.Label(frameSu2, bg = "white smoke", font = "Helvetica " + str(screenHeight//35), text="""Rules to Game:
 
 The objective is to fill a 9x9 grid so that each column,
 each row, and each of the nine 3x3 boxes (also called
@@ -1477,16 +1419,7 @@ blocks or regions) contains the digits from 1 to 9. """).pack(expand=True, fill=
 
 def loadBoardSu():
    try:
-      global myFont #most variables are only called a few times
-      global pixelSu
-      global buttonsSu
-      global shownSu
-      global frameSu
-      global rowSu
-      global columnSu
-      global errorSu
-      global mistakeSu
-      global buttonHow
+      global myFont, pixelSu, buttonsSu, shownSu, frameSu, rowSu, columnSu, errorSu, mistakeSu, buttonHow
       master.bind("<Return>", enterSu)
 
       for widget in master.winfo_children():
@@ -1500,7 +1433,7 @@ def loadBoardSu():
       frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
       frameTitle.grid(row = 0, column = 0, columnspan = 20, sticky = "we")
       frameTitle.propagate(False)
-      Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="Sudoku").pack(expand=True, fill="both")
+      tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="Sudoku").pack(expand=True, fill="both")
 
       frameMenu=tk.Frame(master, width = (screenWidth-(pixelSu*9)), height = pixelSu*2)
       frameMenu.grid(row = 1, column = 10, rowspan = 2, sticky = "we")
@@ -1515,7 +1448,7 @@ def loadBoardSu():
       tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(pixelSu*9))//17), bg = "#fff", command = lambda: Sudoku()).pack(expand=True, fill="both")
       buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(pixelSu*9))//17), bg = "#fff", command = lambda: howToPlaySu())
       buttonHow.pack(expand=True, fill="both") #menu goes right back to start
-      errorSu = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixelSu*9))//12), fg="#fff", text="")
+      errorSu = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixelSu*9))//12), fg="#fff", text="")
       errorSu.pack(expand=True, fill="both")
 
       mistakeSu=[[]] #if numbers conflict, first made with no conflictions
@@ -1544,12 +1477,7 @@ def loadBoardSu():
       Sudoku()
 
 def clickSu(row, column):
-   global buttonsSu
-   global frameSu
-   global shownSu
-   global rowSu
-   global columnSu
-   global entry
+   global buttonsSu, frameSu, shownSu, rowSu, columnSu, entry
 
    try: #tries to do this, will only work if not first one
       enterSu("event") #runs the same as if user clicks enter, saves last number
@@ -1575,8 +1503,7 @@ def clickSu(row, column):
    entry.focus_set() #sets focus to the netry so user does not have to click
 
 def enterSu(event):
-   global shownSu
-   global mistakeSu
+   global shownSu, mistakeSu
    try: #tries to save the number and bring up button
       errorSu.config(text = "")
       if int(entry.get()[-1]) == 0: #if a 0
@@ -1684,7 +1611,7 @@ def Connect4():
 
    tk.Button(frameHow, text = "How To Play", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: howToPlayCon()).pack(expand=True, fill="both")
    tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: menu()).pack(expand=True, fill="both")
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Connect 4").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Connect 4").pack(expand=True, fill="both")
    tk.Button(frameSin, text = "Singleplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: singleCon()).pack(expand=True, fill="both")
    tk.Button(frameMul, text = "Multiplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: boardCon()).pack(expand=True, fill="both")
 
@@ -1696,7 +1623,7 @@ def howToPlayCon(): #see other how-to-plays
    frameTitle=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameTitle.grid(row = 0, column = 0, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Connect 4").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Connect 4").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameMenu.grid(row = 0, column = 1, sticky = "we")
@@ -1710,13 +1637,13 @@ def howToPlayCon(): #see other how-to-plays
    frameCon2.grid(row=2, columnspan=2, sticky="nsew")
    frameCon2.propagate(False)
 
-   Label(frameCon1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+   tk.Label(frameCon1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
 
 Program specific instructions
 
 1.Click in any column to add a connect 4 piece.""").pack(expand=True, fill="both")
 
-   Label(frameCon2, bg = "white smoke", font = "Helvetica " + str(screenHeight//35), text="""Rules to Game:
+   tk.Label(frameCon2, bg = "white smoke", font = "Helvetica " + str(screenHeight//35), text="""Rules to Game:
 
 Players first choose a color and then take turns dropping colored discs,
 from the top into a seven-column, six-row vertically suspended grid.
@@ -1730,18 +1657,7 @@ def singleCon(): #if single player is chosen
    boardCon() #then continues along multiplayer route
 
 def boardCon():
-   global frameCon #SO MANY VARIABLES
-   global labelCon
-   global pixelCon
-   global blackImgCon
-   global redImgCon
-   global blankImgCon
-   global gridCon
-   global turnLabelCon
-   global turnCon
-   global gameOverCon
-   global delayCon
-   global buttonHow
+   global frameCon, labelCon, pixelCon, blackImgCon, redImgCon, blankImgCon, gridCon, turnLabelCon, turnCon, gameOverCon, delayCon,  buttonHow
 
    delayCon=time.time() #This is to make sure peoples plays dont overlap, and for single player it makes sure dont play while ai is going
    gameOverCon=False #sets the game to not over
@@ -1755,7 +1671,7 @@ def boardCon():
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
    frameTitle.grid(row = 0, column = 0, columnspan = 20, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="Connect 4").pack(expand=True, fill="both")
+   tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="Connect 4").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(pixelCon*7)), height = (pixelCon*1.5)//1)
    frameMenu.grid(row = 1, column = 8, rowspan = 3, sticky = "we")
@@ -1770,7 +1686,7 @@ def boardCon():
    tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(pixelCon*7))//17), bg = "#fff", command = lambda: Connect4()).pack(expand=True, fill="both")
    buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(pixelCon*7))//17), bg = "#fff", command = lambda: howToPlayCon())
    buttonHow.pack(expand=True, fill="both") #menu goes right back to start
-   turnLabelCon = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixelCon*7))//12), fg="#fff", text=turnCon + "'s turn") #displays whos turn it is
+   turnLabelCon = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixelCon*7))//12), fg="#fff", text=turnCon + "'s turn") #displays whos turn it is
    turnLabelCon.pack(expand=True, fill="both")
 
    blackImgCon = ImageTk.PhotoImage(Image.open("gameFiles/blackChec.png").resize((pixelCon, pixelCon), resample=0)) #imports images, black piece
@@ -1794,11 +1710,7 @@ def boardCon():
 
 def clickCon(event): #when user clicks, or ai choses a place
    master.unbind("<ButtonRelease-1>") #unbinds so user cannot click while this is happening
-   global gridCon
-   global labelCon
-   global turnLabelCon
-   global turnCon
-   global delayCon
+   global gridCon, labelCon, turnLabelCon, turnCon, delayCon
    if (time.time()-delayCon) > .25 and gameOverCon == False: #if game is not over and time is above .25 since last click
       for c in range(7): #for every column
          moveOn=False
@@ -2093,8 +2005,7 @@ def checkCon(turnCon): #checks for game over
       endCon("No one") #triggers end message saying no one won
 
 def endCon(turnCon): #when game is over
-   global turnLabelCon
-   global gameOverCon
+   global turnLabelCon, gameOverCon
    gameOverCon=True #sets game to over
    if oneCon == True: #if single player
       if turnCon == "Black": #user is black
@@ -2146,13 +2057,12 @@ def HangMan():
 
    tk.Button(frameHow, text = "How To Play", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: howToPlayHang()).pack(expand=True, fill="both")
    tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: menu()).pack(expand=True, fill="both")
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Hangman").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Hangman").pack(expand=True, fill="both")
    tk.Button(frameSin, text = "Singleplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: singleHang()).pack(expand=True, fill="both")
    tk.Button(frameMul, text = "Multiplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: multiHang()).pack(expand=True, fill="both")
 
 def singleHang(): #if singleplayer is chosen
-   global wordHang
-   global soloHang
+   global wordHang, soloHang
    soloHang = True
    wordHang = open(".\gameFiles\HangmanWords.txt").readlines() #creates list of all words in the file
    wordHang = wordHang[random.randint(0, (len(wordHang)-1))] #decides on 1 word out of list
@@ -2162,10 +2072,7 @@ def singleHang(): #if singleplayer is chosen
    loadHang() #loads the board
 
 def multiHang(): #if multiplayer is chosen
-   global soloHang
-   global frameComment
-   global entry
-   global comment
+   global soloHang, frameComment, entry, comment
    soloHang=False
    master.bind("<Return>", enterHang) #binds this so user can click enter to submit
    for widget in master.winfo_children():
@@ -2193,8 +2100,8 @@ def multiHang(): #if multiplayer is chosen
 
    tk.Button(frameHow, text = "How To Play", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: howToPlayHang()).pack(expand=True, fill="both")
    tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: menu()).pack(expand=True, fill="both")
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Hangman").pack(expand=True, fill="both")
-   comment = Label(frameComment, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="You can only use\nletters and spaces.\nMaximum of 15 characters.") #this changes to be more specific if the user doesnt follow the rules
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Hangman").pack(expand=True, fill="both")
+   comment = tk.Label(frameComment, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="You can only use\nletters and spaces.\nMaximum of 15 characters.") #this changes to be more specific if the user doesnt follow the rules
    comment.pack(expand=True, fill="both")
 
    entry = tk.Entry(frameEntry, bg = "white smoke", font = "Helvetica " + str(screenHeight//15), justify = "center") #Where the user puts in the word
@@ -2230,21 +2137,21 @@ def howToPlayHang():
    frameTitle=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameTitle.grid(row = 0, column = 0, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Hangman").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Hangman").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameMenu.grid(row = 0, column = 1, sticky = "we")
    frameMenu.propagate(False)
    tk.Button(frameMenu, text = "Back", font = "Helvetica " + str(screenHeight//40), bg = "#fff", command = lambda: HangMan()).pack(expand=True, fill="both")
 
-   frameHang1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameHang1 = tk.Frame(master, width = screenWidth, height = screenHeight/3)
    frameHang1.grid(row=1, columnspan=2, sticky="nsew")
    frameHang1.propagate(False)
-   frameHang2=(tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight/3 + screenHeight//10)))
+   frameHang2 = tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight/3 + screenHeight//10))
    frameHang2.grid(row=2, columnspan=2, sticky="nsew")
    frameHang2.propagate(False)
 
-   Label(frameHang1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+   tk.Label(frameHang1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
 
 Program specific instructions
 
@@ -2252,7 +2159,7 @@ Program specific instructions
 2. If playing multiplayer, one player choses the word/phrase.
 3. If playing single player, a word will be pulled from the database""").pack(expand=True, fill="both")
 
-   Label(frameHang2, bg = "white smoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
+   tk.Label(frameHang2, bg = "white smoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
 
 The goal is to guess the word/phrase before your man gets hung! one letter at a time.
 If the letter you guess is in the word, they will get filled in.
@@ -2262,15 +2169,7 @@ If you complete the word before the man is done, you win!
 """).pack(expand=True, fill="both")
 
 def loadHang():
-   global buttonHow
-   global hangImg
-   global hangLabel
-   global hangWord
-   global shownWordHang
-   global guessesHang
-   global frameButtons
-   global pixelHang
-   global buttonsHang
+   global buttonHow, hangImg, hangLabel, hangWord, shownWordHang, guessesHang, frameButtons, pixelHang, buttonsHang
    guessesHang=0 #sets guesses to 0
 
    for n in range(len(wordHang)): #creates the string that gets shown
@@ -2290,7 +2189,7 @@ def loadHang():
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
    frameTitle.grid(row = 0, column = 0, columnspan = 40, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="Hangman").pack(expand=True, fill="both")
+   tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="Hangman").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixelHang*3)
    frameMenu.grid(row = 1, column = 1, columnspan = 40, rowspan = 3, sticky = "we")
@@ -2314,7 +2213,7 @@ def loadHang():
    frameImg=tk.Frame(master, width = (screenHeight-screenHeight//17), height = (screenHeight-screenHeight//17))
    frameImg.grid(row = 1, column = 0, rowspan = 40, sticky = "we")
    frameImg.propagate(False)
-   hangLabel = Label(frameImg, image = hangImg[0], bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//25), text = shownWordHang, compound = "top") #image with the word uderneath
+   hangLabel = tk.Label(frameImg, image = hangImg[0], bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//25), text = shownWordHang, compound = "top") #image with the word uderneath
    hangLabel.pack(expand=True, fill="both")
 
    frameButtons=[]
@@ -2343,8 +2242,7 @@ def loadHang():
 
 def letterHang(letter): #when a letter is clicked
    buttonsHang[letter].config(state = "disabled", bg = "grey85") #disables button so it can not be clicked again
-   global guessesHang
-   global shownWordHang
+   global guessesHang, shownWordHang
    if alphabet[letter] in wordHang: #if the ltter is in the button
       spot=wordHang.index(alphabet[letter]) #finds that letter
       shownWordHang=shownWordHang[0:(spot*2)]+alphabet[letter]+shownWordHang[(spot*2+1):] #recreates shown word with letter filled in
@@ -2370,7 +2268,7 @@ def letterHang(letter): #when a letter is clicked
          frameWho=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = (screenHeight-screenHeight//17-pixelHang*6))
          frameWho.grid(row = 7, column = 1, columnspan = 20, sticky = "we")
          frameWho.propagate(False)
-         turnLabelCon = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//10), fg="#fff", text="You Win!") #creates a winner message
+         turnLabelCon = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//10), fg="#fff", text="You Win!") #creates a winner message
          turnLabelCon.pack(expand=True, fill="both")
    else: #if the letter is not in the button
       guessesHang+=1 #adds 1 guess
@@ -2385,7 +2283,7 @@ def letterHang(letter): #when a letter is clicked
          frameWho=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = (screenHeight-screenHeight//17-pixelHang*6))
          frameWho.grid(row = 7, column = 1, rowspan = 20, columnspan = 20, sticky = "we")
          frameWho.propagate(False)
-         turnLabelCon = Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//15), fg="#fff", text="You lose.\n\nThe word was\n"+wordHang) #creates a loser message with the word
+         turnLabelCon = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//15), fg="#fff", text="You lose.\n\nThe word was\n"+wordHang) #creates a loser message with the word
          turnLabelCon.pack(expand=True, fill="both")
 
 
@@ -2394,34 +2292,27 @@ def letterHang(letter): #when a letter is clicked
 #################################################################################################### BlackJack start
 
 #Sam Gunter
-#BlackJack was finished 2:05am on the 31st of May, 2018
-#This was created to play black jack (21) against a computer dealer
-#
+#BlackJack was finished 9:54pm on the 13th of May, 2018
+#This was created to play BlackJack (21) against a computer dealer
+#Although this code deos not have all functions in real BlackJack, it can be played and that is what matters
 
-#Next steps are to
+#Next steps are to add currency for each player, add surrendering, add spliting, doubling down, etc
 
 #BlackJack: Global variables and functions normally have a "21" at the end incase another game uses similar variables later on or earlier on.
-#
-#
-#
+#Starts with creating the board, this is actually a fairly slow block of code, but it makes good framework
+#Then a loop of deal, hitting or standing and finally end screen
 
 def BlackJack():
-   global cardImg
-   global hangImg
-   global playerCard
-   global dealerCard
-   global middleLabel
-   global deck21
-   global buttonHow
+   global cardImg, hangImg, playerCard, dealerCard, middleLabel, deck21, buttonHow, buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender
    for widget in master.winfo_children():
       widget.destroy()
 
-   pixel21=((screenHeight-screenHeight//17)//12)
+   pixel21=((screenHeight-screenHeight//17)//12) #height of each text on side
 
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
    frameTitle.grid(row = 0, column = 0, columnspan = 40, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="BlackJack (21)").pack(expand=True, fill="both")
+   tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="BlackJack (21)").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21)
    frameMenu.grid(row = 1, column = 8, rowspan = 1, sticky = "we")
@@ -2430,8 +2321,8 @@ def BlackJack():
    frameHow.grid(row = 2, column = 8, rowspan = 1, sticky = "we")
    frameHow.propagate(False)
 
-   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: menu()).pack(expand=True, fill="both")
-   buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: howToPlay21())
+   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//30), bg = "#fff", command = lambda: menu()).pack(expand=True, fill="both")
+   buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//30), bg = "#fff", command = lambda: howToPlay21())
    buttonHow.pack(expand=True, fill="both")
 
    frameStand=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
@@ -2450,7 +2341,7 @@ def BlackJack():
    frameSurrender.grid(row = 11, column = 8, rowspan = 2, sticky = "we")
    frameSurrender.propagate(False)
 
-   buttonStand = tk.Button(frameStand, text = "Stand", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: stand21())
+   buttonStand = tk.Button(frameStand, state = "disabled", text = "Stand", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: stand21())
    buttonStand.pack(expand=True, fill="both")
    buttonHit = tk.Button(frameHit, state = "disabled", text = "Hit", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: hit21())
    buttonHit.pack(expand=True, fill="both")
@@ -2463,38 +2354,43 @@ def BlackJack():
 
    deck21=[]
    cardImg = {}
-   for card in os.listdir("gameFiles\\CardDeck"):
-      deck21.append(card)
-      cardImg[card] = ImageTk.PhotoImage(Image.open("gameFiles\\CardDeck\\"+card).resize(((screenHeight-screenHeight//17)//8, (screenHeight-screenHeight//17)//4), resample=0))
+   for card in os.listdir("gameFiles\\CardDeck"): #this is all images in gameFiles
+      deck21.append(card) #adds name to deck
+      cardImg[card] = ImageTk.PhotoImage(Image.open("gameFiles\\CardDeck\\"+card).resize(((screenHeight-screenHeight//17)//8, (screenHeight-screenHeight//17)//4), resample=0)) #adds relative image to another list
 
-   bigFrame=tk.Frame(master, bg = "#000000", width = screenHeight-screenHeight//17, height = screenHeight-screenHeight//17)
+   bigFrame=tk.Frame(master, bg = "#000000", width = screenHeight-screenHeight//17, height = screenHeight-screenHeight//17) #frame that holds the game (words are not in this frame)
    bigFrame.grid(row = 1, column = 0, rowspan = 12, sticky = "we")
    bigFrame.propagate(False)
 
-   middleFrame=tk.Frame(bigFrame, width = screenHeight-screenHeight//17, height = ((screenHeight-screenHeight//17)//9)*4)
+   middleFrame=tk.Frame(bigFrame, width = screenHeight-screenHeight//17, height = ((screenHeight-screenHeight//17)//9)*4) #only here to stop propagation
    middleFrame.grid(row = 1, column = 0, columnspan = 1000, sticky = "we")
    middleFrame.propagate(False)
    middleLabel=tk.Label(middleFrame, bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//20))
    middleLabel.pack(expand=True, fill="both")
+   sideFrame=tk.Frame(middleFrame, pady = "100", bg = "#000000", width = (screenHeight-screenHeight//17)//3, height = ((screenHeight-screenHeight//17)//9)*4)
+   sideFrame.grid(row = 0, column = 0, sticky = "we")
+   sideFrame.propagate(False)
+   sideButton=tk.Button(sideFrame, text = "Deal Again", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//25), bg = "#fff", command = lambda: deal21())
+   sideButton.pack(expand=True, fill="both")
 
    framePlayer=[]
-   frameDealer=[]
+   frameDealer=[] #top cards
    playerCard=[]
-   dealerCard=[]
+   dealerCard=[] #bottom cards
 
    for c in range(8):
-      frameDealer.append(tk.Frame(bigFrame, width = (screenHeight-screenHeight//17)//8, height = (screenHeight-screenHeight//17)//4))
+      frameDealer.append(tk.Frame(bigFrame, width = (screenHeight-screenHeight//17)//8, height = (screenHeight-screenHeight//17)//4)) #8 of these cards side by side
       frameDealer[c].grid(row = 0, column = c, columnspan = 1, padx = 3, sticky = "we")
       frameDealer[c].propagate(False)
       framePlayer.append(tk.Frame(bigFrame, width = (screenHeight-screenHeight//17)//8, height = (screenHeight-screenHeight//17)//4))
       framePlayer[c].grid(row = 2, column = c, columnspan = 1, padx = 3, sticky = "we")
       framePlayer[c].propagate(False)
-      dealerCard.append(Label(frameDealer[c], bg = "#000000", fg = "#fff"))
+      dealerCard.append(tk.Label(frameDealer[c], bg = "#000000", fg = "#fff"))
       dealerCard[c].pack(expand=True, fill="both")
-      playerCard.append(Label(framePlayer[c], bg = "#000000", fg = "#fff"))
+      playerCard.append(tk.Label(framePlayer[c], bg = "#000000", fg = "#fff"))
       playerCard[c].pack(expand=True, fill="both")
 
-   deal21()
+   deal21() #first deal of the game
 
 def howToPlay21():
    for widget in master.winfo_children():
@@ -2503,86 +2399,198 @@ def howToPlay21():
    frameTitle=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameTitle.grid(row = 0, column = 0, sticky = "we")
    frameTitle.propagate(False)
-   Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="BlackJack (21)").pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="BlackJack (21)").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameMenu.grid(row = 0, column = 1, sticky = "we")
    frameMenu.propagate(False)
    tk.Button(frameMenu, text = "Back", font = "Helvetica " + str(screenHeight//40), bg = "#fff", command = lambda: BlackJack()).pack(expand=True, fill="both")
 
-   frameHang1=(tk.Frame(master, width = screenWidth, height = screenHeight/3))
+   frameHang1=tk.Frame(master, width = screenWidth, height = screenHeight/3)
    frameHang1.grid(row=1, columnspan=2, sticky="nsew")
    frameHang1.propagate(False)
-   frameHang2=(tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight/3 + screenHeight//10)))
+   frameHang2=tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight/3 + screenHeight//10))
    frameHang2.grid(row=2, columnspan=2, sticky="nsew")
    frameHang2.propagate(False)
 
-   Label(frameHang1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+   tk.Label(frameHang1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
 
 Program specific instructions
 
-1. Click the letters to the right to guess them.
-2. If playing multiplayer, one player choses the word/phrase.
-3. If playing single player, a word will be pulled from the database""").pack(expand=True, fill="both")
+1. Click deal to deal out new cards
+2. Click Stand once you are done getting cards
+3. Click hit to get antoher card""").pack(expand=True, fill="both")
 
-   Label(frameHang2, bg = "white smoke", font = "Helvetica " + str(screenHeight//40), text="""Rules to Game:
+   tk.Label(frameHang2, bg = "white smoke", font = "Helvetica " + str(screenHeight//55), text="""Rules to Game:
 
-The goal is to guess the word/phrase before your man gets hung! one letter at a time.
-If the letter you guess is in the word, they will get filled in.
-If the letter is not in the word, another part of the hangman is filled in.
-As the game progresses, the man gets closer and closer to complete.
-If you complete the word before the man is done, you win!
+The standard 52-card pack is used.
+The player attempts to beat the dealer by getting a count as close to 21 as possible, without going over 21.
+All face cards are 10 and any other card is its face value, with aces being an 11 or a 1 (whichever is better for you).
+The combination of an ace with a card other than a ten-card is known as a "soft hand,"
+because the player can count the ace as a 1 or 11, and either draw cards or not.
+For example with a "soft 17" (an ace and a 6), the total is 7 or 17.
+
+The player receives two cards face up, and the dealer receives one card face up and one card face down.
+If the player's first two cards are an ace and a 10, giving him a count of 21 in two cards, the player wins by default.
+The player may stand on the two cards originally dealt him, or he may ask the dealer for additional cards (hit),
+until he either decides to stand on the total or goes "bust" (over 21).
+
+Once the player has stood, the dealer turns up his card. If the total is a soft 17 or under,
+he must draw until the total is 17 or more, at which point the dealer must stand. If the dealer has an ace,
+and counting it as 11 would bring his total more than 17 (but not over 21), he must count the ace as 11 and stand. 
 """).pack(expand=True, fill="both")
 
 def deal21():
-   global dealer21
-   global player21
-   global playerCard
-   global dealerCard
-   global hidden21
-   global currentDeck
-   global buttonHow
-   global middleLabel
+   global dealer21, player21, playerCard, dealerCard, hidden21, currentDeck21, buttonHow, middleLabel, buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender
 
-   for c in range(8):
-      dealerCard[c].config(image = "")
+   for c in range(8): #these next few things only matter after first time
+      dealerCard[c].config(image = "") #deletes any cards already there
       playerCard[c].config(image = "")
-   buttonHow.config(text = "How To Play", command = lambda: howToPlay21())
-   middleLabel.config(text = "")
-   
-   currentDeck = deck21[:]
-   currentDeck.remove("back.png")
-
-   dealer21 = []
+   middleLabel.config(text = "") #takes out win or lose message
+   currentDeck21 = deck21[:] #creates a new deck
+   currentDeck21.remove("back.png") #removes the back or blank card
+   dealer21 = [] #resets dealers and players hands
    player21 = []
 
-   choice = random.randint(0, len(currentDeck)-1)
-   player21.append(currentDeck[choice])
-   playerCard[3].config(image = cardImg[currentDeck[choice]])
-   del currentDeck[choice]
+   choice = random.randint(0, len(currentDeck21)-1) #random card in deck
+   player21.append(currentDeck21[choice]) #add to players hand
+   playerCard[3].config(image = cardImg[currentDeck21[choice]]) #add image
+   del currentDeck21[choice] #take it out of the deck
+   master.update()
+   time.sleep(.3) #natural delay
 
-   choice = random.randint(0, len(currentDeck)-1)
-   dealer21.append(currentDeck[choice])
-   dealerCard[3].config(image = cardImg["back.png"])
-   hidden21=currentDeck[choice]
-   del currentDeck[choice]
+   choice = random.randint(0, len(currentDeck21)-1) #saem as above but for dealer
+   dealer21.append(currentDeck21[choice])
+   dealerCard[3].config(image = cardImg["back.png"]) #blank instead of shown because dealer
+   hidden21=currentDeck21[choice]
+   del currentDeck21[choice]
+   master.update()
+   time.sleep(.3)
 
-   choice = random.randint(0, len(currentDeck)-1)
-   player21.append(currentDeck[choice])
-   playerCard[4].config(image = cardImg[currentDeck[choice]])
-   del currentDeck[choice]
+   choice = random.randint(0, len(currentDeck21)-1)
+   player21.append(currentDeck21[choice])
+   playerCard[4].config(image = cardImg[currentDeck21[choice]])
+   del currentDeck21[choice]
+   master.update()
+   time.sleep(.3)
 
-   choice = random.randint(0, len(currentDeck)-1)
-   dealer21.append(currentDeck[choice])
-   dealerCard[4].config(image = cardImg[currentDeck[choice]])
-   del currentDeck[choice]
+   choice = random.randint(0, len(currentDeck21)-1)
+   dealer21.append(currentDeck21[choice])
+   dealerCard[4].config(image = cardImg[currentDeck21[choice]])
+   del currentDeck21[choice]
 
-def stand21():
-   global dealer21
-   global buttonHow
-   global middleLabel
+   buttonStand.config(state = "normal") #now the user can click these buttons
+   buttonHit.config(state = "normal")
+   buttonDown.config(state = "disabled")
+   buttonSplit.config(state = "disabled")
+   buttonSurrender.config(state = "disabled")
+
+   playerSum=0 #this is to check is player has a natural black jack
+   for card in player21: #for cards in hand
+      try:
+         check=int(card[:2]) #this is to trigger except if its not double digits
+         playerSum+=10 #if double digits, add 10
+      except ValueError:
+         if int(card[:1]) == 1: #if it is an ace
+            playerSum+=11 #add 11
+         else: #else
+            playerSum+= int(card[:1]) #add what ever it is
+   if playerSum == 21: #if a natural
+      end21("win") #end game with a win
+
+def stand21(): #if the players stands
+   global dealer21, buttonHow, middleLabel, currentDeck21
    
-   playerSum=0
+   playerSum=0 #checks players hand
+   for card in player21: #this gets sum with aces as 11
+      try:
+         check=int(card[:2])
+         playerSum+=10
+      except ValueError:
+         if int(card[:1]) == 1:
+            playerSum+=11
+         else:
+            playerSum+= int(card[:1])
+   aceCheck=0 #sets where to check aces
+   while True:
+      if playerSum > 21: #if over 21 (else no need to do this)
+         for card in player21[aceCheck:]: #for every card not yet checked
+            aceCheck+=1 #says that this has now been checked
+            if card[:2] == "1-": #if an ace
+               playerSum = playerSum - 10 #switches to a 1
+               break #break current loop to check if still over 21
+      else: #else end
+         break
+   
+   dealerCard[3].config(image = cardImg[hidden21]) #turns up dealers card
+   master.update()
+   time.sleep(.4)
+   dealerSum=0 #counts dealers cards
+   for card in dealer21: #saem as for player, but for dealer
+      try:
+         check=int(card[:2])
+         dealerSum+=10
+      except ValueError:
+         if int(card[:1]) == 1:
+            dealerSum+=11
+         else:
+            dealerSum+= int(card[:1])
+   aceCheck=0
+   while True:
+      if dealerSum < 17: #if under 17
+         choice = random.randint(0, len(currentDeck21)-1) #add new card, run again
+         dealer21.append(currentDeck21[choice])
+
+         try:
+            check=int(currentDeck21[choice][:2])
+            dealerSum+=10
+         except ValueError:
+            if int(currentDeck21[choice][:1]) == 1:
+               dealerSum+=11
+            else:
+               dealerSum+= int(currentDeck21[choice][:1])
+
+         spot = (8-len(dealer21))//2 #this centers the cards
+         for cards in dealer21:
+            dealerCard[spot].config(image = cardImg[cards]) #creates all cards in new places
+            spot+=1
+         del currentDeck21[choice]
+         
+      elif dealerSum == 17 or dealerSum > 21: #if over 21, or soft 17
+         end = True
+         for card in dealer21[aceCheck:]:
+            aceCheck+=1
+            if card[:2] == "1-": #changes an ace to a 1, then runs again
+               end = False
+               dealerSum = dealerSum - 10
+               break
+         if end == True: #if no aces, that means out of hard 17, end
+            break
+
+      else: #between 17 and 21, end
+         break
+
+      master.update()
+      time.sleep(.4)
+
+   if playerSum <= dealerSum and dealerSum <= 21: #checks who has won
+      end21("lose") #dealer
+   else:
+      end21("win") #player
+
+def hit21():
+   global currentDeck21, player21
+   
+   choice = random.randint(0, len(currentDeck21)-1) #players new card
+   player21.append(currentDeck21[choice])
+
+   spot = (8-len(player21))//2 #recenters players cards
+   for cards in player21:
+      playerCard[spot].config(image = cardImg[cards])
+      spot+=1
+   del currentDeck21[choice]
+
+   playerSum=0 #next 2 blocks of code check for if game is over
    for card in player21:
       try:
          check=int(card[:2])
@@ -2592,63 +2600,25 @@ def stand21():
             playerSum+=11
          else:
             playerSum+= int(card[:1])
-   if playerSum > 21:
-      for card in player21:
-         try:
-            check=int(card[:2])
-            playerSum+=10
-         except ValueError:
-            playerSum+= int(card[:1])
-   print(playerSum)
-   
-   dealerCard[3].config(image = cardImg[hidden21])
+
+   aceCheck=0
    while True:
-      dealerSum=0
-      for card in dealer21:
-         try:
-            check=int(card[:2])
-            dealerSum+=10
-         except ValueError:
-            if int(card[:1]) == 1:
-               playerSum+=11
-            else:
-               playerSum+= int(card[:1])
-      if dealerSum < 17:
-         choice = random.randint(0, len(currentDeck)-1)
-         dealer21.append(currentDeck[choice])
-         spot = (8-len(dealer21))//2
-         for cards in dealer21:
-            dealerCard[spot].config(image = cardImg[cards])
-            spot+=1
-         del currentDeck[choice]
-         
-      elif dealerSum >= 17:
+      if playerSum > 21:
          end = True
-         for card in dealer21:
+         for card in player21[aceCheck:]:
+            aceCheck+=1
             if card[:2] == "1-":
                end = False
-               choice = random.randint(0, len(currentDeck)-1)
-               dealer21.append(currentDeck[choice])
-               pot = (8-len(dealer21))//2
-               for cards in dealer21:
-                  dealerCard[spot].config(image = cardImg[cards])
-                  spot+=1
-               del currentDeck[choice]
-         if end == True:
+               playerSum = playerSum - 10
+               break
+         if end == True: #if they went over
+            end21("lose") #they lose
             break
       else:
          break
-   print(dealerSum)
 
-   if playerSum < dealerSum and dealerSum <= 21:
-      middleLabel.config(text = "You lose.")
-   else:
-      middleLabel.config(text = "You Win!")
-
-   buttonHow.config(text = "Play Again", command = lambda: deal21())
-
-def hit21():
-   print("Hit")
+   if playerSum == 21: #if a perfect blackjack
+      end21("win") #they win
 
 def down21():
    print("Double Down")
@@ -2658,6 +2628,19 @@ def split21():
 
 def surrender21():
    print("Surrender")
+
+def end21(result):
+   global buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender
+   if result == "lose": #if they lost
+      middleLabel.config(text = "You lose.") #lose message
+   else: #else
+      middleLabel.config(text = "You Win!") #win message
+
+   buttonStand.config(state = "disabled") #disables all buttons unti la new deal is made
+   buttonHit.config(state = "disabled")
+   buttonDown.config(state = "disabled")
+   buttonSplit.config(state = "disabled")
+   buttonSurrender.config(state = "disabled")
 
 
 #################################################################################################### BlackJack end
@@ -2680,7 +2663,7 @@ def surrender21():
 
 
 
-master = Tk() #creates the window
+master = tk.Tk() #creates the window
 master.title("2k's games")
 master.overrideredirect(1) #gets rid of toolbar
 master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight())) #makes it fill full screen
@@ -2700,13 +2683,7 @@ def unbind(): #unbinds anything I have binded (from multiple games) and goes bac
    menu()
 
 def menu():
-   global TicTacToeImg
-   global Connect4Img
-   global MineSweeperImg
-   global The2048Img
-   global QuitImg
-   global SudokuImg
-   global HangManImg
+   global TicTacToeImg, Connect4Img, MineSweeperImg, The2048Img, QuitImg, SudokuImg, HangManImg, BlackJackImg
    pixelHeight=((screenHeight)//3)
    pixelWidth=((screenWidth)//3)
    SudokuImg = ImageTk.PhotoImage(Image.open("gameFiles/SudokuMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
@@ -2716,6 +2693,7 @@ def menu():
    Connect4Img = ImageTk.PhotoImage(Image.open("gameFiles/Connect4Menu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    TicTacToeImg = ImageTk.PhotoImage(Image.open("gameFiles/TicTacToeMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    HangManImg = ImageTk.PhotoImage(Image.open("gameFiles/HangManMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+   BlackJackImg = ImageTk.PhotoImage(Image.open("gameFiles/BlackJackMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    for widget in master.winfo_children(): #clears contents, but not frame meaning it can update without making a new window each time
       widget.destroy()
    master.configure(bg = "#000000") #Sets initial background colour to black
@@ -2740,18 +2718,18 @@ def menu():
    frameCon.grid(row = 2, column = 1, sticky = "we")
    frameCon.propagate(False)
    tk.Button(frameCon, image = Connect4Img, command = lambda: Connect4()).pack(expand=True, fill="both")
-   frameChec=tk.Frame(master, width = pixelWidth, height = pixelHeight)
-   frameChec.grid(row = 2, column = 2, sticky = "we")
-   frameChec.propagate(False)
-   tk.Button(frameChec, text = "CheckersNF", height = 5, width = 20, bg = "#fff", command = lambda: Checkers()).pack(expand=True, fill="both")
+   frameJack=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameJack.grid(row = 2, column = 2, sticky = "we")
+   frameJack.propagate(False)
+   tk.Button(frameJack, image = BlackJackImg, command = lambda: BlackJack()).pack(expand=True, fill="both")
    frameHang=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameHang.grid(row = 3, column = 0, sticky = "we")
    frameHang.propagate(False)
    tk.Button(frameHang, image = HangManImg, command = lambda: HangMan()).pack(expand=True, fill="both")
-   frameJack=tk.Frame(master, width = pixelWidth, height = pixelHeight)
-   frameJack.grid(row = 3, column = 1, sticky = "we")
-   frameJack.propagate(False)
-   tk.Button(frameJack, text = "BlackJackNF", height = 5, width = 20, bg = "#fff", command = lambda: BlackJack()).pack(expand=True, fill="both")
+   frameChec=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameChec.grid(row = 3, column = 1, sticky = "we")
+   frameChec.propagate(False)
+   tk.Button(frameChec, text = "CheckersNF", command = lambda: Checkers()).pack(expand=True, fill="both")
    frameQuit=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameQuit.grid(row = 3, column = 2, sticky = "we")
    frameQuit.propagate(False)
