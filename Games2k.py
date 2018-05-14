@@ -1,4 +1,3 @@
-
 import tkinter as tk
 import random, time, os
 from tkinter.font import Font
@@ -2303,7 +2302,7 @@ def letterHang(letter): #when a letter is clicked
 #Then a loop of deal, hitting or standing and finally end screen
 
 def BlackJack():
-   global cardImg, hangImg, playerCard, dealerCard, middleLabel, deck21, buttonHow, buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender
+   global cardImg, hangImg, playerCard, dealerCard, middleLabel, deck21, buttonHow, buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender, sideButton
    for widget in master.winfo_children():
       widget.destroy()
 
@@ -2441,11 +2440,12 @@ and counting it as 11 would bring his total more than 17 (but not over 21), he m
 """).pack(expand=True, fill="both")
 
 def deal21():
-   global dealer21, player21, playerCard, dealerCard, hidden21, currentDeck21, buttonHow, middleLabel, buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender
+   global dealer21, player21, playerCard, dealerCard, hidden21, currentDeck21, buttonHow, middleLabel, buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender, sideButton
 
    for c in range(8): #these next few things only matter after first time
       dealerCard[c].config(image = "") #deletes any cards already there
       playerCard[c].config(image = "")
+   sideButton.config(state = "disabled") #cant deal until done
    middleLabel.config(text = "") #takes out win or lose message
    currentDeck21 = deck21[:] #creates a new deck
    currentDeck21.remove("back.png") #removes the back or blank card
@@ -2630,13 +2630,14 @@ def surrender21():
    print("Surrender")
 
 def end21(result):
-   global buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender
+   global buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender, sideButton
    if result == "lose": #if they lost
       middleLabel.config(text = "You lose.") #lose message
    else: #else
       middleLabel.config(text = "You Win!") #win message
 
-   buttonStand.config(state = "disabled") #disables all buttons unti la new deal is made
+   sideButton.config(state = "normal") 
+   buttonStand.config(state = "disabled") #disables all buttons until a new deal is made
    buttonHit.config(state = "disabled")
    buttonDown.config(state = "disabled")
    buttonSplit.config(state = "disabled")
