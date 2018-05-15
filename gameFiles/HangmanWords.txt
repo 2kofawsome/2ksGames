@@ -61,7 +61,6 @@ affect
 afford
 afraid
 African
-African-American
 after
 afternoon
 again
@@ -711,7 +710,7 @@ elementary
 eliminate
 elite
 elsewhere
-e-mail
+email
 embrace
 emerge
 emergency
@@ -1214,7 +1213,7 @@ living
 local
 locate
 location
-long-term
+longterm
 loose
 lovely
 lover
@@ -1285,7 +1284,6 @@ missile
 mission
 mistake
 mixture
-mm-hmm
 model
 moderate
 modern
@@ -1888,7 +1886,6 @@ smell
 smile
 smoke
 smooth
-so-called
 soccer
 social
 society
@@ -2285,4 +2282,4 @@ yield
 young
 yours
 yourself
-youth
+youth
