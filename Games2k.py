@@ -2660,8 +2660,151 @@ def end21(result):
 #
 #
 
-#################################################################################################### Checkers end
+def Checkers():
+   global oneChec
+   oneChec = False
+   for widget in master.winfo_children():
+      widget.destroy()
 
+   frameSin=tk.Frame(master, width = screenWidth//2, height = screenHeight//4)
+   frameSin.grid(row = 1, column = 0, columnspan = 3, sticky = "we")
+   frameSin.propagate(False)
+   frameMul=tk.Frame(master, width = screenWidth//2, height = screenHeight//4)
+   frameMul.grid(row = 1, column = 3, columnspan = 3, sticky = "we")
+   frameMul.propagate(False)
+   frameMenu=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameMenu.grid(row = 0, column = 5, columnspan = 1, sticky = "we")
+   frameMenu.propagate(False)
+   frameTitle=tk.Frame(master, width = (screenWidth//3)*2, height = screenHeight//10)
+   frameTitle.grid(row = 0, column = 1, columnspan = 4, sticky = "we")
+   frameTitle.propagate(False)
+   frameHow=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameHow.grid(row = 0, column = 0, columnspan = 1, sticky = "we")
+   frameHow.propagate(False)
+
+   tk.Button(frameHow, text = "How To Play", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: howToPlayChec()).pack(expand=True, fill="both")
+   tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: menu()).pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Checkers").pack(expand=True, fill="both")
+   tk.Button(frameSin, text = "Singleplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: singleChec()).pack(expand=True, fill="both")
+   tk.Button(frameMul, text = "Multiplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: newGameChec()).pack(expand=True, fill="both")
+
+def singleChec():
+   global oneChec
+   oneChec = True
+   newGameChec()
+
+def howToPlayChec():
+   for widget in master.winfo_children():
+      widget.destroy()
+
+   frameTitle=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
+   frameTitle.grid(row = 0, column = 0, sticky = "we")
+   frameTitle.propagate(False)
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Checkers").pack(expand=True, fill="both")
+
+   frameMenu=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
+   frameMenu.grid(row = 0, column = 1, sticky = "we")
+   frameMenu.propagate(False)
+   tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//40), command = lambda: loadBoardChec()).pack(expand=True, fill="both")
+
+   frameSu1=tk.Frame(master, width = screenWidth, height = screenHeight/3)
+   frameSu1.grid(row=1, columnspan=2, sticky="nsew")
+   frameSu1.propagate(False)
+   frameSu2=tk.Frame(master, width = screenWidth, height = screenHeight-(screenHeight/3 + screenHeight//10))
+   frameSu2.grid(row=2, columnspan=2, sticky="nsew")
+   frameSu2.propagate(False)
+
+   tk.Label(frameSu1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+
+Program specific instructions
+
+1. Click on a space you want to edit, then us your keyboard to type a number.
+2. To save the number either click enter or click on another tile.
+3. Leave a tile empty to delete.
+4. Red squares mean that there are numbers that conflict.""").pack(expand=True, fill="both")
+
+   tk.Label(frameSu2, bg = "white smoke", font = "Helvetica " + str(screenHeight//35), text="""Rules to Game:
+
+The objective is to fill a 9x9 grid so that each column,
+each row, and each of the nine 3x3 boxes (also called
+blocks or regions) contains the digits from 1 to 9. """).pack(expand=True, fill="both")
+
+def newGameChec():
+   global locationChec
+   locationChec = [[]]
+   for r in range(8):
+      if len(locationChec)==r:
+            locationChec.append([])
+      for c in range(8):
+         if r < 3 and (c + r) % 2 == 1:
+            locationChec[r].append("black")
+         elif r > 4 and (c + r) % 2 == 1:
+            locationChec[r].append("red")
+         else:
+            locationChec[r].append("")
+   loadBoardChec()
+
+def loadBoardChec():
+   try:
+      global pixelChec, buttonsChec, frameChec, errorChec, buttonHow, spotChec, locationChec, redImgChec, blackImgChec, kingRedImgChec, kingBlackImgChec
+      
+      for widget in master.winfo_children():
+         widget.destroy()
+      pixelChec=((screenHeight-screenHeight//17)//8)
+
+      redImgChec = ImageTk.PhotoImage(Image.open("gameFiles/redChec.png").resize((pixelChec-pixelChec//10, pixelChec-pixelChec//10), resample=0))
+      blackImgChec = ImageTk.PhotoImage(Image.open("gameFiles/blackChec.png").resize((pixelChec-pixelChec//10, pixelChec-pixelChec//10), resample=0))
+      kingRedImgChec = ImageTk.PhotoImage(Image.open("gameFiles/redChecKing.png").resize((pixelChec-pixelChec//10, pixelChec-pixelChec//10), resample=0))
+      kingBlackImgChec = ImageTk.PhotoImage(Image.open("gameFiles/blackChecKing.png").resize((pixelChec-pixelChec//10, pixelChec-pixelChec//10), resample=0))
+
+      frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
+      frameTitle.grid(row = 0, column = 0, columnspan = 20, sticky = "we")
+      frameTitle.propagate(False)
+      tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="Checkers").pack(expand=True, fill="both")
+
+      frameMenu=tk.Frame(master, width = (screenWidth-(pixelChec*8)), height = pixelChec*2)
+      frameMenu.grid(row = 1, column = 10, rowspan = 2, sticky = "we")
+      frameMenu.propagate(False)
+      frameHow=tk.Frame(master, width = (screenWidth-(pixelChec*8)), height = pixelChec*2)
+      frameHow.grid(row = 3, column = 10, rowspan = 2, sticky = "we")
+      frameHow.propagate(False)
+      frameWho=tk.Frame(master, width = (screenWidth-(pixelChec*8)), height = pixelChec*4)
+      frameWho.grid(row = 5, column = 10, rowspan = 10, sticky = "we")
+      frameWho.propagate(False)
+
+      tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(pixelChec*8))//17), bg = "#fff", command = lambda: Checkers()).pack(expand=True, fill="both")
+      buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(pixelChec*8))//17), bg = "#fff", command = lambda: howToPlayChec())
+      buttonHow.pack(expand=True, fill="both")
+      errorChec = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixelChec*8))//12), fg="#fff", text="")
+      errorChec.pack(expand=True, fill="both")
+
+      spotChec=[[]]
+      frameChec=[[]]
+      buttonsChec=[[]]
+      for r in range(8):
+         if len(buttonsChec)==r:
+            buttonsChec.append([])
+            frameChec.append([])
+            spotChec.append([])
+         for c in range(8):
+            if locationChec[r][c] == "red":
+               spotChec[r].append(redImgChec)
+            elif locationChec[r][c] == "black":
+               spotChec[r].append(blackImgChec)
+            else:
+               spotChec[r].append("")
+            frameChec[r].append(tk.Frame(master, width = pixelChec, height = pixelChec, borderwidth = "0"))
+            frameChec[r][c].grid(row=r+1, column=c, sticky="nsew")
+            frameChec[r][c].propagate(False)
+            if (r+c) % 2 == 1:
+               buttonsChec[r].append(tk.Button(frameChec[r][c], overrelief = "groove", image = spotChec[r][c], relief = 'flat', activebackground = "LightSalmon3", bg = "LightSalmon4", borderwidth = "4", command = lambda forCommand=[r, c]: clickChec(forCommand[0], forCommand[1])))
+            elif (r+c) % 2 == 0:
+               buttonsChec[r].append(tk.Label(frameChec[r][c], bg = "bisque", bd= '0'))
+            buttonsChec[r][c].pack(expand=True, fill="both")
+   except NameError:
+      Checkers()
+
+#################################################################################################### Checkers end
 
 
 master = tk.Tk() #creates the window
