@@ -2650,10 +2650,10 @@ def end21(result):
 
 #Sam Gunter
 #Checkers was finished 2:05am on the 31st of May, 2018
-#This was created to play checkers either single player or against AI
+#This was created to play checkers either multiplayer or against AI
 #
 
-#Next steps are to add AI, double jumping over, kings, howToPlay and leaderboards
+#Next steps are to add AI and leaderboards
 
 #Checkers: Global variables and functions normally have a "Chec" at the end incase another game uses similar variables later on or earlier on.
 #
@@ -2718,16 +2718,25 @@ def howToPlayChec():
 
 Program specific instructions
 
-1. Click on a space you want to edit, then us your keyboard to type a number.
-2. To save the number either click enter or click on another tile.
-3. Leave a tile empty to delete.
-4. Red squares mean that there are numbers that conflict.""").pack(expand=True, fill="both")
+1. Click on the checker you want to move, then click here to move it.
+2. Checkers automatically are taken off the board, and crowned at the end of the board.
+3. If a second jump is available, then the game will automatically take it.""").pack(expand=True, fill="both")
 
-   tk.Label(frameSu2, bg = "white smoke", font = "Helvetica " + str(screenHeight//35), text="""Rules to Game:
+   tk.Label(frameSu2, bg = "white smoke", font = "Helvetica " + str(screenHeight//50), text="""Rules to Game:
 
-The objective is to fill a 9x9 grid so that each column,
-each row, and each of the nine 3x3 boxes (also called
-blocks or regions) contains the digits from 1 to 9. """).pack(expand=True, fill="both")
+Checkers is played on a standard 64 square board. Only the 32 dark colored squares are used in play.
+Each player begins the game with 12 pieces, or checkers, placed in the three rows closest to them. 
+The object of the game is to capture all of the opponent’s checkers or position your pieces so that your opponent has no available moves. 
+
+A checker can be moved one space diagonally forward. You can not move a checker backwards until it becomes a King, as described below.
+If one of your opponent’s checkers is on a forward diagonal next to one of your checkers, and the next space beyond the opponent’s checker is empty,
+then your checker can jump the opponent’s checker and land in the space beyond. Your opponent’s checker is captured and removed from the board. 
+
+After making one jump, your checker might have another jump available from its new position. Your checker must take that jump too.
+It must continue to jump until there are no more jumps available.
+
+When one of your checkers reaches the opposite side of the board, it is crowned and becomes a King.
+A King can move backward as well as forward along the diagonals, instead of just forward.""").pack(expand=True, fill="both")
 
 def newGameChec():
    global locationChec, turnChec
@@ -2795,6 +2804,10 @@ def loadBoardChec():
                spotChec[r].append(redImgChec)
             elif locationChec[r][c] == "black":
                spotChec[r].append(blackImgChec)
+            elif locationChec[r][c] == "redKing":
+               spotChec[r].append(kingRedImgChec)
+            elif locationChec[r][c] == "blackKing":
+               spotChec[r].append(kingBlackImgChec)
             else:
                spotChec[r].append("")
             frameChec[r].append(tk.Frame(master, width = pixelChec, height = pixelChec, borderwidth = "0"))
@@ -2810,15 +2823,15 @@ def loadBoardChec():
 
 def clickChec(row, column):
    global errorChec, baseChec, buttonsChec, turnChec
-   if locationChec[row][column] == turnChec and baseChec[0] < 0:
+   if (locationChec[row][column] == turnChec or locationChec[row][column] == (turnChec+"King")) and baseChec[0] < 0:
       errorChec.config(text = "")
       buttonsChec[row][column].config(bg = "LightSalmon3")
       baseChec = [row, column]
    elif baseChec[0] < 0:
       errorChec.config(text = "It is "+turnChec+"'s turn.")
    else:
-      if locationChec[row][column] == " " and ((turnChec == "red" and row == baseChec[0] - 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))
-            or (turnChec == "black" and row == baseChec[0] + 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))):
+      if locationChec[row][column] == " " and ((locationChec[baseChec[0]][baseChec[1]] == "red" and row == baseChec[0] - 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))
+            or (locationChec[baseChec[0]][baseChec[1]] == "black" and row == baseChec[0] + 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))):
          locationChec[baseChec[0]][baseChec[1]] = " "
          locationChec[row][column] = turnChec
          reloadChec(baseChec[0], baseChec[1])
@@ -2829,27 +2842,180 @@ def clickChec(row, column):
          else:
             turnChec = "red"
 
-      elif locationChec[row][column] == " " and ((turnChec == "red" and row == baseChec[0] - 2 and
-            ((column == baseChec[1] - 2 and locationChec[baseChec[0]-1][baseChec[1]-1] == "black") or
-             (column == baseChec[1] + 2 and locationChec[baseChec[0]-1][baseChec[1]+1] == "black")))
-            or (turnChec == "black" and row == baseChec[0] + 2 and
-            ((column == baseChec[1] - 2  and locationChec[baseChec[0]+1][baseChec[1]-1] == "red") or
-             (column == baseChec[1] + 2 and locationChec[baseChec[0]+1][baseChec[1]+1] == "red")))):
+      elif locationChec[row][column] == " " and ((locationChec[baseChec[0]][baseChec[1]] == "redKing" and
+               (row == baseChec[0] - 1 or row == baseChec[0] + 1) and (column == baseChec[1] - 1 or column == baseChec[1] + 1))
+            or (locationChec[baseChec[0]][baseChec[1]]== "blackKing" and
+               (row == baseChec[0] - 1 or row == baseChec[0] + 1) and (column == baseChec[1] - 1 or column == baseChec[1] + 1))):
          locationChec[baseChec[0]][baseChec[1]] = " "
-         locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] = " "
-         locationChec[row][column] = turnChec
+         locationChec[row][column] = turnChec+"King"
          reloadChec(baseChec[0], baseChec[1])
-         reloadChec((baseChec[0]+row)//2, (baseChec[1]+column)//2)
          reloadChec(row, column)
          baseChec = [-1, -1]
          if turnChec == "red":
             turnChec = "black"
          else:
             turnChec = "red"
+
+      elif locationChec[row][column] == " " and ((locationChec[baseChec[0]][baseChec[1]] == "red" and
+               row == baseChec[0] - 2 and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
+               (locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "black" or locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "blackKing"))
+            or (locationChec[baseChec[0]][baseChec[1]] == "black" and
+               row == baseChec[0] + 2 and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
+               (locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "red" or locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "redKing"))):
+         locationChec[baseChec[0]][baseChec[1]] = " "
+         locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] = " "
+         locationChec[row][column] = turnChec
+         reloadChec(baseChec[0], baseChec[1])
+         reloadChec(row, column)
+         time.sleep(.2)
+         reloadChec((baseChec[0]+row)//2, (baseChec[1]+column)//2)
+         baseChec = [-1, -1]
+
+         if turnChec == "red":
+            turnChec = "black"
+         else:
+            turnChec = "red"
+
+         currentSpot = (row, column)
+         while True:
+               end = True
+               if (locationChec[currentSpot[0]+2][currentSpot[1]+2] == " " and currentSpot[0]+2 < 8 and currentSpot[1]+2 < 8 and turnChec == "red" and
+                     (locationChec[currentSpot[0]+1][currentSpot[1]+1] == turnChec or locationChec[currentSpot[0]+1][currentSpot[1]+1] == turnChec+"King")):
+                  locationChec[currentSpot[0]+2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
+                  locationChec[currentSpot[0]+1][currentSpot[1]+1] = " "
+                  locationChec[currentSpot[0]][currentSpot[1]] = " "
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]+2, currentSpot[1]+2)
+                  reloadChec(currentSpot[0], currentSpot[1])
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]+1, currentSpot[1]+1)
+                  end = False
+                  currentSpot = (currentSpot[0]+2, currentSpot[1]+2)
+                  
+               elif (locationChec[currentSpot[0]-2][currentSpot[1]+2] == " " and currentSpot[0]-2 > -1 and currentSpot[1]+2 < 8 and turnChec == "black" and
+                     (locationChec[currentSpot[0]-1][currentSpot[1]+1] == turnChec or locationChec[currentSpot[0]-1][currentSpot[1]+1] == turnChec+"King")):
+                  locationChec[currentSpot[0]-2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
+                  locationChec[currentSpot[0]-1][currentSpot[1]+1] = " "
+                  locationChec[currentSpot[0]][currentSpot[1]] = " "
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]-2, currentSpot[1]+2)
+                  reloadChec(currentSpot[0], currentSpot[1])
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]-1, currentSpot[1]+1)
+                  end = False
+                  currentSpot = (currentSpot[0]-2, currentSpot[1]+2)
+                  
+               elif (locationChec[currentSpot[0]+2][currentSpot[1]-2] == " " and currentSpot[0]+2 < 8 and currentSpot[1]-2 > -1 and turnChec == "red" and
+                     (locationChec[currentSpot[0]+1][currentSpot[1]-1] == turnChec or locationChec[currentSpot[0]+1][currentSpot[1]-1] == turnChec+"King")):
+                  locationChec[currentSpot[0]+2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
+                  locationChec[currentSpot[0]+1][currentSpot[1]-1] = " "
+                  locationChec[currentSpot[0]][currentSpot[1]] = " "
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]+2, currentSpot[1]-2)
+                  reloadChec(currentSpot[0], currentSpot[1])
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]+1, currentSpot[1]-1)
+                  end = False
+                  currentSpot = (currentSpot[0]+2, currentSpot[1]-2)
+                  
+               elif (locationChec[currentSpot[0]-2][currentSpot[1]-2] == " " and currentSpot[0]-2 > -1 and currentSpot[1]-2 > -1 and turnChec == "black" and
+                     (locationChec[currentSpot[0]-1][currentSpot[1]-1] == turnChec or locationChec[currentSpot[0]-1][currentSpot[1]-1] == turnChec+"King")):
+                  locationChec[currentSpot[0]-2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
+                  locationChec[currentSpot[0]-1][currentSpot[1]-1] = " "
+                  locationChec[currentSpot[0]][currentSpot[1]] = " "
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]-2, currentSpot[1]-2)
+                  reloadChec(currentSpot[0], currentSpot[1])
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]-1, currentSpot[1]-1)
+                  end = False
+                  currentSpot = (currentSpot[0]-2, currentSpot[1]-2)
+                  
+               if end == True:
+                  break
+
+      elif locationChec[row][column] == " " and ((locationChec[baseChec[0]][baseChec[1]] == "redKing" and
+               (row == baseChec[0] + 2 or row == baseChec[0] - 2) and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
+               (locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "black" or locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "blackKing"))
+            or (locationChec[baseChec[0]][baseChec[1]] == "blackKing" and
+               (row == baseChec[0] + 2 or row == baseChec[0] - 2) and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
+               (locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "red" or locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "redKing"))):   
+         locationChec[baseChec[0]][baseChec[1]] = " "
+         locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] = " "
+         locationChec[row][column] = turnChec+"King"
+         reloadChec(baseChec[0], baseChec[1])
+         reloadChec(row, column)
+         time.sleep(.2)
+         reloadChec((baseChec[0]+row)//2, (baseChec[1]+column)//2)
+         baseChec = [-1, -1]
+         
+         if turnChec == "red":
+            turnChec = "black"
+         else:
+            turnChec = "red"
+            
+         currentSpot = (row, column)
+         while True:
+               end = True
+               if (locationChec[currentSpot[0]+2][currentSpot[1]+2] == " " and currentSpot[0]+2 < 8 and currentSpot[1]+2 < 8 and
+                     (locationChec[currentSpot[0]+1][currentSpot[1]+1] == turnChec or locationChec[currentSpot[0]+1][currentSpot[1]+1] == turnChec+"King")):
+                  locationChec[currentSpot[0]+2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
+                  locationChec[currentSpot[0]+1][currentSpot[1]+1] = " "
+                  locationChec[currentSpot[0]][currentSpot[1]] = " "
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]+2, currentSpot[1]+2)
+                  reloadChec(currentSpot[0], currentSpot[1])
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]+1, currentSpot[1]+1)
+                  end = False
+                  currentSpot = (currentSpot[0]+2, currentSpot[1]+2)
+                  
+               elif (locationChec[currentSpot[0]-2][currentSpot[1]+2] == " " and currentSpot[0]-2 > -1 and currentSpot[1]+2 < 8 and
+                     (locationChec[currentSpot[0]-1][currentSpot[1]+1] == turnChec or locationChec[currentSpot[0]-1][currentSpot[1]+1] == turnChec+"King")):
+                  locationChec[currentSpot[0]-2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
+                  locationChec[currentSpot[0]-1][currentSpot[1]+1] = " "
+                  locationChec[currentSpot[0]][currentSpot[1]] = " "
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]-2, currentSpot[1]+2)
+                  reloadChec(currentSpot[0], currentSpot[1])
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]-1, currentSpot[1]+1)
+                  end = False
+                  currentSpot = (currentSpot[0]-2, currentSpot[1]+2)
+                  
+               elif (locationChec[currentSpot[0]+2][currentSpot[1]-2] == " " and currentSpot[0]+2 < 8 and currentSpot[1]-2 > -1 and
+                     (locationChec[currentSpot[0]+1][currentSpot[1]-1] == turnChec or locationChec[currentSpot[0]+1][currentSpot[1]-1] == turnChec+"King")):
+                  locationChec[currentSpot[0]+2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
+                  locationChec[currentSpot[0]+1][currentSpot[1]-1] = " "
+                  locationChec[currentSpot[0]][currentSpot[1]] = " "
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]+2, currentSpot[1]-2)
+                  reloadChec(currentSpot[0], currentSpot[1])
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]+1, currentSpot[1]-1)
+                  end = False
+                  currentSpot = (currentSpot[0]+2, currentSpot[1]-2)
+                  
+               elif (locationChec[currentSpot[0]-2][currentSpot[1]-2] == " " and currentSpot[0]-2 > -1 and currentSpot[1]-2 > -1 and
+                     (locationChec[currentSpot[0]-1][currentSpot[1]-1] == turnChec or locationChec[currentSpot[0]-1][currentSpot[1]-1] == turnChec+"King")):
+                  locationChec[currentSpot[0]-2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
+                  locationChec[currentSpot[0]-1][currentSpot[1]-1] = " "
+                  locationChec[currentSpot[0]][currentSpot[1]] = " "
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]-2, currentSpot[1]-2)
+                  reloadChec(currentSpot[0], currentSpot[1])
+                  time.sleep(.2)
+                  reloadChec(currentSpot[0]-1, currentSpot[1]-1)
+                  end = False
+                  currentSpot = (currentSpot[0]-2, currentSpot[1]-2)
+                  
+               if end == True:
+                  break
             
       elif row == baseChec[0] and column == baseChec[1]:
          reloadChec(baseChec[0], baseChec[1])
          baseChec = [-1, -1]
+         
       else:
          errorChec.config(text = "You cannot\nmove there.")
          reloadChec(baseChec[0], baseChec[1])
@@ -2859,9 +3025,9 @@ def clickChec(row, column):
    blackEnd = True
    for r in range(8):
       for c in range(8):
-         if locationChec[r][c] == "red":
+         if locationChec[r][c] == "red" or locationChec[r][c] == "redKing":
             redEnd = False
-         if locationChec[r][c] == "black":
+         if locationChec[r][c] == "black" or locationChec[r][c] == "redKing":
             blackEnd = False
 
    if redEnd == True:
@@ -2873,13 +3039,23 @@ def clickChec(row, column):
 
 def reloadChec(row, column):
    global buttonsChec, spotChec
+   if row == 0 and locationChec[row][column] == "red":
+      locationChec[row][column] = "redKing"
+   if row == 7 and locationChec[row][column] == "black":
+      locationChec[row][column] = "blackKing"
+      
    if locationChec[row][column] == "red":
       spotChec[row][column] = redImgChec
    elif locationChec[row][column] == "black":
       spotChec[row][column] = blackImgChec
+   elif locationChec[row][column] == "redKing":
+      spotChec[row][column] = kingRedImgChec
+   elif locationChec[row][column] == "blackKing":
+      spotChec[row][column] = kingBlackImgChec
    else:
       spotChec[row][column] = ""
    buttonsChec[row][column].config(image = spotChec[row][column], bg = "LightSalmon4")
+   master.update()
 
 #################################################################################################### Checkers end
 
