@@ -1578,7 +1578,7 @@ def enterSu(event):
 #This was created to play Connect 4 either against another player or against AI.
 #AI checks for winning plays, blocking plays, but the rest is random. This allows the user to set up plays, but no easy wins.
 
-#Next step is to add leaderboard document.
+#Next steps are to add different AIs and a leaderboard document.
 
 #Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
 #Creates a 6 by 7 board which users can click to drop in connect 4 pieces. The game automatically checks for where the user clicks, no buttons, only labels.
@@ -2653,7 +2653,7 @@ def end21(result):
 #This was created to play checkers either single player or against AI
 #
 
-#Next steps are to
+#Next steps are to add AI, double jumping over, kings, howToPlay and leaderboards
 
 #Checkers: Global variables and functions normally have a "Chec" at the end incase another game uses similar variables later on or earlier on.
 #
@@ -2730,7 +2730,8 @@ each row, and each of the nine 3x3 boxes (also called
 blocks or regions) contains the digits from 1 to 9. """).pack(expand=True, fill="both")
 
 def newGameChec():
-   global locationChec
+   global locationChec, turnChec
+   turnChec = "red"
    locationChec = [[]]
    for r in range(8):
       if len(locationChec)==r:
@@ -2740,13 +2741,16 @@ def newGameChec():
             locationChec[r].append("black")
          elif r > 4 and (c + r) % 2 == 1:
             locationChec[r].append("red")
+         elif (c + r) % 2 == 1:
+            locationChec[r].append(" ")
          else:
             locationChec[r].append("")
    loadBoardChec()
 
 def loadBoardChec():
    try:
-      global pixelChec, buttonsChec, frameChec, errorChec, buttonHow, spotChec, locationChec, redImgChec, blackImgChec, kingRedImgChec, kingBlackImgChec
+      global pixelChec, buttonsChec, frameChec, errorChec, buttonHow, spotChec, locationChec, redImgChec, blackImgChec, kingRedImgChec, kingBlackImgChec, baseChec
+      baseChec = [-1, -1]
       
       for widget in master.winfo_children():
          widget.destroy()
@@ -2803,6 +2807,79 @@ def loadBoardChec():
             buttonsChec[r][c].pack(expand=True, fill="both")
    except NameError:
       Checkers()
+
+def clickChec(row, column):
+   global errorChec, baseChec, buttonsChec, turnChec
+   if locationChec[row][column] == turnChec and baseChec[0] < 0:
+      errorChec.config(text = "")
+      buttonsChec[row][column].config(bg = "LightSalmon3")
+      baseChec = [row, column]
+   elif baseChec[0] < 0:
+      errorChec.config(text = "It is "+turnChec+"'s turn.")
+   else:
+      if locationChec[row][column] == " " and ((turnChec == "red" and row == baseChec[0] - 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))
+            or (turnChec == "black" and row == baseChec[0] + 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))):
+         locationChec[baseChec[0]][baseChec[1]] = " "
+         locationChec[row][column] = turnChec
+         reloadChec(baseChec[0], baseChec[1])
+         reloadChec(row, column)
+         baseChec = [-1, -1]
+         if turnChec == "red":
+            turnChec = "black"
+         else:
+            turnChec = "red"
+
+      elif locationChec[row][column] == " " and ((turnChec == "red" and row == baseChec[0] - 2 and
+            ((column == baseChec[1] - 2 and locationChec[baseChec[0]-1][baseChec[1]-1] == "black") or
+             (column == baseChec[1] + 2 and locationChec[baseChec[0]-1][baseChec[1]+1] == "black")))
+            or (turnChec == "black" and row == baseChec[0] + 2 and
+            ((column == baseChec[1] - 2  and locationChec[baseChec[0]+1][baseChec[1]-1] == "red") or
+             (column == baseChec[1] + 2 and locationChec[baseChec[0]+1][baseChec[1]+1] == "red")))):
+         locationChec[baseChec[0]][baseChec[1]] = " "
+         locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] = " "
+         locationChec[row][column] = turnChec
+         reloadChec(baseChec[0], baseChec[1])
+         reloadChec((baseChec[0]+row)//2, (baseChec[1]+column)//2)
+         reloadChec(row, column)
+         baseChec = [-1, -1]
+         if turnChec == "red":
+            turnChec = "black"
+         else:
+            turnChec = "red"
+            
+      elif row == baseChec[0] and column == baseChec[1]:
+         reloadChec(baseChec[0], baseChec[1])
+         baseChec = [-1, -1]
+      else:
+         errorChec.config(text = "You cannot\nmove there.")
+         reloadChec(baseChec[0], baseChec[1])
+         baseChec = [-1, -1]
+
+   redEnd = True
+   blackEnd = True
+   for r in range(8):
+      for c in range(8):
+         if locationChec[r][c] == "red":
+            redEnd = False
+         if locationChec[r][c] == "black":
+            blackEnd = False
+
+   if redEnd == True:
+      errorChec.config(text = "Black wins!")
+      buttonHow.config(text = "Play Again", command = lambda: newGameChec())
+   if blackEnd == True:
+      errorChec.config(text = "Red wins!")
+      buttonHow.config(text = "Play Again", command = lambda: newGameChec())
+
+def reloadChec(row, column):
+   global buttonsChec, spotChec
+   if locationChec[row][column] == "red":
+      spotChec[row][column] = redImgChec
+   elif locationChec[row][column] == "black":
+      spotChec[row][column] = blackImgChec
+   else:
+      spotChec[row][column] = ""
+   buttonsChec[row][column].config(image = spotChec[row][column], bg = "LightSalmon4")
 
 #################################################################################################### Checkers end
 
