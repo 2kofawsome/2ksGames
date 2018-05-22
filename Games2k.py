@@ -3048,6 +3048,8 @@ def clickChec(row, column):
          buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
 def aiChec():
+   global errorChec, buttonHow, locationChec
+   
    blackSpots = []
    for r in range(8):
       for c in range(8):
@@ -3073,9 +3075,7 @@ def aiChec():
 
    jumpSpots = []
    for checkers in blackSpots:
-      print(checkers)
       if int(checkers[0]) < 6 and int(checkers[1]) < 6:
-         print(int(checkers[1]))
          if locationChec[int(checkers[0])+2][int(checkers[1])+2] == " " and (locationChec[int(checkers[0])+1][int(checkers[1])+1] == "red" or locationChec[int(checkers[0])+1][int(checkers[1])+1] == "redKing"):
             jumpSpots.append(checkers+str(int(checkers[0])+2)+str(int(checkers[1])+2))
       if int(checkers[0]) < 6 and int(checkers[1]) > 1:
@@ -3088,6 +3088,65 @@ def aiChec():
          if locationChec[int(checkers[0])-2][int(checkers[1])-2] == " " and (locationChec[int(checkers[0])-1][int(checkers[1])-1] == "red" or locationChec[int(checkers[0])-1][int(checkers[1])-1] == "redKing"):
             jumpSpots.append(checkers+str(int(checkers[0])-2)+str(int(checkers[1])-2))
    print(jumpSpots)
+
+   for checkers in jumpSpots:
+      if int(checkers[2]) < 6 and int(checkers[3]) < 6:
+         if locationChec[int(checkers[2])+2][int(checkers[3])+2] == " " and (locationChec[int(checkers[2])+1][int(checkers[3])+1] == "red" or locationChec[int(checkers[2])+1][int(checkers[3])+1] == "redKing"):
+            if len(jumpSpots[0]) == 4:
+               jumpSpots = []
+            jumpSpots.append(checkers+str(int(checkers[2])+2)+str(int(checkers[3])+2))
+      if int(checkers[2]) < 6 and int(checkers[3]) > 1:
+         if locationChec[int(checkers[2])+2][int(checkers[3])-2] == " " and (locationChec[int(checkers[2])+1][int(checkers[3])-1] == "red" or locationChec[int(checkers[2])+1][int(checkers[3])-1] == "redKing"):
+            if len(jumpSpots[0]) == 4:
+               jumpSpots = []
+            jumpSpots.append(checkers+str(int(checkers[2])+2)+str(int(checkers[3])-2))
+      if int(checkers[2]) > 1 and int(checkers[3]) < 6 and locationChec[int(checkers[0])][int(checkers[3])] == "blackKing":
+         if locationChec[int(checkers[2])-2][int(checkers[3])+2] == " " and (locationChec[int(checkers[2])-1][int(checkers[3])+1] == "red" or locationChec[int(checkers[2])-1][int(checkers[3])+1] == "redKing"):
+            if len(jumpSpots[0]) == 4:
+               jumpSpots = []
+            jumpSpots.append(checkers+str(int(checkers[2])-2)+str(int(checkers[3])+2))
+      if int(checkers[2]) > 1 and int(checkers[3]) > 1 and locationChec[int(checkers[2])][int(checkers[3])] == "blackKing":
+         if locationChec[int(checkers[2])-2][int(checkers[3])-2] == " " and (locationChec[int(checkers[2])-1][int(checkers[3])-1] == "red" or locationChec[int(checkers[2])-1][int(checkers[3])-1] == "redKing"):
+            if len(jumpSpots[0]) == 4:
+               jumpSpots = []
+            jumpSpots.append(checkers+str(int(checkers[2])-2)+str(int(checkers[3])-2))
+
+
+   if False == (jumpSpots == []):
+      pick = random.randint(0, len(jumpSpots)-1)
+      if len(jumpSpots[pick]) == 6:
+         time.sleep(.3)
+         pick = random.randint(0, len(jumpSpots)-1)
+         locationChec[int(jumpSpots[pick][2])][int(jumpSpots[pick][3])] = locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])]
+         locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])] = " "
+         locationChec[(int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2][(int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2] = " "
+         reloadChec(int(jumpSpots[pick][0]), int(jumpSpots[pick][1]))
+         reloadChec(int(jumpSpots[pick][2]), int(jumpSpots[pick][3]))
+         time.sleep(.2)
+         reloadChec((int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2, (int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2)
+         
+      else:
+         time.sleep(.3)
+         pick = random.randint(0, len(jumpSpots)-1)
+         locationChec[int(jumpSpots[pick][2])][int(jumpSpots[pick][3])] = locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])]
+         locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])] = " "
+         locationChec[(int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2][(int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2] = " "
+         reloadChec(int(jumpSpots[pick][0]), int(jumpSpots[pick][1]))
+         reloadChec(int(jumpSpots[pick][2]), int(jumpSpots[pick][3]))
+         time.sleep(.2)
+         reloadChec((int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2, (int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2)
+      
+   elif False == (singleSpots == []):
+      time.sleep(.3)
+      pick = random.randint(0, len(singleSpots)-1)
+      locationChec[int(singleSpots[pick][2])][int(singleSpots[pick][3])] = locationChec[int(singleSpots[pick][0])][int(singleSpots[pick][1])]
+      locationChec[int(singleSpots[pick][0])][int(singleSpots[pick][1])] = " "
+      reloadChec(int(singleSpots[pick][0]), int(singleSpots[pick][1]))
+      reloadChec(int(singleSpots[pick][2]), int(singleSpots[pick][3]))
+      
+   else:
+      errorChec.config(text = "Red wins!")
+      buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
 def reloadChec(row, column):
    global buttonsChec, spotChec
