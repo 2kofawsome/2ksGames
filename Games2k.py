@@ -2661,8 +2661,8 @@ def end21(result):
 #
 
 def Checkers():
-   global oneChec
-   oneChec = False
+   global oneChec #this will make game single player or multiplayer
+   oneChec = False #preset to multiplayer
    for widget in master.winfo_children():
       widget.destroy()
 
@@ -2690,7 +2690,7 @@ def Checkers():
 
 def singleChec():
    global oneChec
-   oneChec = True
+   oneChec = True #if singleplayer was chosen, sets to singleplayer
    newGameChec()
 
 def howToPlayChec():
@@ -2740,26 +2740,26 @@ A King can move backward as well as forward along the diagonals, instead of just
 
 def newGameChec():
    global locationChec, turnChec
-   turnChec = "red"
-   locationChec = [[]]
+   turnChec = "red" #makes red go first
+   locationChec = [[]] #this keeps track of which piece is where
    for r in range(8):
       if len(locationChec)==r:
             locationChec.append([])
       for c in range(8):
          if r < 3 and (c + r) % 2 == 1:
-            locationChec[r].append("black")
+            locationChec[r].append("black") #makes the black pieces
          elif r > 4 and (c + r) % 2 == 1:
-            locationChec[r].append("red")
+            locationChec[r].append("red") #the red pieces
          elif (c + r) % 2 == 1:
-            locationChec[r].append(" ")
+            locationChec[r].append(" ") #an empty space
          else:
-            locationChec[r].append("")
+            locationChec[r].append("") #nothing can fill these spaces (light boxes)
    loadBoardChec()
 
 def loadBoardChec():
-   try:
+   try: #this try is in place for the how to play to not reset the game
       global pixelChec, buttonsChec, frameChec, errorChec, buttonHow, spotChec, locationChec, redImgChec, blackImgChec, kingRedImgChec, kingBlackImgChec, baseChec
-      baseChec = [-1, -1]
+      baseChec = [-1, -1] #this will later keep track of the piece in play
       
       for widget in master.winfo_children():
          widget.destroy()
@@ -2791,59 +2791,61 @@ def loadBoardChec():
       errorChec = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixelChec*8))//12), fg="#fff", text="")
       errorChec.pack(expand=True, fill="both")
 
-      spotChec=[[]]
+      spotChec=[[]] #keeps track of images
       frameChec=[[]]
-      buttonsChec=[[]]
+      buttonsChec=[[]] #each button
       for r in range(8):
          if len(buttonsChec)==r:
             buttonsChec.append([])
             frameChec.append([])
             spotChec.append([])
          for c in range(8):
-            if locationChec[r][c] == "red":
-               spotChec[r].append(redImgChec)
-            elif locationChec[r][c] == "black":
-               spotChec[r].append(blackImgChec)
-            elif locationChec[r][c] == "redKing":
+            if locationChec[r][c] == "red": #if red
+               spotChec[r].append(redImgChec) #red image
+            elif locationChec[r][c] == "black": #if black
+               spotChec[r].append(blackImgChec) #black image
+            elif locationChec[r][c] == "redKing": #etc
                spotChec[r].append(kingRedImgChec)
-            elif locationChec[r][c] == "blackKing":
+            elif locationChec[r][c] == "blackKing": #etc
                spotChec[r].append(kingBlackImgChec)
             else:
-               spotChec[r].append("")
+               spotChec[r].append("") #else, no image
             frameChec[r].append(tk.Frame(master, width = pixelChec, height = pixelChec, borderwidth = "0"))
             frameChec[r][c].grid(row=r+1, column=c, sticky="nsew")
             frameChec[r][c].propagate(False)
             if (r+c) % 2 == 1:
-               buttonsChec[r].append(tk.Button(frameChec[r][c], overrelief = "groove", image = spotChec[r][c], relief = 'flat', activebackground = "LightSalmon3", bg = "LightSalmon4", borderwidth = "4", command = lambda forCommand=[r, c]: clickChec(forCommand[0], forCommand[1])))
+               buttonsChec[r].append(tk.Button(frameChec[r][c], overrelief = "groove", image = spotChec[r][c], relief = 'flat', activebackground = "LightSalmon3", bg = "LightSalmon4", borderwidth = "4", command = lambda forCommand=[r, c]: clickChec(forCommand[0], forCommand[1]))) #creates dark buttons with image
             elif (r+c) % 2 == 0:
-               buttonsChec[r].append(tk.Label(frameChec[r][c], bg = "bisque", bd= '0'))
+               buttonsChec[r].append(tk.Label(frameChec[r][c], bg = "bisque", bd= '0')) #creates light labels always blank
             buttonsChec[r][c].pack(expand=True, fill="both")
-   except NameError:
-      Checkers()
+   except NameError: #if how to play is ended with no game started
+      Checkers() #main menu
 
 def clickChec(row, column):
    global errorChec, baseChec, buttonsChec, turnChec
-   if (locationChec[row][column] == turnChec or locationChec[row][column] == (turnChec+"King")) and baseChec[0] < 0:
+   if (locationChec[row][column] == turnChec or locationChec[row][column] == (turnChec+"King")) and baseChec[0] < 0: #if the right color and no base yet
       errorChec.config(text = "")
       buttonsChec[row][column].config(bg = "LightSalmon3")
-      baseChec = [row, column]
-   elif baseChec[0] < 0:
-      errorChec.config(text = "It is "+turnChec+"'s turn.")
-   else:
-      if locationChec[row][column] == " " and (((locationChec[baseChec[0]][baseChec[1]] == "red" or locationChec[baseChec[0]][baseChec[1]][-4:] == "King") and
-               row == baseChec[0] - 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))
-            or ((locationChec[baseChec[0]][baseChec[1]] == "black" or locationChec[baseChec[0]][baseChec[1]][-4:] == "King") and
-               row == baseChec[0] + 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))):
-         locationChec[row][column] = locationChec[baseChec[0]][baseChec[1]]
-         locationChec[baseChec[0]][baseChec[1]] = " "
-         reloadChec(baseChec[0], baseChec[1])
-         reloadChec(row, column)
+      baseChec = [row, column] #makes it the base
+   elif baseChec[0] < 0: #if wrong colours and no base
+      errorChec.config(text = "It is "+turnChec+"'s turn.") #error message
+   else: #if there is already a base
+      #single move
+      if locationChec[row][column] == " " and (((locationChec[baseChec[0]][baseChec[1]] == "red" or locationChec[baseChec[0]][baseChec[1]][-4:] == "King") and #if click is empty and the base is red (move up) or a king (move anywhere)
+               row == baseChec[0] - 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1)) #and the difference is left or right up
+            or ((locationChec[baseChec[0]][baseChec[1]] == "black" or locationChec[baseChec[0]][baseChec[1]][-4:] == "King") and #OR, if click is empty and the base is red (move up) or a king (move anywhere)
+               row == baseChec[0] + 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))): #and the difference is left or right up
+         locationChec[row][column] = locationChec[baseChec[0]][baseChec[1]] #sets the new spot as old spot value
+         locationChec[baseChec[0]][baseChec[1]] = " " #old spot as nothing
+         reloadChec(baseChec[0], baseChec[1]) #reloads old
+         reloadChec(row, column) #reloads new
          baseChec = [-1, -1]
-         if turnChec == "red":
+         if turnChec == "red": #changes whos turn it is
             turnChec = "black"
          else:
             turnChec = "red"
-
+            
+      #jumping over
       elif locationChec[row][column] == " " and ((locationChec[baseChec[0]][baseChec[1]][:3] == "red" and
                (row == baseChec[0] - 2 or locationChec[baseChec[0]][baseChec[1]] == "redKing") and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
                locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2][:5] == "black")
@@ -2851,28 +2853,28 @@ def clickChec(row, column):
                (row == baseChec[0] + 2 or locationChec[baseChec[0]][baseChec[1]] == "blackKing") and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
                locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2][:3] == "red")):
          
-         locationChec[row][column] = locationChec[baseChec[0]][baseChec[1]]
-         locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] = " "
-         locationChec[baseChec[0]][baseChec[1]] = " "
-         reloadChec(baseChec[0], baseChec[1])
-         reloadChec(row, column)
-         time.sleep(.2)
-         reloadChec((baseChec[0]+row)//2, (baseChec[1]+column)//2)
+         locationChec[row][column] = locationChec[baseChec[0]][baseChec[1]] #sets the new spot as old spot value
+         locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] = " " #middle spot as nothing
+         locationChec[baseChec[0]][baseChec[1]] = " " #old as nothing
+         reloadChec(baseChec[0], baseChec[1]) #reloads old
+         reloadChec(row, column) #reloads new
+         time.sleep(.2) #pause
+         reloadChec((baseChec[0]+row)//2, (baseChec[1]+column)//2) #reloads middle
          baseChec = [-1, -1]
 
-         if turnChec == "red":
+         if turnChec == "red": #changes whos turn it is
             turnChec = "black"
          else:
             turnChec = "red"
 
-         currentSpot = (row, column)
-         while True:
+         currentSpot = (row, column) #this is used in the while loop
+         while True: #loop is used to check for any extra jumps
            
-            if currentSpot[0]+2 < 8 and currentSpot[1]+2 < 8:
-               if (locationChec[currentSpot[0]+2][currentSpot[1]+2] == " " and
-                     (locationChec[currentSpot[0]][currentSpot[1]] == "black" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and
-                     locationChec[currentSpot[0]+1][currentSpot[1]+1][:3] == turnChec[:3]):
-                  locationChec[currentSpot[0]+2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
+            if currentSpot[0]+2 < 8 and currentSpot[1]+2 < 8: #if its not going too far down or right
+               if (locationChec[currentSpot[0]+2][currentSpot[1]+2] == " " and #if down-right is empty
+                     (locationChec[currentSpot[0]][currentSpot[1]] == "black" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and #and a black (down) or a king (all)
+                     locationChec[currentSpot[0]+1][currentSpot[1]+1][:3] == turnChec[:3]): #and middle has a variant of opposition
+                  locationChec[currentSpot[0]+2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]] #same as above updating from jump
                   locationChec[currentSpot[0]+1][currentSpot[1]+1] = " "
                   locationChec[currentSpot[0]][currentSpot[1]] = " "
                   time.sleep(.2)
@@ -2880,14 +2882,14 @@ def clickChec(row, column):
                   reloadChec(currentSpot[0], currentSpot[1])
                   time.sleep(.2)
                   reloadChec(currentSpot[0]+1, currentSpot[1]+1)
-                  currentSpot = (currentSpot[0]+2, currentSpot[1]+2)
-                  continue
+                  currentSpot = (currentSpot[0]+2, currentSpot[1]+2) #sets new currentSpot
+                  continue #goes back to loop (to stop from hitting break)
 
-            if currentSpot[0]-2 > -1 and currentSpot[1]+2 < 8:
-               if (locationChec[currentSpot[0]-2][currentSpot[1]+2] == " " and
-                     (locationChec[currentSpot[0]][currentSpot[1]] == "red" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and
-                     locationChec[currentSpot[0]-1][currentSpot[1]+1][:3] == turnChec[:3]):
-                  locationChec[currentSpot[0]-2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
+            if currentSpot[0]-2 > -1 and currentSpot[1]+2 < 8: #if its not going too far up or right
+               if (locationChec[currentSpot[0]-2][currentSpot[1]+2] == " " and #if up-right is empty
+                     (locationChec[currentSpot[0]][currentSpot[1]] == "red" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and #and a red (up) or a king (all)
+                     locationChec[currentSpot[0]-1][currentSpot[1]+1][:3] == turnChec[:3]): #and middle has a variant of opposition
+                  locationChec[currentSpot[0]-2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]] #rest is same as above
                   locationChec[currentSpot[0]-1][currentSpot[1]+1] = " "
                   locationChec[currentSpot[0]][currentSpot[1]] = " "
                   time.sleep(.2)
@@ -2898,10 +2900,10 @@ def clickChec(row, column):
                   currentSpot = (currentSpot[0]-2, currentSpot[1]+2)
                   continue
 
-            if currentSpot[0]+2 < 8 and currentSpot[1]-2 > -1:
-               if (locationChec[currentSpot[0]+2][currentSpot[1]-2] == " " and
-                     (locationChec[currentSpot[0]][currentSpot[1]] == "black" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and
-                     locationChec[currentSpot[0]+1][currentSpot[1]-1][:3] == turnChec[:3]):
+            if currentSpot[0]+2 < 8 and currentSpot[1]-2 > -1: #if its not going too far down or left
+               if (locationChec[currentSpot[0]+2][currentSpot[1]-2] == " " and #if down-left is empty
+                     (locationChec[currentSpot[0]][currentSpot[1]] == "black" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and #and a black (down) or a king (all)
+                     locationChec[currentSpot[0]+1][currentSpot[1]-1][:3] == turnChec[:3]): #and middle has a variant of opposition
                   locationChec[currentSpot[0]+2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
                   locationChec[currentSpot[0]+1][currentSpot[1]-1] = " "
                   locationChec[currentSpot[0]][currentSpot[1]] = " "
@@ -2913,10 +2915,10 @@ def clickChec(row, column):
                   currentSpot = (currentSpot[0]+2, currentSpot[1]-2)
                   continue
 
-            if currentSpot[0]-2 > -1 and currentSpot[1]-2 > -1:
-               if (locationChec[currentSpot[0]-2][currentSpot[1]-2] == " " and
-                     (locationChec[currentSpot[0]][currentSpot[1]] == "red" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and
-                     locationChec[currentSpot[0]-1][currentSpot[1]-1][:3] == turnChec[:3]):
+            if currentSpot[0]-2 > -1 and currentSpot[1]-2 > -1: #if its not going too far up or left
+               if (locationChec[currentSpot[0]-2][currentSpot[1]-2] == " " and #if up-left is empty
+                     (locationChec[currentSpot[0]][currentSpot[1]] == "red" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and #and a red (up) or a king (all)
+                     locationChec[currentSpot[0]-1][currentSpot[1]-1][:3] == turnChec[:3]): #and middle has a variant of opposition
                   locationChec[currentSpot[0]-2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
                   locationChec[currentSpot[0]-1][currentSpot[1]-1] = " "
                   locationChec[currentSpot[0]][currentSpot[1]] = " "
@@ -2928,36 +2930,36 @@ def clickChec(row, column):
                   currentSpot = (currentSpot[0]-2, currentSpot[1]-2)
                   continue
                
-            break
+            break #end the loop
             
-      elif row == baseChec[0] and column == baseChec[1]:
-         reloadChec(baseChec[0], baseChec[1])
-         baseChec = [-1, -1]
+      elif row == baseChec[0] and column == baseChec[1]: #if clicked the base
+         reloadChec(baseChec[0], baseChec[1]) #reloads the base
+         baseChec = [-1, -1] #unclicks the base
          
       else:
-         errorChec.config(text = "You cannot\nmove there.")
-         reloadChec(baseChec[0], baseChec[1])
-         baseChec = [-1, -1]
+         errorChec.config(text = "You cannot\nmove there.") #if a spot that is not in any of the above
+         reloadChec(baseChec[0], baseChec[1]) #gets rid of base
+         baseChec = [-1, -1] #unclicks the base
 
-   blackEnd = True
+   blackEnd = True #checks for end game (black)
    for r in range(8):
       for c in range(8):
-         if locationChec[r][c] == "black" or locationChec[r][c] == "blackKing":
-            blackEnd = False
-   if blackEnd == True:
+         if locationChec[r][c] == "black" or locationChec[r][c] == "blackKing": #if any black left
+            blackEnd = False #no end
+   if blackEnd == True: #if no black, red wins
       errorChec.config(text = "Red wins!")
       buttonHow.config(text = "Play Again", command = lambda: newGameChec())
-   else:
-      if oneChec == True and turnChec == "black":
-         aiChec()
-         turnChec = "red"
+   else: #if red did not win
+      if oneChec == True and turnChec == "black": #if single player
+         aiChec() #trigger AI
+         turnChec = "red" #changes to red
          
-      redEnd = True
+      redEnd = True #the checks for red
       for r in range(8):
          for c in range(8):
-            if locationChec[r][c] == "red" or locationChec[r][c] == "redKing":
-               redEnd = False
-      if redEnd == True:
+            if locationChec[r][c] == "red" or locationChec[r][c] == "redKing": #if any red left
+               redEnd = False #no end
+      if redEnd == True: #if black won
          errorChec.config(text = "Black wins!")
          buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
@@ -3104,14 +3106,14 @@ def aiChec():
       errorChec.config(text = "Red wins!")
       buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
-def reloadChec(row, column):
+def reloadChec(row, column): #reloads an individual space
    global buttonsChec, spotChec
-   if row == 0 and locationChec[row][column] == "red":
+   if row == 0 and locationChec[row][column] == "red": #if at the top, turn to king
       locationChec[row][column] = "redKing"
-   if row == 7 and locationChec[row][column] == "black":
+   if row == 7 and locationChec[row][column] == "black": #if at the bottom, turn to king
       locationChec[row][column] = "blackKing"
       
-   if locationChec[row][column] == "red":
+   if locationChec[row][column] == "red": #reloads with new images
       spotChec[row][column] = redImgChec
    elif locationChec[row][column] == "black":
       spotChec[row][column] = blackImgChec
@@ -3121,7 +3123,7 @@ def reloadChec(row, column):
       spotChec[row][column] = kingBlackImgChec
    else:
       spotChec[row][column] = ""
-   buttonsChec[row][column].config(image = spotChec[row][column], bg = "LightSalmon4")
+   buttonsChec[row][column].config(image = spotChec[row][column], bg = "LightSalmon4") #changes the colour back to how it was before for base
    master.update()
 
 #################################################################################################### Checkers end
