@@ -2714,7 +2714,7 @@ def howToPlayChec():
    frameSu2.grid(row=2, columnspan=2, sticky="nsew")
    frameSu2.propagate(False)
 
-   tk.Label(frameSu1, bg = "white smoke", font = "Helvetica " + str(screenHeight//37) + " bold", text="""
+   tk.Label(frameSu1, bg = "white smoke", font = "Helvetica " + str(screenHeight//40) + " bold", text="""
 
 Program specific instructions
 
@@ -2722,7 +2722,7 @@ Program specific instructions
 2. Checkers automatically are taken off the board, and crowned at the end of the board.
 3. If a second jump is available, then the game will automatically take it.""").pack(expand=True, fill="both")
 
-   tk.Label(frameSu2, bg = "white smoke", font = "Helvetica " + str(screenHeight//50), text="""Rules to Game:
+   tk.Label(frameSu2, bg = "white smoke", font = "Helvetica " + str(screenHeight//55), text="""Rules to Game:
 
 Checkers is played on a standard 64 square board. Only the 32 dark colored squares are used in play.
 Each player begins the game with 12 pieces, or checkers, placed in the three rows closest to them. 
@@ -2830,10 +2830,12 @@ def clickChec(row, column):
    elif baseChec[0] < 0:
       errorChec.config(text = "It is "+turnChec+"'s turn.")
    else:
-      if locationChec[row][column] == " " and ((locationChec[baseChec[0]][baseChec[1]] == "red" and row == baseChec[0] - 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))
-            or (locationChec[baseChec[0]][baseChec[1]] == "black" and row == baseChec[0] + 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))):
+      if locationChec[row][column] == " " and (((locationChec[baseChec[0]][baseChec[1]] == "red" or locationChec[baseChec[0]][baseChec[1]][-4:] == "King") and
+               row == baseChec[0] - 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))
+            or ((locationChec[baseChec[0]][baseChec[1]] == "black" or locationChec[baseChec[0]][baseChec[1]][-4:] == "King") and
+               row == baseChec[0] + 1 and (column == baseChec[1] - 1 or column == baseChec[1] + 1))):
+         locationChec[row][column] = locationChec[baseChec[0]][baseChec[1]]
          locationChec[baseChec[0]][baseChec[1]] = " "
-         locationChec[row][column] = turnChec
          reloadChec(baseChec[0], baseChec[1])
          reloadChec(row, column)
          baseChec = [-1, -1]
@@ -2842,125 +2844,34 @@ def clickChec(row, column):
          else:
             turnChec = "red"
 
-      elif locationChec[row][column] == " " and ((locationChec[baseChec[0]][baseChec[1]] == "redKing" and
-               (row == baseChec[0] - 1 or row == baseChec[0] + 1) and (column == baseChec[1] - 1 or column == baseChec[1] + 1))
-            or (locationChec[baseChec[0]][baseChec[1]]== "blackKing" and
-               (row == baseChec[0] - 1 or row == baseChec[0] + 1) and (column == baseChec[1] - 1 or column == baseChec[1] + 1))):
-         locationChec[baseChec[0]][baseChec[1]] = " "
-         locationChec[row][column] = turnChec+"King"
-         reloadChec(baseChec[0], baseChec[1])
-         reloadChec(row, column)
-         baseChec = [-1, -1]
-         if turnChec == "red":
-            turnChec = "black"
-         else:
-            turnChec = "red"
-
-      elif locationChec[row][column] == " " and ((locationChec[baseChec[0]][baseChec[1]] == "red" and
-               row == baseChec[0] - 2 and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
-               (locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "black" or locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "blackKing"))
-            or (locationChec[baseChec[0]][baseChec[1]] == "black" and
-               row == baseChec[0] + 2 and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
-               (locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "red" or locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "redKing"))):
-         locationChec[baseChec[0]][baseChec[1]] = " "
-         locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] = " "
-         locationChec[row][column] = turnChec
-         reloadChec(baseChec[0], baseChec[1])
-         reloadChec(row, column)
-         time.sleep(.2)
-         reloadChec((baseChec[0]+row)//2, (baseChec[1]+column)//2)
-         baseChec = [-1, -1]
-
-         if turnChec == "red":
-            turnChec = "black"
-         else:
-            turnChec = "red"
-
-         currentSpot = (row, column)
-         while True:
-               if currentSpot[0]+2 < 8 and currentSpot[1]+2 < 8:
-                  if (locationChec[currentSpot[0]+2][currentSpot[1]+2] == " " and turnChec == "red" and
-                        (locationChec[currentSpot[0]+1][currentSpot[1]+1] == turnChec or locationChec[currentSpot[0]+1][currentSpot[1]+1] == turnChec+"King")):
-                     locationChec[currentSpot[0]+2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
-                     locationChec[currentSpot[0]+1][currentSpot[1]+1] = " "
-                     locationChec[currentSpot[0]][currentSpot[1]] = " "
-                     time.sleep(.2)
-                     reloadChec(currentSpot[0]+2, currentSpot[1]+2)
-                     reloadChec(currentSpot[0], currentSpot[1])
-                     time.sleep(.2)
-                     reloadChec(currentSpot[0]+1, currentSpot[1]+1)
-                     currentSpot = (currentSpot[0]+2, currentSpot[1]+2)
-                     continue
-
-               if currentSpot[0]-2 > -1 and currentSpot[1]+2 < 8:
-                  if (locationChec[currentSpot[0]-2][currentSpot[1]+2] == " " and turnChec == "black" and
-                        (locationChec[currentSpot[0]-1][currentSpot[1]+1] == turnChec or locationChec[currentSpot[0]-1][currentSpot[1]+1] == turnChec+"King")):
-                     locationChec[currentSpot[0]-2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
-                     locationChec[currentSpot[0]-1][currentSpot[1]+1] = " "
-                     locationChec[currentSpot[0]][currentSpot[1]] = " "
-                     time.sleep(.2)
-                     reloadChec(currentSpot[0]-2, currentSpot[1]+2)
-                     reloadChec(currentSpot[0], currentSpot[1])
-                     time.sleep(.2)
-                     reloadChec(currentSpot[0]-1, currentSpot[1]+1)
-                     currentSpot = (currentSpot[0]-2, currentSpot[1]+2)
-                     continue
-
-               if currentSpot[0]+2 < 8 and currentSpot[1]-2 > -1:
-                  if (locationChec[currentSpot[0]+2][currentSpot[1]-2] == " " and turnChec == "red" and
-                        (locationChec[currentSpot[0]+1][currentSpot[1]-1] == turnChec or locationChec[currentSpot[0]+1][currentSpot[1]-1] == turnChec+"King")):
-                     locationChec[currentSpot[0]+2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
-                     locationChec[currentSpot[0]+1][currentSpot[1]-1] = " "
-                     locationChec[currentSpot[0]][currentSpot[1]] = " "
-                     time.sleep(.2)
-                     reloadChec(currentSpot[0]+2, currentSpot[1]-2)
-                     reloadChec(currentSpot[0], currentSpot[1])
-                     time.sleep(.2)
-                     reloadChec(currentSpot[0]+1, currentSpot[1]-1)
-                     currentSpot = (currentSpot[0]+2, currentSpot[1]-2)
-                     continue
-
-               if currentSpot[0]-2 > -1 and currentSpot[1]-2 > -1:
-                  if (locationChec[currentSpot[0]-2][currentSpot[1]-2] == " " and turnChec == "black" and
-                        (locationChec[currentSpot[0]-1][currentSpot[1]-1] == turnChec or locationChec[currentSpot[0]-1][currentSpot[1]-1] == turnChec+"King")):
-                     locationChec[currentSpot[0]-2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
-                     locationChec[currentSpot[0]-1][currentSpot[1]-1] = " "
-                     locationChec[currentSpot[0]][currentSpot[1]] = " "
-                     time.sleep(.2)
-                     reloadChec(currentSpot[0]-2, currentSpot[1]-2)
-                     reloadChec(currentSpot[0], currentSpot[1])
-                     time.sleep(.2)
-                     reloadChec(currentSpot[0]-1, currentSpot[1]-1)
-                     currentSpot = (currentSpot[0]-2, currentSpot[1]-2)
-                     continue
-                  
-               break
-
-      elif locationChec[row][column] == " " and ((locationChec[baseChec[0]][baseChec[1]] == "redKing" and
-               (row == baseChec[0] + 2 or row == baseChec[0] - 2) and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
-               (locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "black" or locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "blackKing"))
-            or (locationChec[baseChec[0]][baseChec[1]] == "blackKing" and
-               (row == baseChec[0] + 2 or row == baseChec[0] - 2) and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
-               (locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "red" or locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] == "redKing"))):   
-         locationChec[baseChec[0]][baseChec[1]] = " "
-         locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] = " "
-         locationChec[row][column] = turnChec+"King"
-         reloadChec(baseChec[0], baseChec[1])
-         reloadChec(row, column)
-         time.sleep(.2)
-         reloadChec((baseChec[0]+row)//2, (baseChec[1]+column)//2)
-         baseChec = [-1, -1]
+      elif locationChec[row][column] == " " and ((locationChec[baseChec[0]][baseChec[1]][:3] == "red" and
+               (row == baseChec[0] - 2 or locationChec[baseChec[0]][baseChec[1]] == "redKing") and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
+               locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2][:5] == "black")
+            or (locationChec[baseChec[0]][baseChec[1]][:5] == "black" and
+               (row == baseChec[0] + 2 or locationChec[baseChec[0]][baseChec[1]] == "blackKing") and (column == baseChec[1] + 2 or column == baseChec[1] - 2) and
+               locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2][:3] == "red")):
          
+         locationChec[row][column] = locationChec[baseChec[0]][baseChec[1]]
+         locationChec[(baseChec[0]+row)//2][(baseChec[1]+column)//2] = " "
+         locationChec[baseChec[0]][baseChec[1]] = " "
+         reloadChec(baseChec[0], baseChec[1])
+         reloadChec(row, column)
+         time.sleep(.2)
+         reloadChec((baseChec[0]+row)//2, (baseChec[1]+column)//2)
+         baseChec = [-1, -1]
+
          if turnChec == "red":
             turnChec = "black"
          else:
             turnChec = "red"
-            
+
          currentSpot = (row, column)
          while True:
+           
             if currentSpot[0]+2 < 8 and currentSpot[1]+2 < 8:
                if (locationChec[currentSpot[0]+2][currentSpot[1]+2] == " " and
-                     (locationChec[currentSpot[0]+1][currentSpot[1]+1] == turnChec or locationChec[currentSpot[0]+1][currentSpot[1]+1] == turnChec+"King")):
+                     (locationChec[currentSpot[0]][currentSpot[1]] == "black" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and
+                     locationChec[currentSpot[0]+1][currentSpot[1]+1][:3] == turnChec[:3]):
                   locationChec[currentSpot[0]+2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
                   locationChec[currentSpot[0]+1][currentSpot[1]+1] = " "
                   locationChec[currentSpot[0]][currentSpot[1]] = " "
@@ -2974,7 +2885,8 @@ def clickChec(row, column):
 
             if currentSpot[0]-2 > -1 and currentSpot[1]+2 < 8:
                if (locationChec[currentSpot[0]-2][currentSpot[1]+2] == " " and
-                     (locationChec[currentSpot[0]-1][currentSpot[1]+1] == turnChec or locationChec[currentSpot[0]-1][currentSpot[1]+1] == turnChec+"King")):
+                     (locationChec[currentSpot[0]][currentSpot[1]] == "red" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and
+                     locationChec[currentSpot[0]-1][currentSpot[1]+1][:3] == turnChec[:3]):
                   locationChec[currentSpot[0]-2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
                   locationChec[currentSpot[0]-1][currentSpot[1]+1] = " "
                   locationChec[currentSpot[0]][currentSpot[1]] = " "
@@ -2988,7 +2900,8 @@ def clickChec(row, column):
 
             if currentSpot[0]+2 < 8 and currentSpot[1]-2 > -1:
                if (locationChec[currentSpot[0]+2][currentSpot[1]-2] == " " and
-                     (locationChec[currentSpot[0]+1][currentSpot[1]-1] == turnChec or locationChec[currentSpot[0]+1][currentSpot[1]-1] == turnChec+"King")):
+                     (locationChec[currentSpot[0]][currentSpot[1]] == "black" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and
+                     locationChec[currentSpot[0]+1][currentSpot[1]-1][:3] == turnChec[:3]):
                   locationChec[currentSpot[0]+2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
                   locationChec[currentSpot[0]+1][currentSpot[1]-1] = " "
                   locationChec[currentSpot[0]][currentSpot[1]] = " "
@@ -3002,7 +2915,8 @@ def clickChec(row, column):
 
             if currentSpot[0]-2 > -1 and currentSpot[1]-2 > -1:
                if (locationChec[currentSpot[0]-2][currentSpot[1]-2] == " " and
-                     (locationChec[currentSpot[0]-1][currentSpot[1]-1] == turnChec or locationChec[currentSpot[0]-1][currentSpot[1]-1] == turnChec+"King")):
+                     (locationChec[currentSpot[0]][currentSpot[1]] == "red" or locationChec[currentSpot[0]][currentSpot[1]][-4:] == "King") and
+                     locationChec[currentSpot[0]-1][currentSpot[1]-1][:3] == turnChec[:3]):
                   locationChec[currentSpot[0]-2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
                   locationChec[currentSpot[0]-1][currentSpot[1]-1] = " "
                   locationChec[currentSpot[0]][currentSpot[1]] = " "
@@ -3013,7 +2927,7 @@ def clickChec(row, column):
                   reloadChec(currentSpot[0]-1, currentSpot[1]-1)
                   currentSpot = (currentSpot[0]-2, currentSpot[1]-2)
                   continue
-                  
+               
             break
             
       elif row == baseChec[0] and column == baseChec[1]:
@@ -3055,7 +2969,6 @@ def aiChec():
       for c in range(8):
          if locationChec[r][c] == "black" or locationChec[r][c] == "blackKing":
             blackSpots.append(str(r)+str(c))
-   print(blackSpots)
    
    singleSpots = []
    for checkers in blackSpots:
@@ -3071,7 +2984,6 @@ def aiChec():
       if int(checkers[0]) > 0 and int(checkers[1]) > 0 and locationChec[int(checkers[0])][int(checkers[1])] == "blackKing":
          if locationChec[int(checkers[0])-1][int(checkers[1])-1] == " ":
             singleSpots.append(checkers+str(int(checkers[0])-1)+str(int(checkers[1])-1))
-   print(singleSpots)
 
    jumpSpots = []
    for checkers in blackSpots:
@@ -3087,7 +2999,6 @@ def aiChec():
       if int(checkers[0]) > 1 and int(checkers[1]) > 1 and locationChec[int(checkers[0])][int(checkers[1])] == "blackKing":
          if locationChec[int(checkers[0])-2][int(checkers[1])-2] == " " and (locationChec[int(checkers[0])-1][int(checkers[1])-1] == "red" or locationChec[int(checkers[0])-1][int(checkers[1])-1] == "redKing"):
             jumpSpots.append(checkers+str(int(checkers[0])-2)+str(int(checkers[1])-2))
-   print(jumpSpots)
 
    for checkers in jumpSpots:
       if int(checkers[2]) < 6 and int(checkers[3]) < 6:
@@ -3111,33 +3022,78 @@ def aiChec():
                jumpSpots = []
             jumpSpots.append(checkers+str(int(checkers[2])-2)+str(int(checkers[3])-2))
 
-
+   time.sleep(.35)
    if False == (jumpSpots == []):
       pick = random.randint(0, len(jumpSpots)-1)
-      if len(jumpSpots[pick]) == 6:
-         time.sleep(.3)
-         pick = random.randint(0, len(jumpSpots)-1)
-         locationChec[int(jumpSpots[pick][2])][int(jumpSpots[pick][3])] = locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])]
-         locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])] = " "
-         locationChec[(int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2][(int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2] = " "
-         reloadChec(int(jumpSpots[pick][0]), int(jumpSpots[pick][1]))
-         reloadChec(int(jumpSpots[pick][2]), int(jumpSpots[pick][3]))
-         time.sleep(.2)
-         reloadChec((int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2, (int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2)
-         
-      else:
-         time.sleep(.3)
-         pick = random.randint(0, len(jumpSpots)-1)
-         locationChec[int(jumpSpots[pick][2])][int(jumpSpots[pick][3])] = locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])]
-         locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])] = " "
-         locationChec[(int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2][(int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2] = " "
-         reloadChec(int(jumpSpots[pick][0]), int(jumpSpots[pick][1]))
-         reloadChec(int(jumpSpots[pick][2]), int(jumpSpots[pick][3]))
-         time.sleep(.2)
-         reloadChec((int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2, (int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2)
+      locationChec[int(jumpSpots[pick][2])][int(jumpSpots[pick][3])] = locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])]
+      locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])] = " "
+      locationChec[(int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2][(int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2] = " "
+      reloadChec(int(jumpSpots[pick][0]), int(jumpSpots[pick][1]))
+      reloadChec(int(jumpSpots[pick][2]), int(jumpSpots[pick][3]))
+      time.sleep(.2)
+      reloadChec((int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2, (int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2)
+
+      currentSpot = (int(jumpSpots[pick][2]), int(jumpSpots[pick][3]))
+      while True:
+         if currentSpot[0]+2 < 8 and currentSpot[1]+2 < 8:
+            if (locationChec[currentSpot[0]+2][currentSpot[1]+2] == " " and
+                  locationChec[currentSpot[0]+1][currentSpot[1]+1][0:3] == "red"):
+               locationChec[currentSpot[0]+2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
+               locationChec[currentSpot[0]+1][currentSpot[1]+1] = " "
+               locationChec[currentSpot[0]][currentSpot[1]] = " "
+               time.sleep(.2)
+               reloadChec(currentSpot[0]+2, currentSpot[1]+2)
+               reloadChec(currentSpot[0], currentSpot[1])
+               time.sleep(.2)
+               reloadChec(currentSpot[0]+1, currentSpot[1]+1)
+               currentSpot = (currentSpot[0]+2, currentSpot[1]+2)
+               continue
+
+         if currentSpot[0]-2 > -1 and currentSpot[1]+2 < 8:
+            if (locationChec[currentSpot[0]-2][currentSpot[1]+2] == " " and locationChec[currentSpot[0]][currentSpot[1]] == "blackKing" and
+                  locationChec[currentSpot[0]-1][currentSpot[1]+1][0:3] == "red"):
+               locationChec[currentSpot[0]-2][currentSpot[1]+2] = locationChec[currentSpot[0]][currentSpot[1]]
+               locationChec[currentSpot[0]-1][currentSpot[1]+1] = " "
+               locationChec[currentSpot[0]][currentSpot[1]] = " "
+               time.sleep(.2)
+               reloadChec(currentSpot[0]-2, currentSpot[1]+2)
+               reloadChec(currentSpot[0], currentSpot[1])
+               time.sleep(.2)
+               reloadChec(currentSpot[0]-1, currentSpot[1]+1)
+               currentSpot = (currentSpot[0]-2, currentSpot[1]+2)
+               continue
+
+         if currentSpot[0]+2 < 8 and currentSpot[1]-2 > -1:
+            if (locationChec[currentSpot[0]+2][currentSpot[1]-2] == " " and
+                  locationChec[currentSpot[0]+1][currentSpot[1]-1][0:3] == "red"):
+               locationChec[currentSpot[0]+2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
+               locationChec[currentSpot[0]+1][currentSpot[1]-1] = " "
+               locationChec[currentSpot[0]][currentSpot[1]] = " "
+               time.sleep(.2)
+               reloadChec(currentSpot[0]+2, currentSpot[1]-2)
+               reloadChec(currentSpot[0], currentSpot[1])
+               time.sleep(.2)
+               reloadChec(currentSpot[0]+1, currentSpot[1]-1)
+               currentSpot = (currentSpot[0]+2, currentSpot[1]-2)
+               continue
+
+         if currentSpot[0]-2 > -1 and currentSpot[1]-2 > -1:
+            if (locationChec[currentSpot[0]-2][currentSpot[1]-2] == " " and locationChec[currentSpot[0]][currentSpot[1]] == "blackKing" and
+                  locationChec[currentSpot[0]-1][currentSpot[1]-1][0:3] == "red"):
+               locationChec[currentSpot[0]-2][currentSpot[1]-2] = locationChec[currentSpot[0]][currentSpot[1]]
+               locationChec[currentSpot[0]-1][currentSpot[1]-1] = " "
+               locationChec[currentSpot[0]][currentSpot[1]] = " "
+               time.sleep(.2)
+               reloadChec(currentSpot[0]-2, currentSpot[1]-2)
+               reloadChec(currentSpot[0], currentSpot[1])
+               time.sleep(.2)
+               reloadChec(currentSpot[0]-1, currentSpot[1]-1)
+               currentSpot = (currentSpot[0]-2, currentSpot[1]-2)
+               continue
+               
+         break
       
    elif False == (singleSpots == []):
-      time.sleep(.3)
       pick = random.randint(0, len(singleSpots)-1)
       locationChec[int(singleSpots[pick][2])][int(singleSpots[pick][3])] = locationChec[int(singleSpots[pick][0])][int(singleSpots[pick][1])]
       locationChec[int(singleSpots[pick][0])][int(singleSpots[pick][1])] = " "
