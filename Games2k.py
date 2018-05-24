@@ -2653,7 +2653,7 @@ def end21(result):
 #This was created to play checkers either multiplayer or against AI
 #
 
-#Next steps are to add AI and leaderboards
+#Next step is to add leaderboards (once got a slight error in aingle move AI (down-right near beginning), but have not been able to trigger it again)
 
 #Checkers: Global variables and functions normally have a "Chec" at the end incase another game uses similar variables later on or earlier on.
 #
@@ -2963,35 +2963,51 @@ def clickChec(row, column):
          errorChec.config(text = "Black wins!")
          buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
-def aiChec():
+def aiChec(): #this function does the play for AI
    global errorChec, buttonHow, locationChec
    
-   blackSpots = []
+   blackSpots = [] #this is  alist of all black pieces
    for r in range(8):
       for c in range(8):
-         if locationChec[r][c] == "black" or locationChec[r][c] == "blackKing":
-            blackSpots.append(str(r)+str(c))
+         if locationChec[r][c][:5] == "black": #if a black piece
+            blackSpots.append(str(r)+str(c)) #add to the list (in a string)
    
-   singleSpots = []
-   for checkers in blackSpots:
+   singleSpots = [] #checks for any single moves
+   for checkers in blackSpots: #for every black piece
       if int(checkers[0]) < 7 and int(checkers[1]) < 7:
-         if locationChec[int(checkers[0])+1][int(checkers[1])+1] == " ":
+         if locationChec[int(checkers[0])+1][int(checkers[1])+1] == " ": #checks down right
             singleSpots.append(checkers+str(int(checkers[0])+1)+str(int(checkers[1])+1))
       if int(checkers[0]) < 7 and int(checkers[1]) > 0:
-         if locationChec[int(checkers[0])+1][int(checkers[1])-1] == " ":
+         if locationChec[int(checkers[0])+1][int(checkers[1])-1] == " ": #checks down left
             singleSpots.append(checkers+str(int(checkers[0])+1)+str(int(checkers[1])-1))
-      if int(checkers[0]) > 0 and int(checkers[1]) < 7 and locationChec[int(checkers[0])][int(checkers[1])] == "blackKing":
-         if locationChec[int(checkers[0])-1][int(checkers[1])+1] == " ":
+      if int(checkers[0]) > 0 and int(checkers[1]) < 7 and locationChec[int(checkers[0])][int(checkers[1])] == "blackKing": #if king
+         if locationChec[int(checkers[0])-1][int(checkers[1])+1] == " ": #checks up right
             singleSpots.append(checkers+str(int(checkers[0])-1)+str(int(checkers[1])+1))
-      if int(checkers[0]) > 0 and int(checkers[1]) > 0 and locationChec[int(checkers[0])][int(checkers[1])] == "blackKing":
-         if locationChec[int(checkers[0])-1][int(checkers[1])-1] == " ":
+      if int(checkers[0]) > 0 and int(checkers[1]) > 0 and locationChec[int(checkers[0])][int(checkers[1])] == "blackKing": #if king
+         if locationChec[int(checkers[0])-1][int(checkers[1])-1] == " ": #checks up left
             singleSpots.append(checkers+str(int(checkers[0])-1)+str(int(checkers[1])-1))
 
-   jumpSpots = []
-   for checkers in blackSpots:
+   betterSpots = [] #checks for spots where the black spots wont be destroyed
+   for checkers in singleSpots:
+      if int(checkers[2]) < 7 and int(checkers[3]) < 7 and int(checkers[2]) > 0 and int(checkers[3]) > 0: #checks if not touching a wall
+         if ((locationChec[int(checkers[2])+1][int(checkers[3])+1][:3] == "red" and (locationChec[int(checkers[2])-1][int(checkers[3])-1] == " " or #if can be jumped up-down, right-left
+                  (int(checkers[2])-1 == int(checkers[0]) and int(checkers[3])-1 == int(checkers[1])))) or
+               (locationChec[int(checkers[2])-1][int(checkers[3])-1] == "redKing" and (locationChec[int(checkers[2])+1][int(checkers[3])+1] == " " or #or can be jumped down-up, left-right
+                  (int(checkers[2])+1 == int(checkers[0]) and int(checkers[3])+1 == int(checkers[1])))) or
+               (locationChec[int(checkers[2])-1][int(checkers[3])+1] == "redKing" and (locationChec[int(checkers[2])+1][int(checkers[3])-1] == " " or #or can be jumped down-up, right-left
+                  (int(checkers[2])+1 == int(checkers[0]) and int(checkers[3])-1 == int(checkers[1])))) or
+               (locationChec[int(checkers[2])+1][int(checkers[3])-1][:3] == "red" and (locationChec[int(checkers[2])-1][int(checkers[3])+1] == " " or #or can be jumped up-down, left-right
+                  (int(checkers[2])-1 == int(checkers[0]) and int(checkers[3])+1 == int(checkers[1]))))):
+            break #if any of these are True, do not add this one
+      betterSpots.append(checkers) #else, add it to the list
+   if False == (betterSpots == []): #if the list isnt empty
+      singleSpots = betterSpots [:] #replace the singleSpots
+
+   jumpSpots = [] #checks for any places where a piece can be taken
+   for checkers in blackSpots: #goes through all black spots
       if int(checkers[0]) < 6 and int(checkers[1]) < 6:
          if locationChec[int(checkers[0])+2][int(checkers[1])+2] == " " and (locationChec[int(checkers[0])+1][int(checkers[1])+1] == "red" or locationChec[int(checkers[0])+1][int(checkers[1])+1] == "redKing"):
-            jumpSpots.append(checkers+str(int(checkers[0])+2)+str(int(checkers[1])+2))
+            jumpSpots.append(checkers+str(int(checkers[0])+2)+str(int(checkers[1])+2)) #add the jump (4 letter string) to the list
       if int(checkers[0]) < 6 and int(checkers[1]) > 1:
          if locationChec[int(checkers[0])+2][int(checkers[1])-2] == " " and (locationChec[int(checkers[0])+1][int(checkers[1])-1] == "red" or locationChec[int(checkers[0])+1][int(checkers[1])-1] == "redKing"):
             jumpSpots.append(checkers+str(int(checkers[0])+2)+str(int(checkers[1])-2))
@@ -3002,12 +3018,12 @@ def aiChec():
          if locationChec[int(checkers[0])-2][int(checkers[1])-2] == " " and (locationChec[int(checkers[0])-1][int(checkers[1])-1] == "red" or locationChec[int(checkers[0])-1][int(checkers[1])-1] == "redKing"):
             jumpSpots.append(checkers+str(int(checkers[0])-2)+str(int(checkers[1])-2))
 
-   for checkers in jumpSpots:
+   for checkers in jumpSpots: #for all possible 1 knockout jumps, checks for any more possible
       if int(checkers[2]) < 6 and int(checkers[3]) < 6:
          if locationChec[int(checkers[2])+2][int(checkers[3])+2] == " " and (locationChec[int(checkers[2])+1][int(checkers[3])+1] == "red" or locationChec[int(checkers[2])+1][int(checkers[3])+1] == "redKing"):
-            if len(jumpSpots[0]) == 4:
-               jumpSpots = []
-            jumpSpots.append(checkers+str(int(checkers[2])+2)+str(int(checkers[3])+2))
+            if len(jumpSpots[0]) == 4: #if currently only single jumps
+               jumpSpots = [] #reset all jumps
+            jumpSpots.append(checkers+str(int(checkers[2])+2)+str(int(checkers[3])+2)) #add this double jump (letter string)
       if int(checkers[2]) < 6 and int(checkers[3]) > 1:
          if locationChec[int(checkers[2])+2][int(checkers[3])-2] == " " and (locationChec[int(checkers[2])+1][int(checkers[3])-1] == "red" or locationChec[int(checkers[2])+1][int(checkers[3])-1] == "redKing"):
             if len(jumpSpots[0]) == 4:
@@ -3024,10 +3040,26 @@ def aiChec():
                jumpSpots = []
             jumpSpots.append(checkers+str(int(checkers[2])-2)+str(int(checkers[3])-2))
 
-   time.sleep(.35)
-   if False == (jumpSpots == []):
-      pick = random.randint(0, len(jumpSpots)-1)
-      locationChec[int(jumpSpots[pick][2])][int(jumpSpots[pick][3])] = locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])]
+   betterSpots = [] #checks for better jump (or double jump) spots
+   for checkers in jumpSpots:
+      if int(checkers[2]) < 7 and int(checkers[3]) < 7 and int(checkers[2]) > 0 and int(checkers[3]) > 0: #same as above code, but...
+         if ((locationChec[int(checkers[2])+1][int(checkers[3])+1][:3] == "red" and (locationChec[int(checkers[2])-1][int(checkers[3])-1] == " " or
+                  (int(checkers[2])-1 == (int(checkers[0])+int(checkers[2]))//2 and int(checkers[3])-1 == (int(checkers[1])+int(checkers[3]))//2))) or #checks for middle of start and end, nstead of just start
+               (locationChec[int(checkers[2])-1][int(checkers[3])-1] == "redKing" and (locationChec[int(checkers[2])+1][int(checkers[3])+1] == " " or #because now jumping (2 moves) instead of just sliding (1 spot)
+                  (int(checkers[2])+1 == (int(checkers[0])+int(checkers[2]))//2 and int(checkers[3])+1 == (int(checkers[1])+int(checkers[3]))//2))) or
+               (locationChec[int(checkers[2])-1][int(checkers[3])+1] == "redKing" and (locationChec[int(checkers[2])+1][int(checkers[3])-1] == " " or
+                  (int(checkers[2])+1 == (int(checkers[0])+int(checkers[2]))//2 and int(checkers[3])-1 == (int(checkers[1])+int(checkers[3]))//2))) or
+               (locationChec[int(checkers[2])+1][int(checkers[3])-1][:3] == "red" and (locationChec[int(checkers[2])-1][int(checkers[3])+1] == " " or
+                  (int(checkers[2])-1 == (int(checkers[0])+int(checkers[2]))//2 and int(checkers[3])+1 == (int(checkers[1])+int(checkers[3]))//2)))):
+            break
+      betterSpots.append(checkers)
+   if False == (betterSpots == []):
+      jumpSpots = betterSpots [:]
+
+   time.sleep(.35) #slight delay (to make it look like AI is thinking)
+   if False == (jumpSpots == []): #if not empty (can jump over)
+      pick = random.randint(0, len(jumpSpots)-1) #picks a random move out of the choices
+      locationChec[int(jumpSpots[pick][2])][int(jumpSpots[pick][3])] = locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])] #makes the play
       locationChec[int(jumpSpots[pick][0])][int(jumpSpots[pick][1])] = " "
       locationChec[(int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2][(int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2] = " "
       reloadChec(int(jumpSpots[pick][0]), int(jumpSpots[pick][1]))
@@ -3035,8 +3067,8 @@ def aiChec():
       time.sleep(.2)
       reloadChec((int(jumpSpots[pick][0])+int(jumpSpots[pick][2]))//2, (int(jumpSpots[pick][1])+int(jumpSpots[pick][3]))//2)
 
-      currentSpot = (int(jumpSpots[pick][2]), int(jumpSpots[pick][3]))
-      while True:
+      currentSpot = (int(jumpSpots[pick][2]), int(jumpSpots[pick][3])) #then loops for any other choices
+      while True: #this is an identical loop to what is in the user function, just a bit smaller if statement
          if currentSpot[0]+2 < 8 and currentSpot[1]+2 < 8:
             if (locationChec[currentSpot[0]+2][currentSpot[1]+2] == " " and
                   locationChec[currentSpot[0]+1][currentSpot[1]+1][0:3] == "red"):
@@ -3095,15 +3127,15 @@ def aiChec():
                
          break
       
-   elif False == (singleSpots == []):
-      pick = random.randint(0, len(singleSpots)-1)
-      locationChec[int(singleSpots[pick][2])][int(singleSpots[pick][3])] = locationChec[int(singleSpots[pick][0])][int(singleSpots[pick][1])]
+   elif False == (singleSpots == []): #if not empty (single moves)
+      pick = random.randint(0, len(singleSpots)-1) #choses a random spot in the list
+      locationChec[int(singleSpots[pick][2])][int(singleSpots[pick][3])] = locationChec[int(singleSpots[pick][0])][int(singleSpots[pick][1])] #moves it
       locationChec[int(singleSpots[pick][0])][int(singleSpots[pick][1])] = " "
       reloadChec(int(singleSpots[pick][0]), int(singleSpots[pick][1]))
       reloadChec(int(singleSpots[pick][2]), int(singleSpots[pick][3]))
       
-   else:
-      errorChec.config(text = "Red wins!")
+   else: #if no single moves
+      errorChec.config(text = "Red wins!") #game is over
       buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
 def reloadChec(row, column): #reloads an individual space
