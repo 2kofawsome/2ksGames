@@ -1309,13 +1309,13 @@ def solvedBoardSu(number):
    return hiddenSu #returns the board
 
 def generateSu(difficulty):
-   global shownSu, staticSu, hiddenSu
+   global shownSu, staticSu, hiddenSu, mistakeSu
 
    fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its working see "CreateBoardsSudoku.py"
 
    hiddenSu = solvedBoardSu(random.randint(0, (len(fileSu)-2))) #choses board from random number within the amount of boards
 
-   patternSu=[[False, False, False, False, False, False, False, False, False], #sets pattern as non shown
+   patternSu = [[False, False, False, False, False, False, False, False, False], #sets pattern as non shown
               [False, False, False, False, False, False, False, False, False],
               [False, False, False, False, False, False, False, False, False],
               [False, False, False, False, False, False, False, False, False],
@@ -1366,11 +1366,14 @@ def generateSu(difficulty):
             break
    staticSu=[[]] #determines labels vs buttons
    shownSu=[[]] #creates what to show
+   mistakeSu=[[]] #if numbers conflict, first made with no conflictions
    for r in range(9):
       if len(shownSu)==r:
+         mistakeSu.append([])
          shownSu.append([])
          staticSu.append([])
       for c in range(9):
+         mistakeSu[r].append(False) #all made with no conflictions
          if patternSu[r][c] == True:
             shownSu[r].append(hiddenSu[r][c]) #adds number
             staticSu[r].append(hiddenSu[r][c]) #adds number
@@ -1450,16 +1453,13 @@ def loadBoardSu():
       errorSu = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixelSu*9))//12), fg="#fff", text="")
       errorSu.pack(expand=True, fill="both")
 
-      mistakeSu=[[]] #if numbers conflict, first made with no conflictions
       frameSu=[[]] #frames for size
       buttonsSu=[[]] #buttons in frames
       for r in range(9):
          if len(buttonsSu)==r:
-            mistakeSu.append([])
             buttonsSu.append([])
             frameSu.append([])
          for c in range(9):
-            mistakeSu[r].append(False) #all made with no conflictions
             frameSu[r].append(tk.Frame(master, width = pixelSu, height = pixelSu, borderwidth = "1")) #borderwidth of 1 gives it that nice look of slight lines between
             frameSu[r][c].grid(row=r+1, column=c, sticky="nsew")
             frameSu[r][c].propagate(False)
@@ -1472,6 +1472,11 @@ def loadBoardSu():
             elif (r//3 + c//3) % 2 == 1:
                buttonsSu[r].append(tk.Label(frameSu[r][c], text = staticSu[r][c], font=boldFont, bg = "light grey"))
             buttonsSu[r][c].pack(expand=True, fill="both")
+
+            if (c//3 + r//3) % 2 == 0 and mistakeSu[r][c]==True:
+               buttonsSu[r][c].config(bg='firebrick1')
+            elif (c//3 + r//3) % 2 == 1 and mistakeSu[r][c]==True:
+               buttonsSu[r][c].config(bg='firebrick3')
    except NameError: #if a game is not started, back to home screen
       Sudoku()
 
@@ -2649,16 +2654,16 @@ def end21(result):
 #################################################################################################### Checkers start
 
 #Sam Gunter
-#Checkers was finished 2:05am on the 31st of May, 2018
-#This was created to play checkers either multiplayer or against AI
-#
+#Checkers was finished 2:05am on the 31st of May, 2018.
+#This was created to play checkers either multiplayer or against AI.
+#The AI has been the biggest struggle of this game, it is seriously insane how much work I have done to make a AI that always loses.
 
-#Next step is to add leaderboards (once got a slight error in aingle move AI (down-right near beginning), but have not been able to trigger it again)
+#Next step is to add leaderboards (once got a slight error in single move AI (down-right near beginning), but have not been able to trigger it again).
 
 #Checkers: Global variables and functions normally have a "Chec" at the end incase another game uses similar variables later on or earlier on.
-#
-#
-#
+#Starts with user picking single or multi, then creates board values, finally loads the board.
+#When user clicks a spot, it is set as base. Next click is checked for if it works. Then switches to other person (multi) or to AI.
+#AI looks for where pieces are, then single moves (checks for best ones), then jumps (checks for best one), then plays the move.
 
 def Checkers():
    global oneChec #this will make game single player or multiplayer
@@ -2987,6 +2992,7 @@ def aiChec(): #this function does the play for AI
          if locationChec[int(checkers[0])-1][int(checkers[1])-1] == " ": #checks up left
             singleSpots.append(checkers+str(int(checkers[0])-1)+str(int(checkers[1])-1))
 
+   print(singleSpots)
    betterSpots = [] #checks for spots where the black spots wont be destroyed
    for checkers in singleSpots:
       if int(checkers[2]) < 7 and int(checkers[3]) < 7 and int(checkers[2]) > 0 and int(checkers[3]) > 0: #checks if not touching a wall
@@ -3002,6 +3008,7 @@ def aiChec(): #this function does the play for AI
       betterSpots.append(checkers) #else, add it to the list
    if False == (betterSpots == []): #if the list isnt empty
       singleSpots = betterSpots [:] #replace the singleSpots
+   print(singleSpots)
 
    jumpSpots = [] #checks for any places where a piece can be taken
    for checkers in blackSpots: #goes through all black spots
@@ -3039,7 +3046,8 @@ def aiChec(): #this function does the play for AI
             if len(jumpSpots[0]) == 4:
                jumpSpots = []
             jumpSpots.append(checkers+str(int(checkers[2])-2)+str(int(checkers[3])-2))
-
+            
+   print(jumpSpots)
    betterSpots = [] #checks for better jump (or double jump) spots
    for checkers in jumpSpots:
       if int(checkers[2]) < 7 and int(checkers[3]) < 7 and int(checkers[2]) > 0 and int(checkers[3]) > 0: #same as above code, but...
@@ -3055,6 +3063,8 @@ def aiChec(): #this function does the play for AI
       betterSpots.append(checkers)
    if False == (betterSpots == []):
       jumpSpots = betterSpots [:]
+   print(jumpSpots)
+   print("")
 
    time.sleep(.35) #slight delay (to make it look like AI is thinking)
    if False == (jumpSpots == []): #if not empty (can jump over)
