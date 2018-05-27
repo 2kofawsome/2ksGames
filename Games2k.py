@@ -1,7 +1,8 @@
 import tkinter as tk
-import random, time, os
+import random, time, os, gspread
 from tkinter.font import Font
 from PIL import ImageTk, Image
+from oauth2client.service_account import ServiceAccountCredentials
 
 print("LOADING...")
 print("Please wait...")
@@ -3177,6 +3178,48 @@ master.overrideredirect(1) #gets rid of toolbar
 master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight())) #makes it fill full screen
 screenWidth = master.winfo_screenwidth()
 screenHeight = master.winfo_screenheight()
+
+
+client = gspread.authorize(ServiceAccountCredentials.from_json_keyfile_name("gameFiles\client_secret.json", ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']))       
+sheet = client.open('2ksGames').sheet1
+
+localData = open(".\gameFiles\CurrentStats.txt").read()
+localData = localData.split("\n")
+
+columnData = sheet.col_values(1)
+match = False
+for name in columnData:
+   if name == localData[0]:
+      match = True
+      break
+if match == False:
+   print("blan")
+   #user log in screen
+
+spot = 0
+for name in columnData:
+   spot += 1
+   if name == localData[0]:
+      match = True
+      break
+
+rowData = sheet.row_values(spot)
+
+for data in range(len(localData)-2):
+   localData[data+2] = str(int(localData[data+2]) + int(rowData[data+2]))
+
+sheet.insert_row(localData, spot)
+sheet.delete_row(spot+1)
+
+
+for data in range(len(localData)-2):
+   localData[data+2] = "0"
+localData = '\n'.join(localData)
+
+localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+localFile.write(localData)
+localFile.close()
+
 
 def unbind(): #unbinds anything I have binded (from multiple games) and goes back to home screen.
    master.unbind("<Up>")
