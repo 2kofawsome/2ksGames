@@ -15,7 +15,7 @@ print("Please wait...")
 #Unlike TicTacToe1.0 this has a GUI to make the experience better. The hard AI is much better and now not only gets lines and blocks lines, but sets up plays where it is a guaranteed win.
 #I created this in functions and procedures instead of linear to allow both single player and multiplayer to use the same blocks of code. This is also so multiple games can be added together in one document.
 
-#Next step is to add a leaderboard document (will have to learn how to do file manipulation).
+#Next step is to add time tracker
 
 #TicTacToe: Global variables and functions normally have a "Tic" at the end incase another game uses similar variables later on.
 #First function is gamemode, then if single player was chosen difficulty, then a function to set difficulty.
@@ -287,12 +287,16 @@ def endTic(result):
    tk.Button(frameHow, text = "Play Again", font = "Helvetica " + str(screenHeight//25), bg = "#fff", command = lambda: againTic()).pack(expand=True, fill="both")
 
    if result=="tie": #if it is a tie display this
+      if levelTic > 0:
+         update(1+(levelTic*3), 1)
       tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text="It is\na Tie.").pack(expand=True, fill="both")
    elif result=="multi": #if multiplayer, the playerTic was the last one who played therefore the winner
       tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text=playerTic+"\nwins!").pack(expand=True, fill="both")
    elif result=="player": #in player vs ai, player wins
+      update((levelTic*3), 1)
       tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text="You\nwin!").pack(expand=True, fill="both")
    elif result=="ai": #in player vs ai, ai wins
+      update(2+(levelTic*3), 1)
       tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text="You\nlose.").pack(expand=True, fill="both")
    frameTic=[]
    for r in range(0, 3): #THIS WHOLE THING IS ONLY TO MAKE THE CODE SHORTER, WAS AROUND 50 LINES FOR THIS BEFORE WITH IF, ELIF, ELSE STATEMENTS
@@ -503,7 +507,7 @@ def aiTic(difficulty):
 #This was created to copy the microsoft minesweeper game that we know and love.
 #I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computers it does have severe lag.
 
-#Next step is to add a leaderboard document.
+#Next step is to add time tracker
 
 #MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
 #First function is MineSweeper(). Then choice of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper().
@@ -607,7 +611,8 @@ you know the 2 other tiles are safe to click.""").pack(expand=True, fill="both")
 
 
 def gameSetMine(level):
-   global sizeMine, bombMine
+   global sizeMine, bombMine, difficultyMine
+   difficultyMine = level
    if level==0: #custom board
          sizeMine=varSizeMine.get() #as I said above, sets var variable to int
          bombMine=varBombMine.get()
@@ -777,8 +782,10 @@ def endMine(result): #end game
    global statusMine, buttonMine
    statusMine="end"
    if result == "lose":
+      update(12+(difficultyMine*2), 1)
       labelMine.config(text = "You lose.")
    elif result == "win":
+      update(11+(difficultyMine*2), 1)
       labelMine.config(text = "You win!")
    for r in range(sizeMine):
       for c in range(sizeMine):
@@ -867,7 +874,7 @@ def checkMine(row, column): #when a button is clicked
 #This was created to play 2048. The hardest and longest part was making the program appear fluid, not a sudden movement where the entire screen refreshes,
 #but making it refresh one by one as the label moves. If the entire screen reloaded it would be too slow, so I had to completely change how I made frames on tkinter.
 
-#Next step is to add a leaderboard document.
+#Next step is to add time tracker
 
 #2048: Global variables and functions normally have a 2048 at the end, main one is called the2048 because had to have letters.
 #Creates board with 2 numbers inside it. Then user can click arrow or swipe mouse/finger across screen.
@@ -1027,9 +1034,11 @@ def reloadFull2048():
          elif value2048[r][c] == 2048:
             label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
    if win2048 == "True":
+      update(20, 1)
       labelWho.config(text="You\nWin!")
       buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), command = lambda: the2048())
    elif win2048 == "False":
+      update(21, 1)
       labelWho.config(text="You\nLose.")
       buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), command = lambda: the2048())
 
@@ -1259,7 +1268,7 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 #This was created to allow the user to play sudoku on the computer.
 #I have tried my best to add a random generator to make the games less static, but it came down to the tried and true method of "f--- it, it is good enough".
 
-#Next steps is to make a leaderboard document.
+#Next step is to add time tracker
 
 #Sudoku: Global variables and functions normally have a "Su" at the end incase another game uses similar variables later on (or earlier on).
 #First function is Sudoku(). Then chocie of easy, medium or hard. Then triggers a board to be generated from one of the preset fully complete and semi-random tiles chosen to show.
@@ -1310,7 +1319,14 @@ def solvedBoardSu(number):
    return hiddenSu #returns the board
 
 def generateSu(difficulty):
-   global shownSu, staticSu, hiddenSu, mistakeSu
+   global shownSu, staticSu, hiddenSu, mistakeSu, difficultySu
+
+   if difficulty == 10:
+      difficultySu = 2
+   elif difficulty == 15:
+      difficultySu = 1
+   elif difficulty == 20:
+      difficultySu = 0
 
    fileSu = open(".\gameFiles\SudokuBoards.txt").readlines() #from a txt file, to add more to file and see more its working see "CreateBoardsSudoku.py"
 
@@ -1572,6 +1588,7 @@ def enterSu(event):
             gameEnd=False #keeps playing
             break
    if gameEnd==True: #if neither of those were met
+      update(23+difficultySu, 1)
       buttonHow.config(text = "Play Again", command = lambda: Sudoku()) #allows the user to play again
       errorSu.config(text="You win!") #changes from preset error message (earlier) to winner message
 
@@ -1584,7 +1601,7 @@ def enterSu(event):
 #This was created to play Connect 4 either against another player or against AI.
 #AI checks for winning plays, blocking plays, but the rest is random. This allows the user to set up plays, but no easy wins.
 
-#Next steps are to add different AIs and a leaderboard document.
+#Next steps are to add different AIs and time tracker
 
 #Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
 #Creates a 6 by 7 board which users can click to drop in connect 4 pieces. The game automatically checks for where the user clicks, no buttons, only labels.
@@ -2014,10 +2031,13 @@ def endCon(turnCon): #when game is over
    gameOverCon=True #sets game to over
    if oneCon == True: #if single player
       if turnCon == "Black": #user is black
+         update(27, 1)
          turnLabelCon.config(text="You win!")
       elif turnCon == "Red": #ai is red
+         update(29, 1)
          turnLabelCon.config(text="You lose.")
       else: #tie
+         update(28, 1)
          turnLabelCon.config(text="It is a tie.")
    else: #if multiplayer
       turnLabelCon.config(text=turnCon + " wins!") #who evers turn it is wins, if a tie the turnCon is "no one"
@@ -2032,7 +2052,7 @@ def endCon(turnCon): #when game is over
 #This was created to play hangman either against another player or against the database.
 #Multiplayer is user chosen word, single player is from the database I made (see code in gameFiles for how).
 
-#Next steps are to fix letters on weird screens and to add a leaderboard.
+#Next steps are to fix letters on weird screens and to add time tracker
 
 #HangMan: Global variables and functions normally have a "Hang" at the end incase another game uses similar variables later on or earlier on.
 #Starts with asking whether single or multi, this triggers a function to choose which word.
@@ -2265,6 +2285,7 @@ def letterHang(letter): #when a letter is clicked
             gameWin = False #the game is not over
       if gameWin == True: #if the game is over
          if soloHang == True:
+            update(34, 1)
             buttonHow.config(text = "Play Again", command = lambda: singleHang()) #creates another single player game
          elif soloHang == False:
             buttonHow.config(text = "Play Again", command = lambda: multiHang()) #creates another multiplayer game
@@ -2280,6 +2301,7 @@ def letterHang(letter): #when a letter is clicked
       hangLabel.config(image = hangImg[guessesHang]) #changes image by 1
       if guessesHang == 6: #if the game is over
          if soloHang == True:
+            update(35, 1)
             buttonHow.config(text = "Play Again", command = lambda: singleHang()) #creates play again
          elif soloHang == False:
             buttonHow.config(text = "Play Again", command = lambda: multiHang())
@@ -2301,14 +2323,14 @@ def letterHang(letter): #when a letter is clicked
 #This was created to play BlackJack (21) against a computer dealer
 #Although this code deos not have all functions in real BlackJack, it can be played and that is what matters
 
-#Next steps are to add currency for each player, add surrendering, add spliting, doubling down, etc
+#Next steps are to add time tracker and fix display
 
 #BlackJack: Global variables and functions normally have a "21" at the end incase another game uses similar variables later on or earlier on.
 #Starts with creating the board, this is actually a fairly slow block of code, but it makes good framework
 #Then a loop of deal, hitting or standing and finally end screen
 
 def BlackJack():
-   global cardImg, hangImg, playerCard, dealerCard, middleLabel, deck21, buttonHow, buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender, sideButton
+   global cardImg, hangImg, playerCard, dealerCard, middleLabel, deck21, buttonHow, buttonStand, buttonHit, sideButton
    for widget in master.winfo_children():
       widget.destroy()
 
@@ -2336,27 +2358,12 @@ def BlackJack():
    frameHit=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
    frameHit.grid(row = 5, column = 8, rowspan = 2, sticky = "we")
    frameHit.propagate(False)
-   frameDown=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
-   frameDown.grid(row = 7, column = 8, rowspan = 2, sticky = "we")
-   frameDown.propagate(False)
-   frameSplit=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
-   frameSplit.grid(row = 9, column = 8, rowspan = 2, sticky = "we")
-   frameSplit.propagate(False)
-   frameSurrender=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
-   frameSurrender.grid(row = 11, column = 8, rowspan = 2, sticky = "we")
-   frameSurrender.propagate(False)
 
    buttonStand = tk.Button(frameStand, state = "disabled", text = "Stand", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: stand21())
    buttonStand.pack(expand=True, fill="both")
    buttonHit = tk.Button(frameHit, state = "disabled", text = "Hit", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: hit21())
    buttonHit.pack(expand=True, fill="both")
-   buttonDown = tk.Button(frameDown, state = "disabled", text = "Double Down", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: down21())
-   buttonDown.pack(expand=True, fill="both")
-   buttonSplit = tk.Button(frameSplit, state = "disabled", text = "Split", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: split21())
-   buttonSplit.pack(expand=True, fill="both")
-   buttonSurrender = tk.Button(frameSurrender, state = "disabled", text = "Surrender", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: surrender21())
-   buttonSurrender.pack(expand=True, fill="both")
-
+   
    deck21=[]
    cardImg = {}
    for card in os.listdir("gameFiles\\CardDeck"): #this is all images in gameFiles
@@ -2446,7 +2453,7 @@ and counting it as 11 would bring his total more than 17 (but not over 21), he m
 """).pack(expand=True, fill="both")
 
 def deal21():
-   global dealer21, player21, playerCard, dealerCard, hidden21, currentDeck21, buttonHow, middleLabel, buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender, sideButton
+   global dealer21, player21, playerCard, dealerCard, hidden21, currentDeck21, buttonHow, middleLabel, buttonStand, buttonHit, sideButton
 
    for c in range(8): #these next few things only matter after first time
       dealerCard[c].config(image = "") #deletes any cards already there
@@ -2487,9 +2494,6 @@ def deal21():
 
    buttonStand.config(state = "normal") #now the user can click these buttons
    buttonHit.config(state = "normal")
-   buttonDown.config(state = "disabled")
-   buttonSplit.config(state = "disabled")
-   buttonSurrender.config(state = "disabled")
 
    playerSum=0 #this is to check is player has a natural black jack
    for card in player21: #for cards in hand
@@ -2626,28 +2630,18 @@ def hit21():
    if playerSum == 21: #if a perfect blackjack
       end21("win") #they win
 
-def down21():
-   print("Double Down")
-
-def split21():
-   print("Split")
-
-def surrender21():
-   print("Surrender")
-
 def end21(result):
-   global buttonStand, buttonHit, buttonDown, buttonSplit, buttonSurrender, sideButton
+   global buttonStand, buttonHit, sideButton
    if result == "lose": #if they lost
+      update(32, 1)
       middleLabel.config(text = "You lose.") #lose message
    else: #else
+      update(31, 1)
       middleLabel.config(text = "You Win!") #win message
 
    sideButton.config(state = "normal") 
    buttonStand.config(state = "disabled") #disables all buttons until a new deal is made
    buttonHit.config(state = "disabled")
-   buttonDown.config(state = "disabled")
-   buttonSplit.config(state = "disabled")
-   buttonSurrender.config(state = "disabled")
 
 
 #################################################################################################### BlackJack end
@@ -2953,6 +2947,8 @@ def clickChec(row, column):
          if locationChec[r][c] == "black" or locationChec[r][c] == "blackKing": #if any black left
             blackEnd = False #no end
    if blackEnd == True: #if no black, red wins
+      if oneChec == True:
+         update(37, 1)
       errorChec.config(text = "Red wins!")
       buttonHow.config(text = "Play Again", command = lambda: newGameChec())
    else: #if red did not win
@@ -2966,6 +2962,8 @@ def clickChec(row, column):
             if locationChec[r][c] == "red" or locationChec[r][c] == "redKing": #if any red left
                redEnd = False #no end
       if redEnd == True: #if black won
+         if oneChec == True:
+            update(38, 1)
          errorChec.config(text = "Black wins!")
          buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
@@ -2993,7 +2991,6 @@ def aiChec(): #this function does the play for AI
          if locationChec[int(checkers[0])-1][int(checkers[1])-1] == " ": #checks up left
             singleSpots.append(checkers+str(int(checkers[0])-1)+str(int(checkers[1])-1))
 
-   print(singleSpots)
    betterSpots = [] #checks for spots where the black spots wont be destroyed
    for checkers in singleSpots:
       if int(checkers[2]) < 7 and int(checkers[3]) < 7 and int(checkers[2]) > 0 and int(checkers[3]) > 0: #checks if not touching a wall
@@ -3009,7 +3006,6 @@ def aiChec(): #this function does the play for AI
       betterSpots.append(checkers) #else, add it to the list
    if False == (betterSpots == []): #if the list isnt empty
       singleSpots = betterSpots [:] #replace the singleSpots
-   print(singleSpots)
 
    jumpSpots = [] #checks for any places where a piece can be taken
    for checkers in blackSpots: #goes through all black spots
@@ -3048,7 +3044,6 @@ def aiChec(): #this function does the play for AI
                jumpSpots = []
             jumpSpots.append(checkers+str(int(checkers[2])-2)+str(int(checkers[3])-2))
             
-   print(jumpSpots)
    betterSpots = [] #checks for better jump (or double jump) spots
    for checkers in jumpSpots:
       if int(checkers[2]) < 7 and int(checkers[3]) < 7 and int(checkers[2]) > 0 and int(checkers[3]) > 0: #same as above code, but...
@@ -3064,8 +3059,6 @@ def aiChec(): #this function does the play for AI
       betterSpots.append(checkers)
    if False == (betterSpots == []):
       jumpSpots = betterSpots [:]
-   print(jumpSpots)
-   print("")
 
    time.sleep(.35) #slight delay (to make it look like AI is thinking)
    if False == (jumpSpots == []): #if not empty (can jump over)
@@ -3147,6 +3140,7 @@ def aiChec(): #this function does the play for AI
       
    else: #if no single moves
       errorChec.config(text = "Red wins!") #game is over
+      update(37, 1)
       buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
 def reloadChec(row, column): #reloads an individual space
@@ -3220,6 +3214,15 @@ localFile = open(".\gameFiles\CurrentStats.txt", 'w')
 localFile.write(localData)
 localFile.close()
 
+def update(dataSet, increase):
+   localData = open(".\gameFiles\CurrentStats.txt").read()
+   localData = localData.split("\n")
+   localData[dataSet] = str(int(localData[dataSet]) + increase)
+   localData = '\n'.join(localData)
+   
+   localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+   localFile.write(localData)
+   localFile.close()
 
 def unbind(): #unbinds anything I have binded (from multiple games) and goes back to home screen.
    master.unbind("<Up>")
