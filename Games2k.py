@@ -2097,7 +2097,7 @@ def singleHang(): #if singleplayer is chosen
    loadHang() #loads the board
 
 def multiHang(): #if multiplayer is chosen
-   global soloHang, frameComment, entry, comment
+   global soloHang, entry, comment
    soloHang=False
    master.bind("<Return>", enterHang) #binds this so user can click enter to submit
    for widget in master.winfo_children():
@@ -2285,7 +2285,7 @@ def letterHang(letter): #when a letter is clicked
             gameWin = False #the game is not over
       if gameWin == True: #if the game is over
          if soloHang == True:
-            update(34, 1)
+            update(31, 1)
             buttonHow.config(text = "Play Again", command = lambda: singleHang()) #creates another single player game
          elif soloHang == False:
             buttonHow.config(text = "Play Again", command = lambda: multiHang()) #creates another multiplayer game
@@ -2301,7 +2301,7 @@ def letterHang(letter): #when a letter is clicked
       hangLabel.config(image = hangImg[guessesHang]) #changes image by 1
       if guessesHang == 6: #if the game is over
          if soloHang == True:
-            update(35, 1)
+            update(32, 1)
             buttonHow.config(text = "Play Again", command = lambda: singleHang()) #creates play again
          elif soloHang == False:
             buttonHow.config(text = "Play Again", command = lambda: multiHang())
@@ -2633,10 +2633,10 @@ def hit21():
 def end21(result):
    global buttonStand, buttonHit, sideButton
    if result == "lose": #if they lost
-      update(32, 1)
+      update(35, 1)
       middleLabel.config(text = "You lose.") #lose message
    else: #else
-      update(31, 1)
+      update(34, 1)
       middleLabel.config(text = "You Win!") #win message
 
    sideButton.config(state = "normal") 
@@ -3165,14 +3165,107 @@ def reloadChec(row, column): #reloads an individual space
 
 #################################################################################################### Checkers end
 
+def logIn():
+   for widget in master.winfo_children():
+         widget.destroy()
+         
+   frameUser=tk.Frame(master, width = screenWidth, height = screenHeight//5)
+   frameUser.grid(row = 1, column = 0, columnspan = 6, sticky = "we")
+   frameUser.propagate(False)
+   framePass=tk.Frame(master, width = screenWidth, height = screenHeight//5)
+   framePass.grid(row = 2, column = 0, columnspan = 6, sticky = "we")
+   framePass.propagate(False)
+   frameEnter=tk.Frame(master, width = screenWidth, height = screenHeight//6)
+   frameEnter.grid(row = 3, column = 0, columnspan = 6, sticky = "we")
+   frameEnter.propagate(False)
+   frameComment=tk.Frame(master, width = screenWidth, height = screenHeight-(((screenHeight//5)*2)+(screenHeight//6)+screenHeight//10))
+   frameComment.grid(row = 4, column = 0, columnspan = 6, sticky = "we")
+   frameComment.propagate(False)
+   frameMenu=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameMenu.grid(row = 0, column = 5, columnspan = 1, sticky = "we")
+   frameMenu.propagate(False)
+   frameTitle=tk.Frame(master, width = (screenWidth//3)*2, height = screenHeight//10)
+   frameTitle.grid(row = 0, column = 1, columnspan = 4, sticky = "we")
+   frameTitle.propagate(False)
+   frameHow=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameHow.grid(row = 0, column = 0, columnspan = 1, sticky = "we")
+   frameHow.propagate(False)
 
-master = tk.Tk() #creates the window
-master.title("2k's games")
-master.overrideredirect(1) #gets rid of toolbar
-master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight())) #makes it fill full screen
-screenWidth = master.winfo_screenwidth()
-screenHeight = master.winfo_screenheight()
 
+   tk.Button(frameHow, text = "Sign Up", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: signUp()).pack(expand=True, fill="both")
+   tk.Button(frameMenu, text = "Quit", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: endLogIn()).pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Log In").pack(expand=True, fill="both")
+   comment = tk.Label(frameComment, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="")
+   comment.pack(expand=True, fill="both")
+
+   UserName = tk.Entry(frameUser, bg = "white smoke", font = "Helvetica " + str(screenHeight//20), justify = "center")
+   UserName.pack(expand=True, fill="both")
+   UserName.insert(0, "Username")
+   UserName.focus_set()
+   PassWord = tk.Entry(framePass, bg = "white smoke", font = "Helvetica " + str(screenHeight//20), justify = "center")
+   PassWord.pack(expand=True, fill="both")
+   PassWord.insert(0, "Password")
+   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterLog()).pack(expand=True, fill="both")
+
+def signUp():
+   for widget in master.winfo_children():
+         widget.destroy()
+         
+   frameUser=tk.Frame(master, width = screenWidth, height = screenHeight//8)
+   frameUser.grid(row = 1, column = 0, columnspan = 6, sticky = "we")
+   frameUser.propagate(False)
+   framePass=tk.Frame(master, width = screenWidth, height = screenHeight//8)
+   framePass.grid(row = 2, column = 0, columnspan = 6, sticky = "we")
+   framePass.propagate(False)
+   framePass2=tk.Frame(master, width = screenWidth, height = screenHeight//8)
+   framePass2.grid(row = 3, column = 0, columnspan = 6, sticky = "we")
+   framePass2.propagate(False)
+   frameEmail=tk.Frame(master, width = screenWidth, height = screenHeight//8)
+   frameEmail.grid(row = 4, column = 0, columnspan = 6, sticky = "we")
+   frameEmail.propagate(False)
+   frameEnter=tk.Frame(master, width = screenWidth, height = screenHeight//8)
+   frameEnter.grid(row = 5, column = 0, columnspan = 6, sticky = "we")
+   frameEnter.propagate(False)
+   frameComment=tk.Frame(master, width = screenWidth, height = screenHeight-(((screenHeight//8)*5)+screenHeight//10))
+   frameComment.grid(row = 6, column = 0, columnspan = 6, sticky = "we")
+   frameComment.propagate(False)
+   frameMenu=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameMenu.grid(row = 0, column = 5, columnspan = 1, sticky = "we")
+   frameMenu.propagate(False)
+   frameTitle=tk.Frame(master, width = (screenWidth//3)*2, height = screenHeight//10)
+   frameTitle.grid(row = 0, column = 1, columnspan = 4, sticky = "we")
+   frameTitle.propagate(False)
+   frameHow=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
+   frameHow.grid(row = 0, column = 0, columnspan = 1, sticky = "we")
+   frameHow.propagate(False)
+
+   tk.Button(frameHow, text = "Log In", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: logIn()).pack(expand=True, fill="both")
+   tk.Button(frameMenu, text = "Quit", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: endLogIn()).pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Sign Up").pack(expand=True, fill="both")
+   comment = tk.Label(frameComment, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="*Email is not required, I will only send\nemails when the game requires an update.")
+   comment.pack(expand=True, fill="both")
+
+   UserName = tk.Entry(frameUser, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
+   UserName.pack(expand=True, fill="both")
+   UserName.insert(0, "Username")
+   UserName.focus_set()
+   PassWord = tk.Entry(framePass, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
+   PassWord.pack(expand=True, fill="both")
+   PassWord.insert(0, "Password")
+   PassWord2 = tk.Entry(framePass2, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
+   PassWord2.pack(expand=True, fill="both")
+   PassWord2.insert(0, "Password Again")
+   Email = tk.Entry(frameEmail, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
+   Email.pack(expand=True, fill="both")
+   Email.insert(0, "Email*")
+   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterLog()).pack(expand=True, fill="both")
+
+def endLogIn():
+   global endGame
+   endGame = True
+   master.destroy()
+
+endGame = False
 
 client = gspread.authorize(ServiceAccountCredentials.from_json_keyfile_name("gameFiles\client_secret.json", ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']))       
 sheet = client.open('2ksGames').sheet1
@@ -3187,32 +3280,17 @@ for name in columnData:
       match = True
       break
 if match == False:
-   print("blan")
-   #user log in screen
+   master = tk.Tk()
+   master.title("Log In")
+   master.overrideredirect(1)
+   master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight()))
+   screenWidth = master.winfo_screenwidth()
+   screenHeight = master.winfo_screenheight()
 
-spot = 0
-for name in columnData:
-   spot += 1
-   if name == localData[0]:
-      match = True
-      break
+   logIn()
+   master.mainloop()
 
-rowData = sheet.row_values(spot)
-
-for data in range(len(localData)-2):
-   localData[data+2] = str(int(localData[data+2]) + int(rowData[data+2]))
-
-sheet.insert_row(localData, spot)
-sheet.delete_row(spot+1)
-
-
-for data in range(len(localData)-2):
-   localData[data+2] = "0"
-localData = '\n'.join(localData)
-
-localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-localFile.write(localData)
-localFile.close()
+   
 
 def update(dataSet, increase):
    localData = open(".\gameFiles\CurrentStats.txt").read()
@@ -3237,11 +3315,10 @@ def unbind(): #unbinds anything I have binded (from multiple games) and goes bac
    menu()
 
 def menu():
-   global TicTacToeImg, Connect4Img, MineSweeperImg, The2048Img, QuitImg, SudokuImg, HangManImg, BlackJackImg, CheckersImg
+   global TicTacToeImg, Connect4Img, MineSweeperImg, The2048Img, QuitImg, SudokuImg, HangManImg, BlackJackImg, CheckersImg, AccountImg
    pixelHeight=((screenHeight)//3)
    pixelWidth=((screenWidth)//3)
    SudokuImg = ImageTk.PhotoImage(Image.open("gameFiles/SudokuMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
-   QuitImg = ImageTk.PhotoImage(Image.open("gameFiles/QuitMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    The2048Img = ImageTk.PhotoImage(Image.open("gameFiles/2048Menu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    MineSweeperImg = ImageTk.PhotoImage(Image.open("gameFiles/MineSweeperMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    Connect4Img = ImageTk.PhotoImage(Image.open("gameFiles/Connect4Menu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
@@ -3249,6 +3326,9 @@ def menu():
    HangManImg = ImageTk.PhotoImage(Image.open("gameFiles/HangManMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    BlackJackImg = ImageTk.PhotoImage(Image.open("gameFiles/BlackJackMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
    CheckersImg = ImageTk.PhotoImage(Image.open("gameFiles/CheckersMenu.jpeg").resize((pixelWidth, pixelHeight), resample=0))
+
+   QuitImg = ImageTk.PhotoImage(Image.open("gameFiles/QuitMenu.jpeg").resize((pixelWidth, pixelHeight//2), resample=0))
+   AccountImg = ImageTk.PhotoImage(Image.open("gameFiles/AccountMenu.jpeg").resize((pixelWidth, pixelHeight//2), resample=0))
    for widget in master.winfo_children(): #clears contents, but not frame meaning it can update without making a new window each time
       widget.destroy()
    master.configure(bg = "#000000") #Sets initial background colour to black
@@ -3262,33 +3342,76 @@ def menu():
    frameMine.propagate(False)
    tk.Button(frameMine, image = MineSweeperImg, command = lambda: MineSweeper(" ")).pack(expand=True, fill="both")
    frame2048=tk.Frame(master, width = pixelWidth, height = pixelHeight)
-   frame2048.grid(row = 1, column = 2, sticky = "we")
+   frame2048.grid(row = 2, column = 0, sticky = "we")
    frame2048.propagate(False)
    tk.Button(frame2048, image = The2048Img, command = lambda: the2048()).pack(expand=True, fill="both")
    frameSu=tk.Frame(master, width = pixelWidth, height = pixelHeight)
-   frameSu.grid(row = 2, column = 0, sticky = "we")
+   frameSu.grid(row = 2, column = 1, sticky = "we")
    frameSu.propagate(False)
    tk.Button(frameSu, image = SudokuImg, command = lambda: Sudoku()).pack(expand=True, fill="both")
    frameCon=tk.Frame(master, width = pixelWidth, height = pixelHeight)
-   frameCon.grid(row = 2, column = 1, sticky = "we")
+   frameCon.grid(row = 2, column = 2, sticky = "we")
    frameCon.propagate(False)
    tk.Button(frameCon, image = Connect4Img, command = lambda: Connect4()).pack(expand=True, fill="both")
-   frameJack=tk.Frame(master, width = pixelWidth, height = pixelHeight)
-   frameJack.grid(row = 2, column = 2, sticky = "we")
-   frameJack.propagate(False)
-   tk.Button(frameJack, image = BlackJackImg, command = lambda: BlackJack()).pack(expand=True, fill="both")
    frameHang=tk.Frame(master, width = pixelWidth, height = pixelHeight)
    frameHang.grid(row = 3, column = 0, sticky = "we")
    frameHang.propagate(False)
    tk.Button(frameHang, image = HangManImg, command = lambda: HangMan()).pack(expand=True, fill="both")
+   frameJack=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameJack.grid(row = 3, column = 1, sticky = "we")
+   frameJack.propagate(False)
+   tk.Button(frameJack, image = BlackJackImg, command = lambda: BlackJack()).pack(expand=True, fill="both")
    frameChec=tk.Frame(master, width = pixelWidth, height = pixelHeight)
-   frameChec.grid(row = 3, column = 1, sticky = "we")
+   frameChec.grid(row = 3, column = 2, sticky = "we")
    frameChec.propagate(False)
    tk.Button(frameChec, image = CheckersImg, command = lambda: Checkers()).pack(expand=True, fill="both")
-   frameQuit=tk.Frame(master, width = pixelWidth, height = pixelHeight)
-   frameQuit.grid(row = 3, column = 2, sticky = "we")
-   frameQuit.propagate(False)
-   tk.Button(frameQuit, image = QuitImg, command = master.destroy).pack(expand=True, fill="both")
+   
+   frameStuff=tk.Frame(master, width = pixelWidth, height = pixelHeight)
+   frameStuff.grid(row = 1, column = 2, sticky = "we")
+   frameStuff.propagate(False)
 
-menu()
-master.mainloop()
+   frameQuit=tk.Frame(frameStuff, width = pixelWidth, height = pixelHeight//2)
+   frameQuit.grid(row = 0, column = 0, sticky = "we")
+   frameQuit.propagate(False)
+   frameAccount=tk.Frame(frameStuff, width = pixelWidth, height = pixelHeight//2)
+   frameAccount.grid(row = 1, column = 0, sticky = "we")
+   frameAccount.propagate(False)
+   tk.Button(frameQuit, image = QuitImg, command = master.destroy).pack(expand=True, fill="both")
+   tk.Button(frameAccount, image = AccountImg, command = lambda: Account()).pack(expand=True, fill="both")
+   
+
+if endGame == False:
+
+   spot = 0
+   for name in columnData:
+      spot += 1
+      if name == localData[0]:
+         match = True
+         break
+
+   rowData = sheet.row_values(spot)
+
+   for data in range(len(localData)-2):
+      localData[data+2] = str(int(localData[data+2]) + int(rowData[data+2]))
+
+   sheet.insert_row(localData, spot)
+   sheet.delete_row(spot+1)
+
+
+   for data in range(len(localData)-2):
+      localData[data+2] = "0"
+   localData = '\n'.join(localData)
+
+   localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+   localFile.write(localData)
+   localFile.close()
+
+   master = tk.Tk() #creates the window
+   master.title("2k's games")
+   master.overrideredirect(1) #gets rid of toolbar
+   master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight())) #makes it fill full screen
+   screenWidth = master.winfo_screenwidth()
+   screenHeight = master.winfo_screenheight()
+
+   menu()
+   master.mainloop()
