@@ -2339,7 +2339,7 @@ def BlackJack():
    for widget in master.winfo_children():
       widget.destroy()
 
-   pixel21=((screenHeight-screenHeight//17)//4) #height of each text on side
+   pixel21=((screenHeight-screenHeight//17)//6) #height of each text on side
 
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
    frameTitle.grid(row = 0, column = 0, columnspan = 40, sticky = "we")
@@ -2357,7 +2357,7 @@ def BlackJack():
    buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//25), bg = "#fff", command = lambda: howToPlay21())
    buttonHow.pack(expand=True, fill="both")
 
-   commentFrame=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
+   commentFrame=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*4)
    commentFrame.grid(row = 3, column = 8, columnspan = 1000, sticky = "we")
    commentFrame.propagate(False)
    comment=tk.Label(commentFrame, bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//20))
@@ -3177,7 +3177,8 @@ def reloadChec(row, column): #reloads an individual space
 
 #################################################################################################### Checkers end
 
-def logIn():
+def logInScreen():
+   global UserName, PassWord, comment
    for widget in master.winfo_children():
          widget.destroy()
          
@@ -3204,7 +3205,7 @@ def logIn():
    frameHow.propagate(False)
 
 
-   tk.Button(frameHow, text = "Sign Up", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: signUp()).pack(expand=True, fill="both")
+   tk.Button(frameHow, text = "Sign Up", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: signUpScreen()).pack(expand=True, fill="both")
    tk.Button(frameMenu, text = "Quit", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: endLogIn()).pack(expand=True, fill="both")
    tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Log In").pack(expand=True, fill="both")
    comment = tk.Label(frameComment, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="")
@@ -3219,7 +3220,7 @@ def logIn():
    PassWord.insert(0, "Password")
    tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterLog()).pack(expand=True, fill="both")
 
-def signUp():
+def signUpScreen():
    for widget in master.winfo_children():
          widget.destroy()
          
@@ -3251,7 +3252,7 @@ def signUp():
    frameHow.grid(row = 0, column = 0, columnspan = 1, sticky = "we")
    frameHow.propagate(False)
 
-   tk.Button(frameHow, text = "Log In", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: logIn()).pack(expand=True, fill="both")
+   tk.Button(frameHow, text = "Log In", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: logInScreen()).pack(expand=True, fill="both")
    tk.Button(frameMenu, text = "Quit", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: endLogIn()).pack(expand=True, fill="both")
    tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Sign Up").pack(expand=True, fill="both")
    comment = tk.Label(frameComment, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="*Email is not required, I will only send\nemails when the game requires an update.")
@@ -3270,7 +3271,39 @@ def signUp():
    Email = tk.Entry(frameEmail, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
    Email.pack(expand=True, fill="both")
    Email.insert(0, "Email*")
-   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterLog()).pack(expand=True, fill="both")
+   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterSign()).pack(expand=True, fill="both")
+
+def enterLog():
+   global localData, spot
+   userName = UserName.get()
+   passWord = PassWord.get()
+
+   match = False
+   spot = 0
+   for name in columnData:
+      spot += 1
+      if name == userName:
+         match = True
+         break
+
+   if match == True:
+      rowData = sheet.row_values(spot)
+      if rowData[1] == passWord:
+         localData[0] = userName
+         localData[1] = passWord
+   
+         localData = '\n'.join(localData)
+         localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+         localFile.write(localData)
+         localFile.close()
+         master.destroy()
+      else:
+         comment.config(text = "That password\nis not valid.")
+   else:
+      comment.config(text = "That username is not\nin our database.")
+
+def enterSign():
+   print(blah)
 
 def endLogIn():
    global endGame
@@ -3287,10 +3320,14 @@ localData = localData.split("\n")
 
 columnData = sheet.col_values(1)
 match = False
+spot = 0
 for name in columnData:
+   spot += 1
    if name == localData[0]:
       match = True
       break
+
+
 if match == False:
    master = tk.Tk()
    master.title("Log In")
@@ -3299,10 +3336,10 @@ if match == False:
    screenWidth = master.winfo_screenwidth()
    screenHeight = master.winfo_screenheight()
 
-   logIn()
+   logInScreen()
    master.mainloop()
 
-   
+
 
 def update(dataSet, increase):
    localData = open(".\gameFiles\CurrentStats.txt").read()
@@ -3394,16 +3431,12 @@ def menu():
 
 if endGame == False:
 
-   spot = 0
-   for name in columnData:
-      spot += 1
-      if name == localData[0]:
-         match = True
-         break
-
    rowData = sheet.row_values(spot)
 
+   print(localData)
+   
    for data in range(len(localData)-2):
+      print(int(localData[data+2]) + int(rowData[data+2]))
       localData[data+2] = str(int(localData[data+2]) + int(rowData[data+2]))
 
    sheet.insert_row(localData, spot)
