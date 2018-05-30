@@ -1665,7 +1665,7 @@ Program specific instructions
 
 1.Click in any column to add a connect 4 piece.""").pack(expand=True, fill="both")
 
-   tk.Label(frameCon2, bg = "white smoke", font = "Helvetica " + str(screenHeight//35), text="""Rules to Game:
+   tk.Label(frameCon2, bg = "white smoke", font = "Helvetica " + str(screenHeight//37), text="""Rules to Game:
 
 Players first choose a color and then take turns dropping colored discs,
 from the top into a seven-column, six-row vertically suspended grid.
@@ -2052,7 +2052,7 @@ def endCon(turnCon): #when game is over
 #This was created to play hangman either against another player or against the database.
 #Multiplayer is user chosen word, single player is from the database I made (see code in gameFiles for how).
 
-#Next steps are to fix letters on weird screens and to add time tracker
+#Next steps is to add time tracker
 
 #HangMan: Global variables and functions normally have a "Hang" at the end incase another game uses similar variables later on or earlier on.
 #Starts with asking whether single or multi, this triggers a function to choose which word.
@@ -2217,10 +2217,10 @@ def loadHang():
    tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="Hangman").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixelHang*3)
-   frameMenu.grid(row = 1, column = 1, columnspan = 40, rowspan = 3, sticky = "we")
+   frameMenu.grid(row = 1, column = 1, columnspan = 7, sticky = "we")
    frameMenu.propagate(False)
    frameHow=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixelHang*3)
-   frameHow.grid(row = 4, column = 1, columnspan = 40, rowspan = 3, sticky = "we")
+   frameHow.grid(row = 4, column = 1, columnspan = 7, sticky = "we")
    frameHow.propagate(False)
 
    tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: HangMan()).pack(expand=True, fill="both")
@@ -2236,7 +2236,7 @@ def loadHang():
    hangImg.append(ImageTk.PhotoImage(Image.open("gameFiles/hangman6.png").resize(((screenHeight-screenHeight//17), (screenHeight-screenHeight//4)), resample=0)))
 
    frameImg=tk.Frame(master, width = (screenHeight-screenHeight//17), height = (screenHeight-screenHeight//17))
-   frameImg.grid(row = 1, column = 0, rowspan = 40, sticky = "we")
+   frameImg.grid(row = 1, column = 0, rowspan = 1000, sticky = "we")
    frameImg.propagate(False)
    hangLabel = tk.Label(frameImg, image = hangImg[0], bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//25), text = shownWordHang, compound = "top") #image with the word uderneath
    hangLabel.pack(expand=True, fill="both")
@@ -2244,20 +2244,25 @@ def loadHang():
    frameButtons=[]
    buttonsHang=[]
 
+   if (screenHeight-(screenHeight-screenHeight//17-pixelHang*6))//4 < (screenWidth-(screenHeight-screenHeight//17))//7:
+      sizeAlphabet = (screenHeight-(screenHeight-screenHeight//17-pixelHang*6))//4
+   else:
+      sizeAlphabet = (screenWidth-(screenHeight-screenHeight//17))//7
+
    for c in range(7): #this creates the grid of frames for letters
-      frameButtons.append(tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17))//7, height = (screenWidth-(screenHeight-screenHeight//17))//7))
+      frameButtons.append(tk.Frame(master, width = sizeAlphabet, height = sizeAlphabet))
       frameButtons[c].grid(row = 7, column = 1+c, sticky = "we")
       frameButtons[c].propagate(False)
    for c in range(7): #it is many lines
-      frameButtons.append(tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17))//7, height = (screenWidth-(screenHeight-screenHeight//17))//7))
+      frameButtons.append(tk.Frame(master, width = sizeAlphabet, height = sizeAlphabet))
       frameButtons[c+7].grid(row = 8, column = 1+(c%7), sticky = "we")
       frameButtons[c+7].propagate(False)
    for c in range(7): #it goes for 4 lines
-      frameButtons.append(tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17))//7, height = (screenWidth-(screenHeight-screenHeight//17))//7))
+      frameButtons.append(tk.Frame(master, width = sizeAlphabet, height = sizeAlphabet))
       frameButtons[c+14].grid(row = 9, column = 1+(c%7), sticky = "we")
       frameButtons[c+14].propagate(False)
    for c in range(5): #with the 4th line the shortest
-      frameButtons.append(tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17))//7, height = (screenWidth-(screenHeight-screenHeight//17))//7))
+      frameButtons.append(tk.Frame(master, width = sizeAlphabet, height = sizeAlphabet))
       frameButtons[c+21].grid(row = 10, column = 2+(c%7), sticky = "we")
       frameButtons[c+21].propagate(False)
 
@@ -2323,18 +2328,18 @@ def letterHang(letter): #when a letter is clicked
 #This was created to play BlackJack (21) against a computer dealer
 #Although this code deos not have all functions in real BlackJack, it can be played and that is what matters
 
-#Next steps are to add time tracker and fix display
+#Next steps is to add time tracker
 
 #BlackJack: Global variables and functions normally have a "21" at the end incase another game uses similar variables later on or earlier on.
 #Starts with creating the board, this is actually a fairly slow block of code, but it makes good framework
 #Then a loop of deal, hitting or standing and finally end screen
 
 def BlackJack():
-   global cardImg, hangImg, playerCard, dealerCard, middleLabel, deck21, buttonHow, buttonStand, buttonHit, sideButton
+   global cardImg, hangImg, playerCard, dealerCard, comment, deck21, buttonHow, buttonStand, buttonHit, sideButton
    for widget in master.winfo_children():
       widget.destroy()
 
-   pixel21=((screenHeight-screenHeight//17)//12) #height of each text on side
+   pixel21=((screenHeight-screenHeight//17)//4) #height of each text on side
 
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//17)
    frameTitle.grid(row = 0, column = 0, columnspan = 40, sticky = "we")
@@ -2342,48 +2347,54 @@ def BlackJack():
    tk.Label(frameTitle, font = "fixedsys " + str(screenHeight//40), bg = "#000000", fg="#fff", text="BlackJack (21)").pack(expand=True, fill="both")
 
    frameMenu=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21)
-   frameMenu.grid(row = 1, column = 8, rowspan = 1, sticky = "we")
+   frameMenu.grid(row = 1, column = 8, sticky = "we")
    frameMenu.propagate(False)
    frameHow=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21)
-   frameHow.grid(row = 2, column = 8, rowspan = 1, sticky = "we")
+   frameHow.grid(row = 2, column = 8, sticky = "we")
    frameHow.propagate(False)
 
-   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//30), bg = "#fff", command = lambda: menu()).pack(expand=True, fill="both")
-   buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//30), bg = "#fff", command = lambda: howToPlay21())
+   tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//25), bg = "#fff", command = lambda: menu()).pack(expand=True, fill="both")
+   buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//25), bg = "#fff", command = lambda: howToPlay21())
    buttonHow.pack(expand=True, fill="both")
 
-   frameStand=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
-   frameStand.grid(row = 3, column = 8, rowspan = 2, sticky = "we")
-   frameStand.propagate(False)
-   frameHit=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
-   frameHit.grid(row = 5, column = 8, rowspan = 2, sticky = "we")
-   frameHit.propagate(False)
-
-   buttonStand = tk.Button(frameStand, state = "disabled", text = "Stand", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: stand21())
-   buttonStand.pack(expand=True, fill="both")
-   buttonHit = tk.Button(frameHit, state = "disabled", text = "Hit", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//17), bg = "#fff", command = lambda: hit21())
-   buttonHit.pack(expand=True, fill="both")
+   commentFrame=tk.Frame(master, width = (screenWidth-(screenHeight-screenHeight//17)), height = pixel21*2)
+   commentFrame.grid(row = 3, column = 8, columnspan = 1000, sticky = "we")
+   commentFrame.propagate(False)
+   comment=tk.Label(commentFrame, bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//20))
+   comment.pack(expand=True, fill="both")
    
    deck21=[]
    cardImg = {}
    for card in os.listdir("gameFiles\\CardDeck"): #this is all images in gameFiles
       deck21.append(card) #adds name to deck
-      cardImg[card] = ImageTk.PhotoImage(Image.open("gameFiles\\CardDeck\\"+card).resize(((screenHeight-screenHeight//17)//8, (screenHeight-screenHeight//17)//4), resample=0)) #adds relative image to another list
+      cardImg[card] = ImageTk.PhotoImage(Image.open("gameFiles\\CardDeck\\"+card).resize(((screenHeight-screenHeight//8)//8, (screenHeight-screenHeight//17)//4), resample=0)) #adds relative image to another list
 
    bigFrame=tk.Frame(master, bg = "#000000", width = screenHeight-screenHeight//17, height = screenHeight-screenHeight//17) #frame that holds the game (words are not in this frame)
-   bigFrame.grid(row = 1, column = 0, rowspan = 12, sticky = "we")
+   bigFrame.grid(row = 1, column = 0, rowspan = 1000, sticky = "we")
    bigFrame.propagate(False)
 
-   middleFrame=tk.Frame(bigFrame, width = screenHeight-screenHeight//17, height = ((screenHeight-screenHeight//17)//9)*4) #only here to stop propagation
+   middleFrame=tk.Frame(bigFrame, width = screenHeight-screenHeight//17, height = ((screenHeight-screenHeight//17)-((screenHeight-screenHeight//17)//2))) #only here to stop propagation
    middleFrame.grid(row = 1, column = 0, columnspan = 1000, sticky = "we")
    middleFrame.propagate(False)
-   middleLabel=tk.Label(middleFrame, bg = "#000000", fg = "#fff", font = "Helvetica " + str((screenHeight-screenHeight//17)//20))
+   middleLabel=tk.Label(middleFrame, bg = "#000000")
    middleLabel.pack(expand=True, fill="both")
-   sideFrame=tk.Frame(middleFrame, pady = "100", bg = "#000000", width = (screenHeight-screenHeight//17)//3, height = ((screenHeight-screenHeight//17)//9)*4)
+
+   sideFrame=tk.Frame(middleFrame, pady = "100", padx = "2", bg = "#000000", width = (screenHeight-screenHeight//17)//3, height = ((screenHeight-screenHeight//17)-((screenHeight-screenHeight//17)//2)))
    sideFrame.grid(row = 0, column = 0, sticky = "we")
    sideFrame.propagate(False)
-   sideButton=tk.Button(sideFrame, text = "Deal Again", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//25), bg = "#fff", command = lambda: deal21())
+   frameStand=tk.Frame(middleFrame, pady = "100", padx = "2", bg = "#000000", width = (screenHeight-screenHeight//17)//3, height = ((screenHeight-screenHeight//17)-((screenHeight-screenHeight//17)//2)))
+   frameStand.grid(row = 0, column = 1, sticky = "we")
+   frameStand.propagate(False)
+   frameHit=tk.Frame(middleFrame, pady = "100", padx = "2", bg = "#000000", width = (screenHeight-screenHeight//17)//3, height = ((screenHeight-screenHeight//17)-((screenHeight-screenHeight//17)//2)))
+   frameHit.grid(row = 0, column = 2, sticky = "we")
+   frameHit.propagate(False)
+
+   sideButton=tk.Button(sideFrame, text = "Deal Again", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//30), bg = "#fff", command = lambda: deal21())
    sideButton.pack(expand=True, fill="both")
+   buttonStand = tk.Button(frameStand, state = "disabled", text = "Stand", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//30), bg = "#fff", command = lambda: stand21())
+   buttonStand.pack(expand=True, fill="both")
+   buttonHit = tk.Button(frameHit, state = "disabled", text = "Hit", font = "Helvetica " + str((screenWidth-(screenHeight-screenHeight//17))//30), bg = "#fff", command = lambda: hit21())
+   buttonHit.pack(expand=True, fill="both")
 
    framePlayer=[]
    frameDealer=[] #top cards
@@ -2391,10 +2402,10 @@ def BlackJack():
    dealerCard=[] #bottom cards
 
    for c in range(8):
-      frameDealer.append(tk.Frame(bigFrame, width = (screenHeight-screenHeight//17)//8, height = (screenHeight-screenHeight//17)//4)) #8 of these cards side by side
+      frameDealer.append(tk.Frame(bigFrame, width = (screenHeight-screenHeight//8)//8, height = (screenHeight-screenHeight//17)//4)) #8 of these cards side by side
       frameDealer[c].grid(row = 0, column = c, columnspan = 1, padx = 3, sticky = "we")
       frameDealer[c].propagate(False)
-      framePlayer.append(tk.Frame(bigFrame, width = (screenHeight-screenHeight//17)//8, height = (screenHeight-screenHeight//17)//4))
+      framePlayer.append(tk.Frame(bigFrame, width = (screenHeight-screenHeight//8)//8, height = (screenHeight-screenHeight//17)//4))
       framePlayer[c].grid(row = 2, column = c, columnspan = 1, padx = 3, sticky = "we")
       framePlayer[c].propagate(False)
       dealerCard.append(tk.Label(frameDealer[c], bg = "#000000", fg = "#fff"))
@@ -2431,7 +2442,7 @@ Program specific instructions
 
 1. Click deal to deal out new cards
 2. Click Stand once you are done getting cards
-3. Click hit to get antoher card""").pack(expand=True, fill="both")
+3. Click hit to get another card""").pack(expand=True, fill="both")
 
    tk.Label(frameHang2, bg = "white smoke", font = "Helvetica " + str(screenHeight//55), text="""Rules to Game:
 
@@ -2453,13 +2464,13 @@ and counting it as 11 would bring his total more than 17 (but not over 21), he m
 """).pack(expand=True, fill="both")
 
 def deal21():
-   global dealer21, player21, playerCard, dealerCard, hidden21, currentDeck21, buttonHow, middleLabel, buttonStand, buttonHit, sideButton
+   global dealer21, player21, playerCard, dealerCard, hidden21, currentDeck21, buttonHow, comment, buttonStand, buttonHit, sideButton
 
    for c in range(8): #these next few things only matter after first time
       dealerCard[c].config(image = "") #deletes any cards already there
       playerCard[c].config(image = "")
    sideButton.config(state = "disabled") #cant deal until done
-   middleLabel.config(text = "") #takes out win or lose message
+   comment.config(text = "") #takes out win or lose message
    currentDeck21 = deck21[:] #creates a new deck
    currentDeck21.remove("back.png") #removes the back or blank card
    dealer21 = [] #resets dealers and players hands
@@ -2509,7 +2520,7 @@ def deal21():
       end21("win") #end game with a win
 
 def stand21(): #if the players stands
-   global dealer21, buttonHow, middleLabel, currentDeck21
+   global dealer21, buttonHow, comment, currentDeck21
    
    playerSum=0 #checks players hand
    for card in player21: #this gets sum with aces as 11
@@ -2634,10 +2645,10 @@ def end21(result):
    global buttonStand, buttonHit, sideButton
    if result == "lose": #if they lost
       update(35, 1)
-      middleLabel.config(text = "You lose.") #lose message
+      comment.config(text = "You lose.") #lose message
    else: #else
       update(34, 1)
-      middleLabel.config(text = "You Win!") #win message
+      comment.config(text = "You Win!") #win message
 
    sideButton.config(state = "normal") 
    buttonStand.config(state = "disabled") #disables all buttons until a new deal is made
@@ -2726,14 +2737,15 @@ Program specific instructions
 
 Checkers is played on a standard 64 square board. Only the 32 dark colored squares are used in play.
 Each player begins the game with 12 pieces, or checkers, placed in the three rows closest to them. 
-The object of the game is to capture all of the opponent’s checkers or position your pieces so that your opponent has no available moves. 
+The object of the game is to capture all of the opponent’s checkers or make your opponent have no available moves. 
 
-A checker can be moved one space diagonally forward. You can not move a checker backwards until it becomes a King, as described below.
-If one of your opponent’s checkers is on a forward diagonal next to one of your checkers, and the next space beyond the opponent’s checker is empty,
-then your checker can jump the opponent’s checker and land in the space beyond. Your opponent’s checker is captured and removed from the board. 
+A checker can be moved one space diagonally forward until it reaches the opposite side (when it becomes a King).
+A King can move backward as well as forward along the diagonals, instead of just forward.
+If an opponent’s checker is on a diagonal next to one of your checkers, and the diagonal beyond the opponent’s checker is empty,
+then your checker can jump the opponent’s checker and land in the space beyond. The opponent’s checker is then removed. 
 
-After making one jump, your checker might have another jump available from its new position. Your checker must take that jump too.
-It must continue to jump until there are no more jumps available.
+After making one jump, your checker might have another jump available from its new position t take another piece.
+The game will do the jump for you, therefore allowing you to remove more pieces.
 
 When one of your checkers reaches the opposite side of the board, it is crowned and becomes a King.
 A King can move backward as well as forward along the diagonals, instead of just forward.""").pack(expand=True, fill="both")
