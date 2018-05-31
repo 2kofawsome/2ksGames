@@ -3221,6 +3221,7 @@ def logInScreen():
    tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterLog()).pack(expand=True, fill="both")
 
 def signUpScreen():
+   global UserName, PassWord, PassWord2, Email, comment
    for widget in master.winfo_children():
          widget.destroy()
          
@@ -3273,10 +3274,52 @@ def signUpScreen():
    Email.insert(0, "Email*")
    tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterSign()).pack(expand=True, fill="both")
 
-def enterLog():
-   global localData, spot
+def enterSign():
+   global localData
    userName = UserName.get()
    passWord = PassWord.get()
+   passWord2 = PassWord2.get()
+   email = Email.get()
+
+   userName = userName.lower()
+   passWord = passWord.lower()
+   passWord2 = passWord2.lower()
+   email = email.lower()
+
+   match = False
+   for name in columnData:
+      if name == userName:
+         match = True
+         break
+
+   if match == False:
+      if passWord == passWord2:
+         localData[0] = userName
+         localData[1] = passWord
+         for data in range(37):
+            localData[data+2] = "0"
+      
+         sheet.append_row(localData)
+         localData = '\n'.join(localData)
+         localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+         localFile.write(localData)
+         localFile.close()
+
+         localData = localData.split("\n")
+         time.sleep(2)
+         master.destroy()
+      else:
+         comment.config(text = "Those passwords\ndo not match.")
+   else:
+      comment.config(text = "That username\nalready exists.")
+
+def enterLog():
+   global localData
+   userName = UserName.get()
+   passWord = PassWord.get()
+
+   userName = userName.lower()
+   passWord = passWord.lower()
 
    match = False
    spot = 0
@@ -3296,19 +3339,20 @@ def enterLog():
          localFile = open(".\gameFiles\CurrentStats.txt", 'w')
          localFile.write(localData)
          localFile.close()
+
+         localData = localData.split("\n")
          master.destroy()
       else:
          comment.config(text = "That password\nis not valid.")
    else:
       comment.config(text = "That username is not\nin our database.")
 
-def enterSign():
-   print(blah)
-
 def endLogIn():
    global endGame
    endGame = True
    master.destroy()
+
+
 
 endGame = False
 
@@ -3326,7 +3370,6 @@ for name in columnData:
    if name == localData[0]:
       match = True
       break
-
 
 if match == False:
    master = tk.Tk()
@@ -3350,6 +3393,35 @@ def update(dataSet, increase):
    localFile = open(".\gameFiles\CurrentStats.txt", 'w')
    localFile.write(localData)
    localFile.close()
+
+def updateDatabase():
+   global localData, sheet, columnData
+   sheet = client.open('2ksGames').sheet1
+   columnData = sheet.col_values(1)
+   
+   spot = 0
+   for name in columnData:
+      spot += 1
+      if name == localData[0]:
+         break
+   
+   rowData = sheet.row_values(spot)
+   
+   for data in range(len(localData)-2):
+      localData[data+2] = str(int(localData[data+2]) + int(rowData[data+2]))
+
+   sheet.insert_row(localData, spot)
+   sheet.delete_row(spot+1)
+
+
+   for data in range(len(localData)-2):
+      localData[data+2] = "0"
+   localData = '\n'.join(localData)
+
+   localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+   localFile.write(localData)
+   localFile.close()
+
 
 def unbind(): #unbinds anything I have binded (from multiple games) and goes back to home screen.
    master.unbind("<Up>")
@@ -3430,26 +3502,7 @@ def menu():
    
 
 if endGame == False:
-
-   rowData = sheet.row_values(spot)
-
-   print(localData)
-   
-   for data in range(len(localData)-2):
-      print(int(localData[data+2]) + int(rowData[data+2]))
-      localData[data+2] = str(int(localData[data+2]) + int(rowData[data+2]))
-
-   sheet.insert_row(localData, spot)
-   sheet.delete_row(spot+1)
-
-
-   for data in range(len(localData)-2):
-      localData[data+2] = "0"
-   localData = '\n'.join(localData)
-
-   localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-   localFile.write(localData)
-   localFile.close()
+   updateDatabase()
 
    master = tk.Tk() #creates the window
    master.title("2k's games")
