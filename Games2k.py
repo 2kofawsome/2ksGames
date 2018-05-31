@@ -3177,8 +3177,24 @@ def reloadChec(row, column): #reloads an individual space
 
 #################################################################################################### Checkers end
 
+def logInWindow():
+   global master, screenWidth, screenHeight, localData
+   master = tk.Tk()
+   master.title("Log In")
+   master.overrideredirect(1)
+   master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight()))
+   screenWidth = master.winfo_screenwidth()
+   screenHeight = master.winfo_screenheight()
+   localData = open(".\gameFiles\CurrentStats.txt").read()
+   localData = localData.split("\n")
+
+   logInScreen()
+   master.mainloop()
+
 def logInScreen():
    global UserName, PassWord, comment
+   master.unbind("<Return>")
+   master.bind("<Return>", enterLog)
    for widget in master.winfo_children():
          widget.destroy()
          
@@ -3218,10 +3234,12 @@ def logInScreen():
    PassWord = tk.Entry(framePass, bg = "white smoke", font = "Helvetica " + str(screenHeight//20), justify = "center")
    PassWord.pack(expand=True, fill="both")
    PassWord.insert(0, "Password")
-   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterLog()).pack(expand=True, fill="both")
+   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterLog("waste")).pack(expand=True, fill="both")
 
 def signUpScreen():
    global UserName, PassWord, PassWord2, Email, comment
+   master.unbind("<Return>")
+   master.bind("<Return>", enterSign)
    for widget in master.winfo_children():
          widget.destroy()
          
@@ -3272,9 +3290,10 @@ def signUpScreen():
    Email = tk.Entry(frameEmail, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
    Email.pack(expand=True, fill="both")
    Email.insert(0, "Email*")
-   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterSign()).pack(expand=True, fill="both")
+   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterSign("waste")).pack(expand=True, fill="both")
 
-def enterSign():
+def enterSign(waste):
+   master.unbind("<Return>")
    global localData
    userName = UserName.get()
    passWord = PassWord.get()
@@ -3306,14 +3325,15 @@ def enterSign():
          localFile.close()
 
          localData = localData.split("\n")
-         time.sleep(2)
          master.destroy()
+         loadGame()
       else:
          comment.config(text = "Those passwords\ndo not match.")
    else:
       comment.config(text = "That username\nalready exists.")
 
-def enterLog():
+def enterLog(waste):
+   master.unbind("<Return>")
    global localData
    userName = UserName.get()
    passWord = PassWord.get()
@@ -3342,47 +3362,31 @@ def enterLog():
 
          localData = localData.split("\n")
          master.destroy()
+         loadGame()
       else:
          comment.config(text = "That password\nis not valid.")
    else:
       comment.config(text = "That username is not\nin our database.")
 
 def endLogIn():
-   global endGame
-   endGame = True
    master.destroy()
 
+def Account():
+   updateDatabase()
+   logOut()
 
-
-endGame = False
-
-client = gspread.authorize(ServiceAccountCredentials.from_json_keyfile_name("gameFiles\client_secret.json", ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']))       
-sheet = client.open('2ksGames').sheet1
-
-localData = open(".\gameFiles\CurrentStats.txt").read()
-localData = localData.split("\n")
-
-columnData = sheet.col_values(1)
-match = False
-spot = 0
-for name in columnData:
-   spot += 1
-   if name == localData[0]:
-      match = True
-      break
-
-if match == False:
-   master = tk.Tk()
-   master.title("Log In")
-   master.overrideredirect(1)
-   master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight()))
-   screenWidth = master.winfo_screenwidth()
-   screenHeight = master.winfo_screenheight()
-
-   logInScreen()
-   master.mainloop()
-
-
+def logOut():
+   localData = open(".\gameFiles\CurrentStats.txt").read()
+   localData = localData.split("\n")
+   localData[0] = ""
+   localData[1] = ""
+   localData = '\n'.join(localData)
+   
+   localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+   localFile.write(localData)
+   localFile.close()
+   master.destroy()
+   logInWindow()
 
 def update(dataSet, increase):
    localData = open(".\gameFiles\CurrentStats.txt").read()
@@ -3398,7 +3402,9 @@ def updateDatabase():
    global localData, sheet, columnData
    sheet = client.open('2ksGames').sheet1
    columnData = sheet.col_values(1)
-   
+   localData = open(".\gameFiles\CurrentStats.txt").read()
+   localData = localData.split("\n")
+
    spot = 0
    for name in columnData:
       spot += 1
@@ -3434,6 +3440,20 @@ def unbind(): #unbinds anything I have binded (from multiple games) and goes bac
    master.unbind("<Button-2>")
    master.unbind("<Return>")
    menu()
+
+def loadGame():
+   global master, screenHeight, screenWidth
+   updateDatabase()
+
+   master = tk.Tk() #creates the window
+   master.title("2k's games")
+   master.overrideredirect(1) #gets rid of toolbar
+   master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight())) #makes it fill full screen
+   screenWidth = master.winfo_screenwidth()
+   screenHeight = master.winfo_screenheight()
+
+   menu()
+   master.mainloop()
 
 def menu():
    global TicTacToeImg, Connect4Img, MineSweeperImg, The2048Img, QuitImg, SudokuImg, HangManImg, BlackJackImg, CheckersImg, AccountImg
@@ -3499,17 +3519,25 @@ def menu():
    frameAccount.propagate(False)
    tk.Button(frameQuit, image = QuitImg, command = master.destroy).pack(expand=True, fill="both")
    tk.Button(frameAccount, image = AccountImg, command = lambda: Account()).pack(expand=True, fill="both")
-   
 
-if endGame == False:
-   updateDatabase()
 
-   master = tk.Tk() #creates the window
-   master.title("2k's games")
-   master.overrideredirect(1) #gets rid of toolbar
-   master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight())) #makes it fill full screen
-   screenWidth = master.winfo_screenwidth()
-   screenHeight = master.winfo_screenheight()
+client = gspread.authorize(ServiceAccountCredentials.from_json_keyfile_name("gameFiles\client_secret.json", ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']))       
+sheet = client.open('2ksGames').sheet1
 
-   menu()
-   master.mainloop()
+localData = open(".\gameFiles\CurrentStats.txt").read()
+localData = localData.split("\n")
+
+columnData = sheet.col_values(1)
+match = False
+endGame = False
+spot = 0
+for name in columnData:
+   spot += 1
+   if name == localData[0]:
+      match = True
+      break
+
+if match == False:
+   logInWindow()
+else:
+   loadGame()
