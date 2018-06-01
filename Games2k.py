@@ -15,8 +15,6 @@ print("Please wait...")
 #Unlike TicTacToe1.0 this has a GUI to make the experience better. The hard AI is much better and now not only gets lines and blocks lines, but sets up plays where it is a guaranteed win.
 #I created this in functions and procedures instead of linear to allow both single player and multiplayer to use the same blocks of code. This is also so multiple games can be added together in one document.
 
-#Next step is to add time tracker
-
 #TicTacToe: Global variables and functions normally have a "Tic" at the end incase another game uses similar variables later on.
 #First function is gamemode, then if single player was chosen difficulty, then a function to set difficulty.
 #No matter if single or multiplayer the next function creates the tkinter window and then one of the turns happen either turnTic or one of the AI, ends with endTic. User can go back to menu or click again and the person starting alternates.
@@ -172,7 +170,8 @@ def setTic(difficulty): #difficulty changes depending on whether medium or hard 
       loadTic()
 
 def loadTic():
-   global playerTic, sizeTic, frameTic, buttonTic, labelWho
+   global playerTic, sizeTic, frameTic, buttonTic, labelWho, timeCount
+   timeCount = time.time()
    for widget in master.winfo_children():
       widget.destroy()
    frameTitle=tk.Frame(master, width = screenWidth, height = screenHeight//16)
@@ -309,6 +308,7 @@ def endTic(result):
          else:
             tk.Button(frameTic[r*3+c], text = gridTic[r*3+c], font=myFont, bg = "#fff").pack(expand=True, fill="both") #normal text
       #once this is done it will sit and wait for user to click menu and restart
+   update(2, time.time()-timeCount)
 
 def turnTic(number): #number is whichever button was clicked
    global playerTic, gridWinTic, levelTic, delayTic
@@ -507,8 +507,6 @@ def aiTic(difficulty):
 #This was created to copy the microsoft minesweeper game that we know and love.
 #I have tried my best to make it as efficient as possible with my (I admit) limited knowledge of programming, but on some computers it does have severe lag.
 
-#Next step is to add time tracker
-
 #MineSweeper: Global variables and functions normally have a "Mine" at the end incase another game uses similar variables later on (or earlier on).
 #First function is MineSweeper(). Then choice of easy, medium or hard presets, or custom. If custom is out of range goes back to MineSweeper().
 #Then creates the board, depending on the click either ends game or shows number and allows player to go again, first click will never be a bomb. Allows user to chose to play again.
@@ -633,7 +631,8 @@ def gameSetMine(level):
       createBoardMine() #triggers next function
 
 def createBoardMine():
-   global shownMine, frameMine, reliefMine, hiddenMine, myFont, pixelMine, statusMine, bombsLeftMine, buttonMine, flagImgMine, bombImgMine, labelMine, buttonHow #Similar to TicTacToe(), most of these are barely called again, but have to all be declared here as global
+   global shownMine, frameMine, timeCount, reliefMine, hiddenMine, myFont, pixelMine, statusMine, bombsLeftMine, buttonMine, flagImgMine, bombImgMine, labelMine, buttonHow #Similar to TicTacToe(), most of these are barely called again, but have to all be declared here as global
+   timeCount = time.time()
    bombsLeftMine=bombMine #keep track of flag counter in top corner
    statusMine="start"
    for widget in master.winfo_children(): #same as TicTacToe2.0 this delete all widgets onscreen
@@ -793,6 +792,7 @@ def endMine(result): #end game
             buttonMine[r][c].config(image=bombImgMine, bg = "indianred")  #make bombs show as red
          elif hiddenMine[r][c] == "!" and result == "win": #if win
             buttonMine[r][c].config(image=flagImgMine, text = "?") #make bombs show as defused
+   update(12, time.time()-timeCount)
 
 def clickMine(row, column): #This is used 1 time to make sure the user doesn't get out 1st time
    global statusMine, sizeMine, hiddenMine
@@ -874,14 +874,13 @@ def checkMine(row, column): #when a button is clicked
 #This was created to play 2048. The hardest and longest part was making the program appear fluid, not a sudden movement where the entire screen refreshes,
 #but making it refresh one by one as the label moves. If the entire screen reloaded it would be too slow, so I had to completely change how I made frames on tkinter.
 
-#Next step is to add time tracker
-
 #2048: Global variables and functions normally have a 2048 at the end, main one is called the2048 because had to have letters.
 #Creates board with 2 numbers inside it. Then user can click arrow or swipe mouse/finger across screen.
 #All numbers move in that direction and combine if possible. Constantly checking for game end.
 
 def the2048():
-   global pixel2048, value2048, frame2048, label2048, win2048, delay2048, labelWho, buttonHow
+   global pixel2048, value2048, frame2048, label2048, win2048, delay2048, labelWho, buttonHow, timeCount
+   timeCount = time.time()
    delay2048=time.time()
    win2048="schrodinger"
    master.bind("<Up>", up2048) #binds the up, down, left, right arrows on keyboard
@@ -1035,10 +1034,12 @@ def reloadFull2048():
             label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
    if win2048 == "True":
       update(20, 1)
+      update(19, time.time()-timeCount)
       labelWho.config(text="You\nWin!")
       buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), command = lambda: the2048())
    elif win2048 == "False":
       update(21, 1)
+      update(19, time.time()-timeCount)
       labelWho.config(text="You\nLose.")
       buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), command = lambda: the2048())
 
@@ -1268,13 +1269,13 @@ def right2048(event): #this is the same code as down,2048 but r and c are switch
 #This was created to allow the user to play sudoku on the computer.
 #I have tried my best to add a random generator to make the games less static, but it came down to the tried and true method of "f--- it, it is good enough".
 
-#Next step is to add time tracker
-
 #Sudoku: Global variables and functions normally have a "Su" at the end incase another game uses similar variables later on (or earlier on).
 #First function is Sudoku(). Then chocie of easy, medium or hard. Then triggers a board to be generated from one of the preset fully complete and semi-random tiles chosen to show.
 #Next it loads the board, then when users click and type in numbers it saves, always checking for errors or to end the game. At the end you can play again.
 
 def Sudoku():
+   global timeCount
+   timeCount = time.time()
    for widget in master.winfo_children():
       widget.destroy()
 
@@ -1467,7 +1468,7 @@ def loadBoardSu():
       tk.Button(frameMenu, text = "Menu", font = "Helvetica " + str((screenWidth-(pixelSu*9))//17), bg = "#fff", command = lambda: Sudoku()).pack(expand=True, fill="both")
       buttonHow = tk.Button(frameHow, text = "How To Play", font = "Helvetica " + str((screenWidth-(pixelSu*9))//17), bg = "#fff", command = lambda: howToPlaySu())
       buttonHow.pack(expand=True, fill="both") #menu goes right back to start
-      errorSu = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixelSu*9))//12), fg="#fff", text="")
+      errorSu = tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(pixelSu*9))//15), fg="#fff", text="")
       errorSu.pack(expand=True, fill="both")
 
       frameSu=[[]] #frames for size
@@ -1585,10 +1586,14 @@ def enterSu(event):
             gameEnd=False #keeps playing
             break
          elif shownSu[r][c]==" ": #if any blank
+            errorSu.config(text="Click <enter>\nonce you are\nfinished.")
+            if gameEnd == False:
+               errorSu.config(text="")
+               break
             gameEnd=False #keeps playing
-            break
    if gameEnd==True: #if neither of those were met
       update(23+difficultySu, 1)
+      update(22, time.time()-timeCount)
       buttonHow.config(text = "Play Again", command = lambda: Sudoku()) #allows the user to play again
       errorSu.config(text="You win!") #changes from preset error message (earlier) to winner message
 
@@ -1601,7 +1606,7 @@ def enterSu(event):
 #This was created to play Connect 4 either against another player or against AI.
 #AI checks for winning plays, blocking plays, but the rest is random. This allows the user to set up plays, but no easy wins.
 
-#Next steps are to add different AIs and time tracker
+#Next step is to add different AIs
 
 #Connect: Global variables and functions normally have a "Con" at the end incase another game uses similar variables later on or earlier on.
 #Creates a 6 by 7 board which users can click to drop in connect 4 pieces. The game automatically checks for where the user clicks, no buttons, only labels.
@@ -1679,7 +1684,8 @@ def singleCon(): #if single player is chosen
    boardCon() #then continues along multiplayer route
 
 def boardCon():
-   global frameCon, labelCon, pixelCon, blackImgCon, redImgCon, blankImgCon, gridCon, turnLabelCon, turnCon, gameOverCon, delayCon,  buttonHow
+   global frameCon, labelCon, pixelCon, blackImgCon, redImgCon, blankImgCon, gridCon, turnLabelCon, turnCon, gameOverCon, delayCon, buttonHow, timeCount
+   timeCount = time.time()
 
    delayCon=time.time() #This is to make sure peoples plays dont overlap, and for single player it makes sure dont play while ai is going
    gameOverCon=False #sets the game to not over
@@ -2042,6 +2048,7 @@ def endCon(turnCon): #when game is over
    else: #if multiplayer
       turnLabelCon.config(text=turnCon + " wins!") #who evers turn it is wins, if a tie the turnCon is "no one"
    buttonHow.config(text = "Play Again", command = lambda: boardCon()) #allows user to play again
+   update(26, time.time()-timeCount)
 
 #################################################################################################### Connect4 end
 
@@ -2051,8 +2058,6 @@ def endCon(turnCon): #when game is over
 #HangMan was finished 10:42pm on the 4th of May, 2018
 #This was created to play hangman either against another player or against the database.
 #Multiplayer is user chosen word, single player is from the database I made (see code in gameFiles for how).
-
-#Next steps is to add time tracker
 
 #HangMan: Global variables and functions normally have a "Hang" at the end incase another game uses similar variables later on or earlier on.
 #Starts with asking whether single or multi, this triggers a function to choose which word.
@@ -2087,7 +2092,8 @@ def HangMan():
    tk.Button(frameMul, text = "Multiplayer", bg = "#fff", font = "Helvetica " + str(screenHeight//20), command = lambda: multiHang()).pack(expand=True, fill="both")
 
 def singleHang(): #if singleplayer is chosen
-   global wordHang, soloHang
+   global wordHang, soloHang, timeCount
+   timeCount = time.time()
    soloHang = True
    wordHang = open(".\gameFiles\HangmanWords.txt").readlines() #creates list of all words in the file
    wordHang = wordHang[random.randint(0, (len(wordHang)-1))] #decides on 1 word out of list
@@ -2097,7 +2103,8 @@ def singleHang(): #if singleplayer is chosen
    loadHang() #loads the board
 
 def multiHang(): #if multiplayer is chosen
-   global soloHang, entry, comment
+   global soloHang, entry, comment, timeCount
+   timeCount = time.time()
    soloHang=False
    master.bind("<Return>", enterHang) #binds this so user can click enter to submit
    for widget in master.winfo_children():
@@ -2289,6 +2296,7 @@ def letterHang(letter): #when a letter is clicked
          if shownWordHang[n] == "_": #if a blank letter
             gameWin = False #the game is not over
       if gameWin == True: #if the game is over
+         update(30, time.time()-timeCount)
          if soloHang == True:
             update(31, 1)
             buttonHow.config(text = "Play Again", command = lambda: singleHang()) #creates another single player game
@@ -2305,6 +2313,7 @@ def letterHang(letter): #when a letter is clicked
       guessesHang+=1 #adds 1 guess
       hangLabel.config(image = hangImg[guessesHang]) #changes image by 1
       if guessesHang == 6: #if the game is over
+         update(30, time.time()-timeCount)
          if soloHang == True:
             update(32, 1)
             buttonHow.config(text = "Play Again", command = lambda: singleHang()) #creates play again
@@ -2327,8 +2336,6 @@ def letterHang(letter): #when a letter is clicked
 #BlackJack was finished 9:54pm on the 13th of May, 2018
 #This was created to play BlackJack (21) against a computer dealer
 #Although this code deos not have all functions in real BlackJack, it can be played and that is what matters
-
-#Next steps is to add time tracker
 
 #BlackJack: Global variables and functions normally have a "21" at the end incase another game uses similar variables later on or earlier on.
 #Starts with creating the board, this is actually a fairly slow block of code, but it makes good framework
@@ -2464,7 +2471,8 @@ and counting it as 11 would bring his total more than 17 (but not over 21), he m
 """).pack(expand=True, fill="both")
 
 def deal21():
-   global dealer21, player21, playerCard, dealerCard, hidden21, currentDeck21, buttonHow, comment, buttonStand, buttonHit, sideButton
+   global dealer21, player21, playerCard, dealerCard, hidden21, currentDeck21, buttonHow, comment, buttonStand, buttonHit, sideButton, timeCount
+   timeCount = time.time()
 
    for c in range(8): #these next few things only matter after first time
       dealerCard[c].config(image = "") #deletes any cards already there
@@ -2653,6 +2661,7 @@ def end21(result):
    sideButton.config(state = "normal") 
    buttonStand.config(state = "disabled") #disables all buttons until a new deal is made
    buttonHit.config(state = "disabled")
+   update(33, time.time()-timeCount)
 
 
 #################################################################################################### BlackJack end
@@ -2664,7 +2673,7 @@ def end21(result):
 #This was created to play checkers either multiplayer or against AI.
 #The AI has been the biggest struggle of this game, it is seriously insane how much work I have done to make a AI that always loses.
 
-#Next step is to add leaderboards (once got a slight error in single move AI (down-right near beginning), but have not been able to trigger it again).
+#Next step is that I once got a slight error in single move AI (down-right near beginning), but have not been able to trigger it again.
 
 #Checkers: Global variables and functions normally have a "Chec" at the end incase another game uses similar variables later on or earlier on.
 #Starts with user picking single or multi, then creates board values, finally loads the board.
@@ -2751,7 +2760,8 @@ When one of your checkers reaches the opposite side of the board, it is crowned 
 A King can move backward as well as forward along the diagonals, instead of just forward.""").pack(expand=True, fill="both")
 
 def newGameChec():
-   global locationChec, turnChec
+   global locationChec, turnChec, timeCount
+   timeCount = time.time()
    turnChec = "red" #makes red go first
    locationChec = [[]] #this keeps track of which piece is where
    for r in range(8):
@@ -2961,6 +2971,7 @@ def clickChec(row, column):
    if blackEnd == True: #if no black, red wins
       if oneChec == True:
          update(37, 1)
+      update(36, time.time()-timeCount)
       errorChec.config(text = "Red wins!")
       buttonHow.config(text = "Play Again", command = lambda: newGameChec())
    else: #if red did not win
@@ -2976,6 +2987,7 @@ def clickChec(row, column):
       if redEnd == True: #if black won
          if oneChec == True:
             update(38, 1)
+         update(36, time.time()-timeCount)
          errorChec.config(text = "Black wins!")
          buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
@@ -3152,6 +3164,7 @@ def aiChec(): #this function does the play for AI
       
    else: #if no single moves
       errorChec.config(text = "Red wins!") #game is over
+      update(36, time.time()-timeCount)
       update(37, 1)
       buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
@@ -3391,7 +3404,7 @@ def logOut():
 def update(dataSet, increase):
    localData = open(".\gameFiles\CurrentStats.txt").read()
    localData = localData.split("\n")
-   localData[dataSet] = str(int(localData[dataSet]) + increase)
+   localData[dataSet] = str(int(localData[dataSet]) + int(increase//1))
    localData = '\n'.join(localData)
    
    localFile = open(".\gameFiles\CurrentStats.txt", 'w')
@@ -3414,7 +3427,7 @@ def updateDatabase():
    rowData = sheet.row_values(spot)
    
    for data in range(len(localData)-2):
-      localData[data+2] = str(int(localData[data+2]) + int(rowData[data+2]))
+      localData[data+2] = str(int(localData[data+2])+ int(rowData[data+2]))
 
    sheet.insert_row(localData, spot)
    sheet.delete_row(spot+1)
