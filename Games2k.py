@@ -3404,42 +3404,48 @@ def logOut():
 def update(dataSet, increase):
    localData = open(".\gameFiles\CurrentStats.txt").read()
    localData = localData.split("\n")
-   localData[dataSet] = str(int(localData[dataSet]) + int(increase//1))
-   localData = '\n'.join(localData)
-   
-   localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-   localFile.write(localData)
-   localFile.close()
+   if localData[0] != "":
+      localData[dataSet] = str(int(localData[dataSet]) + int(increase//1))
+      localData = '\n'.join(localData)
+      
+      localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+      localFile.write(localData)
+      localFile.close()
 
 def updateDatabase():
-   global localData, sheet, columnData
-   sheet = client.open('2ksGames').sheet1
-   columnData = sheet.col_values(1)
-   localData = open(".\gameFiles\CurrentStats.txt").read()
-   localData = localData.split("\n")
+   global noInternet
+   noInternet = False
+   try:
+      global localData, sheet, columnData
+      sheet = client.open('2ksGames').sheet1
+      columnData = sheet.col_values(1)
+      localData = open(".\gameFiles\CurrentStats.txt").read()
+      localData = localData.split("\n")
 
-   spot = 0
-   for name in columnData:
-      spot += 1
-      if name == localData[0]:
-         break
-   
-   rowData = sheet.row_values(spot)
-   
-   for data in range(len(localData)-2):
-      localData[data+2] = str(int(localData[data+2])+ int(rowData[data+2]))
+      spot = 0
+      for name in columnData:
+         spot += 1
+         if name == localData[0]:
+            break
+      
+      rowData = sheet.row_values(spot)
+      
+      for data in range(len(localData)-2):
+         localData[data+2] = str(int(localData[data+2])+ int(rowData[data+2]))
 
-   sheet.insert_row(localData, spot)
-   sheet.delete_row(spot+1)
+      sheet.insert_row(localData, spot)
+      sheet.delete_row(spot+1)
 
 
-   for data in range(len(localData)-2):
-      localData[data+2] = "0"
-   localData = '\n'.join(localData)
+      for data in range(len(localData)-2):
+         localData[data+2] = "0"
+      localData = '\n'.join(localData)
 
-   localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-   localFile.write(localData)
-   localFile.close()
+      localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+      localFile.write(localData)
+      localFile.close()
+   except:
+      noInternet = True
 
 
 def unbind(): #unbinds anything I have binded (from multiple games) and goes back to home screen.
@@ -3456,8 +3462,6 @@ def unbind(): #unbinds anything I have binded (from multiple games) and goes bac
 
 def loadGame():
    global master, screenHeight, screenWidth
-   updateDatabase()
-
    master = tk.Tk() #creates the window
    master.title("2k's games")
    master.overrideredirect(1) #gets rid of toolbar
@@ -3469,6 +3473,7 @@ def loadGame():
    master.mainloop()
 
 def menu():
+   updateDatabase()
    global TicTacToeImg, Connect4Img, MineSweeperImg, The2048Img, QuitImg, SudokuImg, HangManImg, BlackJackImg, CheckersImg, AccountImg
    pixelHeight=((screenHeight)//3)
    pixelWidth=((screenWidth)//3)
@@ -3533,12 +3538,12 @@ def menu():
    tk.Button(frameQuit, image = QuitImg, command = master.destroy).pack(expand=True, fill="both")
    tk.Button(frameAccount, image = AccountImg, command = lambda: Account()).pack(expand=True, fill="both")
 
-
-client = gspread.authorize(ServiceAccountCredentials.from_json_keyfile_name("gameFiles\client_secret.json", ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']))       
-sheet = client.open('2ksGames').sheet1
-
 localData = open(".\gameFiles\CurrentStats.txt").read()
 localData = localData.split("\n")
+
+#try:
+client = gspread.authorize(ServiceAccountCredentials.from_json_keyfile_name("gameFiles\client_secret.json", ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']))       
+sheet = client.open('2ksGames').sheet1
 
 columnData = sheet.col_values(1)
 match = False
@@ -3549,6 +3554,8 @@ for name in columnData:
    if name == localData[0]:
       match = True
       break
+#except:
+ #  match = True
 
 if match == False:
    logInWindow()
