@@ -1,5 +1,5 @@
 import tkinter as tk
-import random, time, os, gspread
+import random, time, os, gspread, re
 from tkinter.font import Font
 from PIL import ImageTk, Image
 from oauth2client.service_account import ServiceAccountCredentials
@@ -287,15 +287,15 @@ def endTic(result):
 
    if result=="tie": #if it is a tie display this
       if levelTic > 0:
-         update(1+(levelTic*3), 1)
+         update(2+(levelTic*3), 1)
       tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text="It is\na Tie.").pack(expand=True, fill="both")
    elif result=="multi": #if multiplayer, the playerTic was the last one who played therefore the winner
       tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text=playerTic+"\nwins!").pack(expand=True, fill="both")
    elif result=="player": #in player vs ai, player wins
-      update((levelTic*3), 1)
+      update(1+(levelTic*3), 1)
       tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text="You\nwin!").pack(expand=True, fill="both")
    elif result=="ai": #in player vs ai, ai wins
-      update(2+(levelTic*3), 1)
+      update(3+(levelTic*3), 1)
       tk.Label(frameWho, bg = "#000000", font = "Helvetica " + str((screenWidth-(sizeTic*3))//7), fg="#fff", text="You\nlose.").pack(expand=True, fill="both")
    frameTic=[]
    for r in range(0, 3): #THIS WHOLE THING IS ONLY TO MAKE THE CODE SHORTER, WAS AROUND 50 LINES FOR THIS BEFORE WITH IF, ELIF, ELSE STATEMENTS
@@ -308,7 +308,7 @@ def endTic(result):
          else:
             tk.Button(frameTic[r*3+c], text = gridTic[r*3+c], font=myFont, bg = "#fff").pack(expand=True, fill="both") #normal text
       #once this is done it will sit and wait for user to click menu and restart
-   update(2, time.time()-timeCount)
+   update(3, time.time()-timeCount)
 
 def turnTic(number): #number is whichever button was clicked
    global playerTic, gridWinTic, levelTic, delayTic
@@ -781,10 +781,10 @@ def endMine(result): #end game
    global statusMine, buttonMine
    statusMine="end"
    if result == "lose":
-      update(12+(difficultyMine*2), 1)
+      update(13+(difficultyMine*2), 1)
       labelMine.config(text = "You lose.")
    elif result == "win":
-      update(11+(difficultyMine*2), 1)
+      update(12+(difficultyMine*2), 1)
       labelMine.config(text = "You win!")
    for r in range(sizeMine):
       for c in range(sizeMine):
@@ -792,7 +792,7 @@ def endMine(result): #end game
             buttonMine[r][c].config(image=bombImgMine, bg = "indianred")  #make bombs show as red
          elif hiddenMine[r][c] == "!" and result == "win": #if win
             buttonMine[r][c].config(image=flagImgMine, text = "?") #make bombs show as defused
-   update(12, time.time()-timeCount)
+   update(13, time.time()-timeCount)
 
 def clickMine(row, column): #This is used 1 time to make sure the user doesn't get out 1st time
    global statusMine, sizeMine, hiddenMine
@@ -1033,13 +1033,13 @@ def reloadFull2048():
          elif value2048[r][c] == 2048:
             label2048[r][c].config(text = value2048[r][c], bg = "goldenrod", font=("Helvetica", pixel2048//4))
    if win2048 == "True":
-      update(20, 1)
-      update(19, time.time()-timeCount)
+      update(21, 1)
+      update(20, time.time()-timeCount)
       labelWho.config(text="You\nWin!")
       buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), command = lambda: the2048())
    elif win2048 == "False":
-      update(21, 1)
-      update(19, time.time()-timeCount)
+      update(22, 1)
+      update(20, time.time()-timeCount)
       labelWho.config(text="You\nLose.")
       buttonHow.config(text = "Play Again", font = "Helvetica " + str((screenWidth-(pixel2048*3))//17), command = lambda: the2048())
 
@@ -1592,8 +1592,8 @@ def enterSu(event):
                break
             gameEnd=False #keeps playing
    if gameEnd==True: #if neither of those were met
-      update(23+difficultySu, 1)
-      update(22, time.time()-timeCount)
+      update(24+difficultySu, 1)
+      update(23, time.time()-timeCount)
       buttonHow.config(text = "Play Again", command = lambda: Sudoku()) #allows the user to play again
       errorSu.config(text="You win!") #changes from preset error message (earlier) to winner message
 
@@ -2037,18 +2037,18 @@ def endCon(turnCon): #when game is over
    gameOverCon=True #sets game to over
    if oneCon == True: #if single player
       if turnCon == "Black": #user is black
-         update(27, 1)
+         update(28, 1)
          turnLabelCon.config(text="You win!")
       elif turnCon == "Red": #ai is red
-         update(29, 1)
+         update(30, 1)
          turnLabelCon.config(text="You lose.")
       else: #tie
-         update(28, 1)
+         update(29, 1)
          turnLabelCon.config(text="It is a tie.")
    else: #if multiplayer
       turnLabelCon.config(text=turnCon + " wins!") #who evers turn it is wins, if a tie the turnCon is "no one"
    buttonHow.config(text = "Play Again", command = lambda: boardCon()) #allows user to play again
-   update(26, time.time()-timeCount)
+   update(27, time.time()-timeCount)
 
 #################################################################################################### Connect4 end
 
@@ -2296,9 +2296,9 @@ def letterHang(letter): #when a letter is clicked
          if shownWordHang[n] == "_": #if a blank letter
             gameWin = False #the game is not over
       if gameWin == True: #if the game is over
-         update(30, time.time()-timeCount)
+         update(31, time.time()-timeCount)
          if soloHang == True:
-            update(31, 1)
+            update(32, 1)
             buttonHow.config(text = "Play Again", command = lambda: singleHang()) #creates another single player game
          elif soloHang == False:
             buttonHow.config(text = "Play Again", command = lambda: multiHang()) #creates another multiplayer game
@@ -2313,9 +2313,9 @@ def letterHang(letter): #when a letter is clicked
       guessesHang+=1 #adds 1 guess
       hangLabel.config(image = hangImg[guessesHang]) #changes image by 1
       if guessesHang == 6: #if the game is over
-         update(30, time.time()-timeCount)
+         update(31, time.time()-timeCount)
          if soloHang == True:
-            update(32, 1)
+            update(33, 1)
             buttonHow.config(text = "Play Again", command = lambda: singleHang()) #creates play again
          elif soloHang == False:
             buttonHow.config(text = "Play Again", command = lambda: multiHang())
@@ -2652,16 +2652,16 @@ def hit21():
 def end21(result):
    global buttonStand, buttonHit, sideButton
    if result == "lose": #if they lost
-      update(35, 1)
+      update(36, 1)
       comment.config(text = "You lose.") #lose message
    else: #else
-      update(34, 1)
+      update(35, 1)
       comment.config(text = "You Win!") #win message
 
    sideButton.config(state = "normal") 
    buttonStand.config(state = "disabled") #disables all buttons until a new deal is made
    buttonHit.config(state = "disabled")
-   update(33, time.time()-timeCount)
+   update(34, time.time()-timeCount)
 
 
 #################################################################################################### BlackJack end
@@ -2970,8 +2970,8 @@ def clickChec(row, column):
             blackEnd = False #no end
    if blackEnd == True: #if no black, red wins
       if oneChec == True:
-         update(37, 1)
-      update(36, time.time()-timeCount)
+         update(38, 1)
+      update(37, time.time()-timeCount)
       errorChec.config(text = "Red wins!")
       buttonHow.config(text = "Play Again", command = lambda: newGameChec())
    else: #if red did not win
@@ -2986,8 +2986,8 @@ def clickChec(row, column):
                redEnd = False #no end
       if redEnd == True: #if black won
          if oneChec == True:
-            update(38, 1)
-         update(36, time.time()-timeCount)
+            update(39, 1)
+         update(37, time.time()-timeCount)
          errorChec.config(text = "Black wins!")
          buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
@@ -3164,8 +3164,8 @@ def aiChec(): #this function does the play for AI
       
    else: #if no single moves
       errorChec.config(text = "Red wins!") #game is over
-      update(36, time.time()-timeCount)
-      update(37, 1)
+      update(37, time.time()-timeCount)
+      update(38, 1)
       buttonHow.config(text = "Play Again", command = lambda: newGameChec())
 
 def reloadChec(row, column): #reloads an individual space
@@ -3326,20 +3326,26 @@ def enterSign(waste):
 
    if match == False:
       if passWord == passWord2:
-         localData[0] = userName
-         localData[1] = passWord
-         for data in range(37):
-            localData[data+2] = "0"
-      
-         sheet.append_row(localData)
-         localData = '\n'.join(localData)
-         localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-         localFile.write(localData)
-         localFile.close()
+         emailSearch = re.compile(r'(\w)+@(\w)+\.(\w)+')
+         emailFound = emailSearch.search(email)
+         if (False == (emailFound == None)) or email == "": 
+            localData[0] = userName
+            localData[1] = passWord
+            localData[2] = email
+            for data in range(37):
+               localData[data+3] = "0"
+         
+            sheet.append_row(localData)
+            localData = '\n'.join(localData)
+            localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+            localFile.write(localData)
+            localFile.close()
 
-         localData = localData.split("\n")
-         master.destroy()
-         loadGame()
+            localData = localData.split("\n")
+            master.destroy()
+            loadGame()
+         else:
+            comment.config(text = "Email is not valid.\nFix it or remove it.")
       else:
          comment.config(text = "Those passwords\ndo not match.")
    else:
@@ -3393,6 +3399,7 @@ def logOut():
    localData = localData.split("\n")
    localData[0] = ""
    localData[1] = ""
+   localData[2] = ""
    localData = '\n'.join(localData)
    
    localFile = open(".\gameFiles\CurrentStats.txt", 'w')
@@ -3415,37 +3422,37 @@ def update(dataSet, increase):
 def updateDatabase():
    global noInternet
    noInternet = False
-   try:
-      global localData, sheet, columnData
-      sheet = client.open('2ksGames').sheet1
-      columnData = sheet.col_values(1)
-      localData = open(".\gameFiles\CurrentStats.txt").read()
-      localData = localData.split("\n")
+   #try:
+   global localData, sheet, columnData
+   sheet = client.open('2ksGames').sheet1
+   columnData = sheet.col_values(1)
+   localData = open(".\gameFiles\CurrentStats.txt").read()
+   localData = localData.split("\n")
 
-      spot = 0
-      for name in columnData:
-         spot += 1
-         if name == localData[0]:
-            break
-      
-      rowData = sheet.row_values(spot)
-      
-      for data in range(len(localData)-2):
-         localData[data+2] = str(int(localData[data+2])+ int(rowData[data+2]))
+   spot = 0
+   for name in columnData:
+      spot += 1
+      if name == localData[0]:
+         break
+   
+   rowData = sheet.row_values(spot)
+   
+   for data in range(len(localData)-3):
+      localData[data+3] = str(int(localData[data+3])+ int(rowData[data+3]))
 
-      sheet.insert_row(localData, spot)
-      sheet.delete_row(spot+1)
+   sheet.insert_row(localData, spot)
+   sheet.delete_row(spot+1)
 
 
-      for data in range(len(localData)-2):
-         localData[data+2] = "0"
-      localData = '\n'.join(localData)
+   for data in range(len(localData)-3):
+      localData[data+3] = "0"
+   localData = '\n'.join(localData)
 
-      localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-      localFile.write(localData)
-      localFile.close()
-   except:
-      noInternet = True
+   localFile = open(".\gameFiles\CurrentStats.txt", 'w')
+   localFile.write(localData)
+   localFile.close()
+   #except:
+    #  noInternet = True
 
 
 def unbind(): #unbinds anything I have binded (from multiple games) and goes back to home screen.
@@ -3541,21 +3548,22 @@ def menu():
 localData = open(".\gameFiles\CurrentStats.txt").read()
 localData = localData.split("\n")
 
-#try:
-client = gspread.authorize(ServiceAccountCredentials.from_json_keyfile_name("gameFiles\client_secret.json", ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']))       
-sheet = client.open('2ksGames').sheet1
+endAll = False
+try:
+   client = gspread.authorize(ServiceAccountCredentials.from_json_keyfile_name("gameFiles\client_secret.json", ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']))       
+   sheet = client.open('2ksGames').sheet1
 
-columnData = sheet.col_values(1)
-match = False
-endGame = False
-spot = 0
-for name in columnData:
-   spot += 1
-   if name == localData[0]:
-      match = True
-      break
-#except:
- #  match = True
+   columnData = sheet.col_values(1)
+   match = False
+   endGame = False
+   spot = 0
+   for name in columnData:
+      spot += 1
+      if name == localData[0]:
+         match = True
+         break
+except:
+   match = True
 
 if match == False:
    logInWindow()
