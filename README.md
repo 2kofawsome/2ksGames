@@ -1,5 +1,5 @@
 # 2ksGames
-A collect of 2D turn based games that I have been creating from scratch, 
+A collection of 2D turn based games that I have been creating from scratch, 
 I have been trying to learn programming and not just learn how to look up what others have done in the past. 
 I used Python 3 for this code with the GUI from tkinter as well as a few google APIs.
 
