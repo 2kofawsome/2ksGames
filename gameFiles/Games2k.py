@@ -1,8 +1,7 @@
 import tkinter as tk
-import random, time, os, gspread, re
+import random, time, os, re
 from tkinter.font import Font
 from PIL import ImageTk, Image
-from oauth2client.service_account import ServiceAccountCredentials
 
 print("LOADING...")
 print("Please wait...")
@@ -3190,241 +3189,23 @@ def reloadChec(row, column): #reloads an individual space
 
 #################################################################################################### Checkers end
 
-def logInWindow(): #this creates the window to log in
-   global master, screenWidth, screenHeight, localData
-   master = tk.Tk()
-   master.title("Log In")
-   master.overrideredirect(1)
-   master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight()))
-   screenWidth = master.winfo_screenwidth()
-   screenHeight = master.winfo_screenheight()
-   localData = open(".\gameFiles\CurrentStats.txt").read()
-   localData = localData.split("\n")
-
-   logInScreen()
-   master.mainloop()
-
-def logInScreen(): #where users can log in (collects entry data)
-   global UserName, PassWord, comment
-   master.unbind("<Return>") #removes any earlier binding
-   master.bind("<Return>", enterLog) #allows user to click enter on kleyboard
-   for widget in master.winfo_children():
-         widget.destroy()
-         
-   frameUser=tk.Frame(master, width = screenWidth, height = screenHeight//5)
-   frameUser.grid(row = 1, column = 0, columnspan = 6, sticky = "we")
-   frameUser.propagate(False)
-   framePass=tk.Frame(master, width = screenWidth, height = screenHeight//5)
-   framePass.grid(row = 2, column = 0, columnspan = 6, sticky = "we")
-   framePass.propagate(False)
-   frameEnter=tk.Frame(master, width = screenWidth, height = screenHeight//6)
-   frameEnter.grid(row = 3, column = 0, columnspan = 6, sticky = "we")
-   frameEnter.propagate(False)
-   frameComment=tk.Frame(master, width = screenWidth, height = screenHeight-(((screenHeight//5)*2)+(screenHeight//6)+screenHeight//10))
-   frameComment.grid(row = 4, column = 0, columnspan = 6, sticky = "we")
-   frameComment.propagate(False)
-   frameMenu=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
-   frameMenu.grid(row = 0, column = 5, columnspan = 1, sticky = "we")
-   frameMenu.propagate(False)
-   frameTitle=tk.Frame(master, width = (screenWidth//3)*2, height = screenHeight//10)
-   frameTitle.grid(row = 0, column = 1, columnspan = 4, sticky = "we")
-   frameTitle.propagate(False)
-   frameHow=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
-   frameHow.grid(row = 0, column = 0, columnspan = 1, sticky = "we")
-   frameHow.propagate(False)
-
-
-   tk.Button(frameHow, text = "Sign Up", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: signUpScreen()).pack(expand=True, fill="both")
-   tk.Button(frameMenu, text = "Quit", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: endLogIn()).pack(expand=True, fill="both")
-   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Log In").pack(expand=True, fill="both")
-   comment = tk.Label(frameComment, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="")
-   comment.pack(expand=True, fill="both")
-
-   UserName = tk.Entry(frameUser, bg = "white smoke", font = "Helvetica " + str(screenHeight//20), justify = "center")
-   UserName.pack(expand=True, fill="both")
-   UserName.insert(0, "Username")
-   UserName.focus_set()
-   PassWord = tk.Entry(framePass, bg = "white smoke", font = "Helvetica " + str(screenHeight//20), justify = "center")
-   PassWord.pack(expand=True, fill="both")
-   PassWord.insert(0, "Password")
-   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterLog("waste")).pack(expand=True, fill="both")
-
-def signUpScreen(): #where users can sign up (collects entry data)
-   global UserName, PassWord, PassWord2, Email, comment
-   master.unbind("<Return>")
-   master.bind("<Return>", enterSign)
-   for widget in master.winfo_children():
-         widget.destroy()
-         
-   frameUser=tk.Frame(master, width = screenWidth, height = screenHeight//8)
-   frameUser.grid(row = 1, column = 0, columnspan = 6, sticky = "we")
-   frameUser.propagate(False)
-   framePass=tk.Frame(master, width = screenWidth, height = screenHeight//8)
-   framePass.grid(row = 2, column = 0, columnspan = 6, sticky = "we")
-   framePass.propagate(False)
-   framePass2=tk.Frame(master, width = screenWidth, height = screenHeight//8)
-   framePass2.grid(row = 3, column = 0, columnspan = 6, sticky = "we")
-   framePass2.propagate(False)
-   frameEmail=tk.Frame(master, width = screenWidth, height = screenHeight//8)
-   frameEmail.grid(row = 4, column = 0, columnspan = 6, sticky = "we")
-   frameEmail.propagate(False)
-   frameEnter=tk.Frame(master, width = screenWidth, height = screenHeight//8)
-   frameEnter.grid(row = 5, column = 0, columnspan = 6, sticky = "we")
-   frameEnter.propagate(False)
-   frameComment=tk.Frame(master, width = screenWidth, height = screenHeight-(((screenHeight//8)*5)+screenHeight//10))
-   frameComment.grid(row = 6, column = 0, columnspan = 6, sticky = "we")
-   frameComment.propagate(False)
-   frameMenu=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
-   frameMenu.grid(row = 0, column = 5, columnspan = 1, sticky = "we")
-   frameMenu.propagate(False)
-   frameTitle=tk.Frame(master, width = (screenWidth//3)*2, height = screenHeight//10)
-   frameTitle.grid(row = 0, column = 1, columnspan = 4, sticky = "we")
-   frameTitle.propagate(False)
-   frameHow=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
-   frameHow.grid(row = 0, column = 0, columnspan = 1, sticky = "we")
-   frameHow.propagate(False)
-
-   tk.Button(frameHow, text = "Log In", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: logInScreen()).pack(expand=True, fill="both")
-   tk.Button(frameMenu, text = "Quit", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: endLogIn()).pack(expand=True, fill="both")
-   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Sign Up").pack(expand=True, fill="both")
-   comment = tk.Label(frameComment, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="*Email is not required, I will only send\nemails when the game requires an update.")
-   comment.pack(expand=True, fill="both")
-
-   UserName = tk.Entry(frameUser, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
-   UserName.pack(expand=True, fill="both")
-   UserName.insert(0, "Username")
-   UserName.focus_set()
-   PassWord = tk.Entry(framePass, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
-   PassWord.pack(expand=True, fill="both")
-   PassWord.insert(0, "Password")
-   PassWord2 = tk.Entry(framePass2, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
-   PassWord2.pack(expand=True, fill="both")
-   PassWord2.insert(0, "Password Again")
-   Email = tk.Entry(frameEmail, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
-   Email.pack(expand=True, fill="both")
-   Email.insert(0, "Email*")
-   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: enterSign("waste")).pack(expand=True, fill="both")
-
-def enterSign(waste):
-   master.unbind("<Return>")
-   global localData
-   userName = UserName.get() #collectsd data
-   passWord = PassWord.get()
-   passWord2 = PassWord2.get()
-   email = Email.get()
-
-   userName = userName.lower() #always turns to lowercase
-   passWord = passWord.lower()
-   passWord2 = passWord2.lower()
-   email = email.lower()
-
-   match = False
-   for name in columnData:
-      if name == userName: #checsk for if username is already in use
-         match = True
-         break
-
-   if match == False: #if not in use
-      if passWord == passWord2: #checks if passwords match
-         emailSearch = re.compile(r'(\w)+@(\w)+\.(\w)+') #regex to look for emails
-         emailFound = emailSearch.search(email) #searches
-         if (False == (emailFound == None)) or (email == "" or email == "email*"): #if it exists or is blank (they do not need an email)
-            localData[0] = userName #updates local file with words
-            localData[1] = passWord
-            localData[2] = email
-            if email == "email*":
-               localData[2] = ""
-            for data in range(37):
-               localData[data+3] = "0" #then numbers
-         
-            sheet.append_row(localData) #then adds to database
-            localData = '\n'.join(localData) #then creates solid local file
-            localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-            localFile.write(localData)
-            localFile.close()
-
-            localData = localData.split("\n")
-            master.destroy() #closes this process
-            loadGame() #starts game startup
-         else: #if email is wrong
-            comment.config(text = "Email is not valid.\nFix it or remove it.") #message
-      else: #if not match
-         comment.config(text = "Those passwords\ndo not match.") #message
-   else: #if in use
-      comment.config(text = "That username\nalready exists.") #message
-
-def enterLog(waste): #almost the same as above
-   master.unbind("<Return>")
-   global localData
-   userName = UserName.get()
-   passWord = PassWord.get() #no longer email
-
-   userName = userName.lower()
-   passWord = passWord.lower()
-
-   match = False
-   spot = 0
-   for name in columnData:
-      spot += 1
-      if name == userName: #this time needs to make sure username IS in database
-         match = True
-         break
-
-   if match == True:
-      rowData = sheet.row_values(spot) #this time checks password against database
-      if rowData[1] == passWord:
-         localData[0] = userName #same as above, but with no cloud update this time
-         localData[1] = passWord
-   
-         localData = '\n'.join(localData)
-         localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-         localFile.write(localData)
-         localFile.close()
-
-         localData = localData.split("\n")
-         master.destroy()
-         loadGame()
-      else:
-         comment.config(text = "That password\nis not valid.")
-   else:
-      comment.config(text = "That username is not\nin our database.")
-
-def endLogIn(): #if the user hit quit
-   master.destroy() #ends everything
-
 def Account(): #this page displays stuff about the users account
    for widget in master.winfo_children():
       widget.destroy()
    master.unbind("<Return>")
 
-   sheet = client.open('2ksGames').sheet1
-   columnData = sheet.col_values(1)
    localData = open(".\gameFiles\CurrentStats.txt").read()
    localData = localData.split("\n")
-   spot = 0
-   for name in columnData:
-      spot += 1
-      if name == localData[0]:
-         break
-   rowData = sheet.row_values(spot)
 
    frameTitle=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameTitle.grid(row = 0, column = 0, sticky = "we")
    frameTitle.propagate(False)
-   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text=localData[0]).pack(expand=True, fill="both")
+   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Local Account").pack(expand=True, fill="both")
    frameMenu=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
    frameMenu.grid(row = 0, column = 1, sticky = "we")
    frameMenu.propagate(False)
    tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//40), command = lambda: menu()).pack(expand=True, fill="both")
-   frameLog=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
-   frameLog.grid(row = 1, column = 0, sticky = "we")
-   frameLog.propagate(False)
-   tk.Button(frameLog, text = "Log Out", bg = "#fff", font = "Helvetica " + str(screenHeight//40), command = lambda: logOut()).pack(expand=True, fill="both")
-   frameChange=tk.Frame(master, width = screenWidth//2, height = screenHeight//10)
-   frameChange.grid(row = 1, column = 1, sticky = "we")
-   frameChange.propagate(False)
-   tk.Button(frameChange, text = "Change Password", bg = "#fff", font = "Helvetica " + str(screenHeight//40), command = lambda: changePassword()).pack(expand=True, fill="both")
-
+   
    frame1=tk.Frame(master, width = screenWidth//2, height = screenHeight-(screenHeight/3 + screenHeight//5))
    frame1.grid(row=2, column = 0, sticky="nsew")
    frame1.propagate(False)
@@ -3436,37 +3217,37 @@ def Account(): #this page displays stuff about the users account
    frame3.propagate(False)
 
 
-   TicTacToeWins = int(rowData[4]) + int(rowData[7]) + int(rowData[10])
-   MineSweeperWins = int(rowData[14]) + int(rowData[16]) + int(rowData[18])
-   twoWins = int(rowData[21])
-   SudokuWins = int(rowData[24]) + int(rowData[25]) + int(rowData[26])
-   Connect4Wins = int(rowData[28])
-   HangmanWins = int(rowData[32])
-   BlackJackWins = int(rowData[35])
-   CheckersWins = int(rowData[38])
+   TicTacToeWins = int(localData[4]) + int(localData[7]) + int(localData[10])
+   MineSweeperWins = int(localData[14]) + int(localData[16]) + int(localData[18])
+   twoWins = int(localData[21])
+   SudokuWins = int(localData[24]) + int(localData[25]) + int(localData[26])
+   Connect4Wins = int(localData[28])
+   HangmanWins = int(localData[32])
+   BlackJackWins = int(localData[35])
+   CheckersWins = int(localData[38])
 
-   TimePlayed = int(rowData[3]) + int(rowData[13]) + int(rowData[20]) + int(rowData[23]) + int(rowData[27]) + int(rowData[31]) + int(rowData[34]) + int(rowData[37])
+   TimePlayed = int(localData[3]) + int(localData[13]) + int(localData[20]) + int(localData[23]) + int(localData[27]) + int(localData[31]) + int(localData[34]) + int(localData[37])
 
-   TicTacToeLoses = int(rowData[6]) + int(rowData[9]) + int(rowData[11])
-   if TicTacToeLoses == 0: 
+   TicTacToeLoses = int(localData[6]) + int(localData[9]) + int(localData[11])
+   if TicTacToeLoses + TicTacToeWins == 0: 
       TicTacToeLoses = 1
-   MineSweeperLoses = int(rowData[15]) + int(rowData[17]) + int(rowData[19])
-   if MineSweeperLoses == 0:
+   MineSweeperLoses = int(localData[15]) + int(localData[17]) + int(localData[19])
+   if MineSweeperLoses + MineSweeperWins == 0:
       MineSweeperLoses = 1
-   twoLoses = int(rowData[22])
-   if twoLoses == 0:
+   twoLoses = int(localData[22])
+   if twoLoses + twoWins == 0:
       twoLoses = 1
-   Connect4Loses = int(rowData[30])
-   if Connect4Loses == 0:
+   Connect4Loses = int(localData[30])
+   if Connect4Loses + Connect4Wins == 0:
       Connect4Loses = 1
-   HangmanLoses = int(rowData[33])
-   if HangmanLoses == 0:
+   HangmanLoses = int(localData[33])
+   if HangmanLoses + HangmanWins == 0:
       HangmanLoses = 1
-   BlackJackLoses = int(rowData[36])
-   if BlackJackLoses == 0:
+   BlackJackLoses = int(localData[36])
+   if BlackJackLoses + BlackJackWins == 0:
       BlackJackLoses = 1
-   CheckersLoses = int(rowData[39])
-   if CheckersLoses == 0:
+   CheckersLoses = int(localData[39])
+   if CheckersLoses + CheckersWins == 0:
       CheckersLoses = 1
 
    tk.Label(frame1, bg = "white smoke", font = "Helvetica " + str(screenHeight//45), text=("\n\n\nTotal Wins: " + str(TicTacToeWins+MineSweeperWins+twoWins+SudokuWins+Connect4Wins+HangmanWins+BlackJackWins+CheckersWins) +
@@ -3496,106 +3277,6 @@ This was created by Sam (2k of awsome) Gunter.
 Email samgunter12@gmail.com for any problems or concerns.
 """).pack(expand=True, fill="both")
 
-def logOut(): #if users clicked logOut on account screen
-   localData = open(".\gameFiles\CurrentStats.txt").read()
-   localData = localData.split("\n")
-   localData[0] = "" #gets rid of all word data (passwords, usernames, emails)
-   localData[1] = ""
-   localData[2] = ""
-   localData = '\n'.join(localData)
-   
-   localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-   localFile.write(localData)
-   localFile.close()
-   master.destroy() #ends the games
-   logInWindow() #goes to log in screen
-
-def changePassword():
-   global oldPassWordVar, newPassWordVar, newPassWord2Var, comment
-   master.bind("<Return>", submitPassword)
-   for widget in master.winfo_children():
-         widget.destroy()
-         
-   frameOld=tk.Frame(master, width = screenWidth, height = screenHeight//7)
-   frameOld.grid(row = 1, column = 0, columnspan = 6, sticky = "we")
-   frameOld.propagate(False)
-   frameNew=tk.Frame(master, width = screenWidth, height = screenHeight//7)
-   frameNew.grid(row = 2, column = 0, columnspan = 6, sticky = "we")
-   frameNew.propagate(False)
-   frameNew2=tk.Frame(master, width = screenWidth, height = screenHeight//7)
-   frameNew2.grid(row = 3, column = 0, columnspan = 6, sticky = "we")
-   frameNew2.propagate(False)
-   frameEnter=tk.Frame(master, width = screenWidth, height = screenHeight//8)
-   frameEnter.grid(row = 4, column = 0, columnspan = 6, sticky = "we")
-   frameEnter.propagate(False)
-   frameComment=tk.Frame(master, width = screenWidth, height = screenHeight-(((screenHeight//7)*3)+(screenHeight//8)+screenHeight//10))
-   frameComment.grid(row = 5, column = 0, columnspan = 6, sticky = "we")
-   frameComment.propagate(False)
-   frameMenu=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
-   frameMenu.grid(row = 0, column = 5, columnspan = 1, sticky = "we")
-   frameMenu.propagate(False)
-   frameTitle=tk.Frame(master, width = (screenWidth//3)*2, height = screenHeight//10)
-   frameTitle.grid(row = 0, column = 1, columnspan = 4, sticky = "we")
-   frameTitle.propagate(False)
-   frameHow=tk.Frame(master, width = screenWidth//6, height = screenHeight//10)
-   frameHow.grid(row = 0, column = 0, columnspan = 1, sticky = "we")
-   frameHow.propagate(False)
-
-
-   tk.Button(frameHow, text = "Log Out", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: logOut()).pack(expand=True, fill="both")
-   tk.Button(frameMenu, text = "Back", bg = "#fff", font = "Helvetica " + str(screenHeight//50), command = lambda: Account()).pack(expand=True, fill="both")
-   tk.Label(frameTitle, bg = "#000000", font = "fixedsys " + str(screenHeight//35), fg="#fff", text="Log In").pack(expand=True, fill="both")
-   comment = tk.Label(frameComment, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="")
-   comment.pack(expand=True, fill="both")
-
-   oldPassWordVar = tk.Entry(frameOld, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
-   oldPassWordVar.pack(expand=True, fill="both")
-   oldPassWordVar.insert(0, "Old Password")
-   oldPassWordVar.focus_set()
-   newPassWordVar = tk.Entry(frameNew, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
-   newPassWordVar.pack(expand=True, fill="both")
-   newPassWordVar.insert(0, "New Password")
-   newPassWord2Var = tk.Entry(frameNew2, bg = "white smoke", font = "Helvetica " + str(screenHeight//25), justify = "center")
-   newPassWord2Var.pack(expand=True, fill="both")
-   newPassWord2Var.insert(0, "New Password Again")
-   tk.Button(frameEnter, text = "Enter", bg = "#fff", font = "Helvetica " + str(screenHeight//35), command = lambda: submitPassword("waste")).pack(expand=True, fill="both")
-
-def submitPassword(waste):
-   master.unbind("<Return>")
-   global localData
-   localData = localData.split("\n")
-   oldPassWord = oldPassWordVar.get()
-   newPassWord = newPassWordVar.get()
-   newPassWord2 = newPassWord2Var.get()
-
-   oldPassWord = oldPassWord.lower()
-   newPassWord = newPassWord.lower()
-   newPassWord2 = newPassWord2.lower()
-
-   spot = 0
-   for name in columnData:
-      spot += 1
-      if name == localData[0]:
-         break
-
-   rowData = sheet.row_values(spot)
-   if rowData[1] == oldPassWord:
-      if newPassWord == newPassWord2:
-
-         localData[1] = newPassWord
-         sheet.insert_row(localData, spot)
-         sheet.delete_row(spot+1)
-
-         localData = '\n'.join(localData)
-         localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-         localFile.write(localData)
-         localFile.close()
-
-         menu()
-      else:
-         comment.config(text = "The new passwords\ndo not match.")
-   else:
-      comment.config(text = "The old password\nis not correct.")
 
 def update(dataSet, increase): #everytime the local database is updated
    localData = open(".\gameFiles\CurrentStats.txt").read()
@@ -3607,40 +3288,6 @@ def update(dataSet, increase): #everytime the local database is updated
       localFile = open(".\gameFiles\CurrentStats.txt", 'w')
       localFile.write(localData)
       localFile.close()
-
-def updateDatabase(): #when global databse is updated
-   try: #incase there is no internet/not updated
-      global localData, sheet, columnData
-      sheet = client.open('2ksGames').sheet1 #regrabs sheet because different from last time
-      columnData = sheet.col_values(1) #all usernames
-      localData = open(".\gameFiles\CurrentStats.txt").read()
-      localData = localData.split("\n")
-
-      spot = 0
-      for name in columnData:
-         spot += 1
-         if name == localData[0]: #finds the spot of te current user
-            break
-      
-      rowData = sheet.row_values(spot) #grabs their data
-      
-      for data in range(len(localData)-3): #updates their data for everyone after the words
-         localData[data+3] = str(int(localData[data+3])+ int(rowData[data+3]))
-
-      sheet.insert_row(localData, spot) #puts it in
-      sheet.delete_row(spot+1) #deletes old data
-
-
-      for data in range(len(localData)-3): #clears local data
-         localData[data+3] = "0"
-      localData = '\n'.join(localData)
-
-      localFile = open(".\gameFiles\CurrentStats.txt", 'w')
-      localFile.write(localData)
-      localFile.close()
-   except:
-      waste = 1
-
 
 def unbind(): #unbinds anything I have binded (from multiple games) and goes back to home screen.
    master.unbind("<Up>")
@@ -3667,7 +3314,6 @@ def loadGame():
    master.mainloop()
 
 def menu():
-   updateDatabase()
    global TicTacToeImg, Connect4Img, MineSweeperImg, The2048Img, QuitImg, SudokuImg, HangManImg, BlackJackImg, CheckersImg, AccountImg
    pixelHeight=((screenHeight)//3)
    pixelWidth=((screenWidth)//3)
@@ -3735,40 +3381,4 @@ def menu():
 localData = open(".\gameFiles\CurrentStats.txt").read() #opens local data
 localData = localData.split("\n") #makes it a list
 
-endAll = False
-try:
-   client = gspread.authorize(ServiceAccountCredentials.from_json_keyfile_name("gameFiles\client_secret.json", ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']))       
-   #makes sure program is allowed to access the database
-   sheet = client.open('2ksGames').sheet1 #opens the database
-
-   columnData = sheet.col_values(1) #all usernames
-   match = False
-   endGame = False
-   spot = 0
-   for name in columnData: #checks for if username matches
-      spot += 1
-      if name == localData[0]:
-         match = True
-         break
-except Exception as e: #if it doesnt work (either internet or not updated)
-   match = True #bypass all future database updates
-   if str(e) == "invalid_grant: Invalid JWT Signature.": #if it was not updated
-      master = tk.Tk() #creates a 5 second pop up that tells user to update
-      master.title("Error")
-      master.overrideredirect(1)
-      master.geometry("%dx%d+0+0" % (master.winfo_screenwidth(), master.winfo_screenheight()))
-      screenWidth = master.winfo_screenwidth()
-      screenHeight = master.winfo_screenheight()
-      
-      frame=tk.Frame(master, width = screenWidth, height = screenHeight)
-      frame.grid(row = 0, column = 0, sticky = "we")
-      frame.propagate(False)
-      tk.Label(frame, bg = "#000000", font = "Helvetica " + str(screenHeight//25), fg="#fff", text="This game is not up to date\nplease update as soon as you can.\n\nGame wil begin, Please wait...").pack(expand=True, fill="both")
-      master.update()
-      time.sleep(5)
-      master.destroy() #ends and starts the game
-
-if match == False: #if no match
-   logInWindow() #log in
-else: #if a match or an error
-   loadGame()
+loadGame()
