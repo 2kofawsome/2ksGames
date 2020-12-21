@@ -17,7 +17,7 @@ Games created are TicTacToe, MineSweeper, 2048, Sudoku, Connect 4, Hangman, Blac
 
 ![All Games](https://raw.githubusercontent.com/2kofawsome/2ksGames/master/gameFiles/mainScreen.png) 
 
-<p align="center"><i>THomescreen with a sneakpeak of all games</i></p>
+<p align="center"><i>Homescreen with a sneakpeak of all games</i></p>
 
 ### TicTacToe 2.0
 
